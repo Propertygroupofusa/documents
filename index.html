@@ -1017,37 +1017,37 @@
   <p class="section-sub">From real estate closings to tax returns — we cover the documents people need most.</p>
 
   <div class="services-grid">
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('notary_remote')" style="cursor:pointer;">
       <span class="service-icon">📋</span>
       <h4>Mobile Notary</h4>
       <p>Mobile notary, loan signings, real estate closings, affidavits, power of attorney. Flat rate — no hidden travel fees ever.</p>
       <div class="service-price">$39 flat — competitors charge $50–$200</div>
     </div>
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('notary_remote')" style="cursor:pointer;">
       <span class="service-icon">🌐</span>
       <h4>Remote Online Notary</h4>
       <p>Get documents notarized from anywhere in the country. Video-verified, legally binding, available same day.</p>
       <div class="service-price">$14.99 per session — cheapest online</div>
     </div>
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('tax_w2')" style="cursor:pointer;">
       <span class="service-icon">🧾</span>
       <h4>Tax Preparation</h4>
       <p>W-2, self-employed, real estate investors, small business. Real preparers. Maximize your refund — guaranteed.</p>
       <div class="service-price">W-2 from $49 · Self-employed $99 · Investor $149</div>
     </div>
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('legal')" style="cursor:pointer;">
       <span class="service-icon">⚖️</span>
       <h4>Legal Documents</h4>
       <p>Contracts, LLC formation, lease agreements, demand letters, and standard legal forms — flat rate, no surprises.</p>
       <div class="service-price">$35 flat — competitors charge $50–$200</div>
     </div>
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('real_estate')" style="cursor:pointer;">
       <span class="service-icon">🏠</span>
       <h4>Real Estate Closings</h4>
       <p>Full closing support for buyers, sellers, and investors. Wholesale deals, traditional sales, and refinances.</p>
       <div class="service-price">$99 per closing — title companies charge $150–$300</div>
     </div>
-    <div class="service-card">
+    <div class="service-card" onclick="goStripe('tax_self')" style="cursor:pointer;">
       <span class="service-icon">📊</span>
       <h4>Business Documents</h4>
       <p>Operating agreements, corporate resolutions, business licenses, EIN applications, and entity formation packages.</p>
@@ -1116,7 +1116,7 @@
         <li>Featured profile listing</li>
         <li>Monthly performance report</li>
       </ul>
-      <button class="pricing-btn" onclick="openModal('worker')">Go Professional</button>
+      <button class="pricing-btn" onclick="goStripe('worker_pro')">Go Professional</button>
     </div>
     <div class="pricing-card">
       <h4>Elite</h4>
@@ -1130,7 +1130,7 @@
         <li>Team management tools</li>
         <li>Custom invoicing</li>
       </ul>
-      <button class="pricing-btn" onclick="openModal('worker')">Go Elite</button>
+      <button class="pricing-btn" onclick="goStripe('worker_elite')">Go Elite</button>
     </div>
   </div>
 </section>
@@ -1306,7 +1306,7 @@
           <option>Other</option>
         </select>
       </div>
-      <button class="modal-submit client" onclick="submitForm('client')">Create My Account →</button>
+      <button class="modal-submit client" onclick="submitAndPay()">Get My Documents Done →</button>
       <div class="modal-switch">Are you a worker? <a onclick="switchModal('worker')">Join as a worker instead</a></div>
     </div>
     <div class="success-state" id="clientSuccess">
@@ -1385,6 +1385,22 @@
 </div>
 
 <script>
+  // ── Stripe Payment Links ─────────────────────────────────
+  const STRIPE = {
+    notary_remote:  'https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00',
+    notary_mobile:  'https://buy.stripe.com/14A4gA4l85440oDfB51sQ01',
+    tax_w2:         'https://buy.stripe.com/9B64gAg3QgMMc7l3Sn1sQ02',
+    tax_self:       'https://buy.stripe.com/cNidRa3h47cc8V92Oj1sQ03',
+    real_estate:    'https://buy.stripe.com/28E6oIg3Q9kk4ET0Gb1sQ04',
+    legal:          'https://buy.stripe.com/bJe6oI2d06886N1gF91sQ05',
+    worker_pro:     'https://buy.stripe.com/8x2cN65pc2VWc7lcoT1sQ09',
+    worker_elite:   'https://buy.stripe.com/9B614o18W9kk1sHgF91sQ08',
+  };
+
+  function goStripe(key) {
+    window.open(STRIPE[key], '_blank');
+  }
+
   function openModal(type) {
     document.getElementById(type + 'Modal').classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1393,7 +1409,6 @@
   function closeModal(type) {
     document.getElementById(type + 'Modal').classList.remove('active');
     document.body.style.overflow = '';
-    // Reset form
     document.getElementById(type + 'Form').style.display = 'block';
     document.getElementById(type + 'Success').style.display = 'none';
   }
@@ -1404,12 +1419,44 @@
     setTimeout(() => openModal(to), 100);
   }
 
-  function submitForm(type) {
-    document.getElementById(type + 'Form').style.display = 'none';
+  async function submitForm(type) {
+    const form = document.getElementById(type + 'Form');
+    const inputs = form.querySelectorAll('input, select');
+    const data = { type };
+    inputs.forEach(i => { if (i.value) data[i.type || i.tagName] = i.value; });
+
+    // Send to Formspree
+    try {
+      await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch(e) { console.log('Form submit error', e); }
+
+    form.style.display = 'none';
     document.getElementById(type + 'Success').style.display = 'block';
+
+    // Redirect worker signups to Pro plan after 2 seconds
+    if (type === 'worker') {
+      setTimeout(() => window.open(STRIPE.worker_pro, '_blank'), 2000);
+    }
   }
 
-  // Close on overlay click
+  function submitAndPay() {
+    const select = document.querySelector('#clientForm select');
+    const serviceMap = {
+      'Notary Service': 'notary_remote',
+      'Tax Preparation': 'tax_w2',
+      'Legal Documents': 'legal',
+      'Real Estate Closing': 'real_estate',
+      'Remote Online Notary': 'notary_remote',
+      'Business Documents': 'tax_self',
+    };
+    submitForm('client');
+    const key = serviceMap[select?.value] || 'notary_remote';
+    setTimeout(() => goStripe(key), 1500);
+  }
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', function(e) {
       if (e.target === this) {
