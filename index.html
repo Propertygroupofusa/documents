@@ -1476,6 +1476,30 @@
   </div>
 </div>
 
+<!-- CLAIM JOB MODAL -->
+<div class="modal-overlay" id="claimModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('claim')">×</button>
+    <div id="claimForm">
+      <div class="modal-tag worker">Claim Job</div>
+      <h3 id="claimJobTitle">Claim This Job</h3>
+      <p>Enter your info and we'll confirm this job is yours within 30 minutes.</p>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="claimFirst" placeholder="First"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="claimLast" placeholder="Last"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="claimEmail" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="claimPhone" placeholder="(210) 555-0000"></div>
+      <button class="modal-submit worker" onclick="submitClaim()">Claim This Job →</button>
+    </div>
+    <div class="success-state" id="claimSuccess">
+      <span class="success-icon">✅</span>
+      <h3>Job Claimed!</h3>
+      <p>Check your email for confirmation within 30 minutes.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Stripe Links ─────────────────────────────────────────────
 const STRIPE = {
@@ -1726,16 +1750,36 @@ function filterJobs(filter, btn) {
   renderJobs(filter);
 }
 
+// ── Claim Job (proper modal, replaces old prompt()) ──────────
+let claimingJobTitle = null;
+
 function claimJob(title) {
-  const email = prompt(`Enter your email to claim: ${title}`);
-  if (email) {
-    fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
+  claimingJobTitle = title;
+  document.getElementById('claimJobTitle').textContent = 'Claim: ' + title;
+  openModal('claim');
+}
+
+async function submitClaim() {
+  const first = document.getElementById('claimFirst').value;
+  const email = document.getElementById('claimEmail').value;
+  if (!first || !email) { alert('Please fill in your name and email.'); return; }
+
+  try {
+    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ type: 'JOB CLAIM', email, job: title })
+      body: JSON.stringify({
+        type: 'JOB CLAIM',
+        name: first + ' ' + document.getElementById('claimLast').value,
+        email,
+        phone: document.getElementById('claimPhone').value,
+        job: claimingJobTitle,
+      })
     });
-    alert('Job claimed! Check your email for confirmation within 30 minutes.');
-  }
+  } catch(e) {}
+
+  document.getElementById('claimForm').style.display = 'none';
+  document.getElementById('claimSuccess').style.display = 'block';
 }
 
 // ── QR Code (simple SVG-based) ───────────────────────────────
