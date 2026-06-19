@@ -1501,6 +1501,9 @@
 </div>
 
 <script>
+// ── Backend API ─────────────────────────────────────────────
+const API_BASE = 'https://pgusa-platform-production.up.railway.app';
+
 // ── Stripe Links ─────────────────────────────────────────────
 const STRIPE = {
   notary_remote:  'https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00',
@@ -1588,11 +1591,38 @@ async function bookAndPay() {
   const last = document.getElementById('clientLast').value;
   const email = document.getElementById('clientEmail').value;
   const phone = document.getElementById('clientPhone').value;
+  const state = document.getElementById('clientState').value;
+  const notes = document.getElementById('clientNotes').value;
 
   if (!first || !email) { alert('Please fill in your name and email.'); return; }
   if (!selectedService) { alert('Please select a service.'); return; }
+  if (!state) { alert('Please select your state.'); return; }
 
-  // Submit to Formspree
+  // Create a real job in the backend so workers can see and claim it
+  try {
+    const jobRes = await fetch(API_BASE + '/jobs/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_type: selectedServiceKey,
+        description: `Client: ${first} ${last} | Email: ${email} | Phone: ${phone}`,
+        location: state,
+        state: state,
+        is_remote: selectedServiceKey === 'notary_remote',
+        scheduled_date: null,
+        scheduled_time: selectedTime || null,
+        is_urgent: false,
+        notes: notes || null,
+      })
+    });
+    if (!jobRes.ok) {
+      console.error('Job creation failed', await jobRes.text());
+    }
+  } catch (e) {
+    console.error('Job creation request failed', e);
+  }
+
+  // Also notify by email (backup, non-blocking)
   try {
     await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
       method: 'POST',
@@ -1707,19 +1737,52 @@ function buildCalendar() {
 }
 
 // ── Job Board ────────────────────────────────────────────────
-const JOBS = [
+// Fallback demo jobs — shown only if the live backend is unreachable
+const DEMO_JOBS = [
   { type: 'notary', label: 'Notary', title: 'Loan Signing', location: 'San Antonio, TX', pay: '$75', time: 'Today 2:00 PM', docs: '85 pages, purchase loan', urgent: true, remote: false },
   { type: 'tax', label: 'Tax', title: 'Self-Employed Tax Return', location: 'Austin, TX (Remote)', pay: '$99', time: 'This week', docs: 'Schedule C, 1099s', urgent: false, remote: true },
   { type: 'closing', label: 'Closing', title: 'Real Estate Closing', location: 'Houston, TX', pay: '$150', time: 'Tomorrow 10:00 AM', docs: 'Cash purchase, 120 pages', urgent: true, remote: false },
-  { type: 'notary', label: 'Notary', title: 'Remote Online Notary', location: 'Nationwide (Remote)', pay: '$14.99', time: 'ASAP', docs: 'Power of Attorney', urgent: true, remote: true },
-  { type: 'legal', label: 'Legal', title: 'LLC Formation Package', location: 'Dallas, TX (Remote)', pay: '$59', time: '3-day turnaround', docs: 'Operating agreement + EIN', urgent: false, remote: true },
-  { type: 'tax', label: 'Tax', title: 'Real Estate Investor Tax', location: 'San Antonio, TX', pay: '$149', time: 'This week', docs: 'Schedule E, multiple properties', urgent: false, remote: false },
-  { type: 'notary', label: 'Notary', title: 'Mobile Notary — Hospital', location: 'San Antonio, TX', pay: '$75', time: 'Today ASAP', docs: 'Medical POA, healthcare directive', urgent: true, remote: false },
-  { type: 'closing', label: 'Closing', title: 'Refinance Signing', location: 'Austin, TX', pay: '$125', time: 'Thursday 4:00 PM', docs: '110 pages, refi package', urgent: false, remote: false },
-  { type: 'legal', label: 'Legal', title: 'Demand Letter', location: 'Remote', pay: '$35', time: '48 hours', docs: 'Landlord-tenant dispute', urgent: false, remote: true },
 ];
 
+let JOBS = [];
 let currentFilter = 'all';
+
+const SERVICE_TYPE_MAP = {
+  notary_remote: 'notary', notary_mobile: 'notary',
+  tax_w2: 'tax', tax_self: 'tax', tax_investor: 'tax',
+  real_estate: 'closing',
+  legal: 'legal', business_docs: 'legal',
+};
+
+function mapApiJobToCard(j) {
+  const type = SERVICE_TYPE_MAP[j.service_type] || 'legal';
+  return {
+    id: j.id,
+    type,
+    label: type.charAt(0).toUpperCase() + type.slice(1),
+    title: j.title,
+    location: j.is_remote ? (j.location || j.state) + ' (Remote)' : (j.location || j.state),
+    pay: '$' + Number(j.worker_pay).toFixed(2),
+    time: j.scheduled_time || (j.scheduled_date ? j.scheduled_date : 'Flexible'),
+    docs: '',
+    urgent: !!j.is_urgent,
+    remote: !!j.is_remote,
+  };
+}
+
+async function loadJobsFromBackend() {
+  try {
+    const res = await fetch(API_BASE + '/jobs/board');
+    if (!res.ok) throw new Error('Bad response');
+    const data = await res.json();
+    JOBS = (data.jobs || []).map(mapApiJobToCard);
+    if (JOBS.length === 0) JOBS = DEMO_JOBS; // keep board from looking empty
+  } catch (e) {
+    console.error('Falling back to demo jobs', e);
+    JOBS = DEMO_JOBS;
+  }
+  renderJobs(currentFilter);
+}
 
 function renderJobs(filter) {
   const grid = document.getElementById('jobGrid');
@@ -1736,8 +1799,8 @@ function renderJobs(filter) {
         <h4>${job.title}</h4>
         <div class="location">📍 ${job.location}</div>
         <div class="pay">${job.pay}</div>
-        <div class="details">⏰ ${job.time}<br>📄 ${job.docs}</div>
-        <button class="claim-btn" onclick="claimJob('${job.title}')">Claim This Job</button>
+        <div class="details">⏰ ${job.time}${job.docs ? '<br>📄 ' + job.docs : ''}</div>
+        <button class="claim-btn" onclick="claimJob('${job.title.replace(/'/g, "\\'")}')">Claim This Job</button>
       </div>
     `;
   });
@@ -1797,7 +1860,7 @@ function buildQR() {
 // ── Init ─────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   buildCalendar();
-  renderJobs('all');
+  loadJobsFromBackend();
   buildQR();
 });
 </script>
