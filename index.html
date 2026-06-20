@@ -764,14 +764,15 @@
     <span>Documents Platform</span>
   </div>
   <ul class="nav-links">
-    <li><a onclick="scrollTo('services')">Services</a></li>
-    <li><a onclick="scrollTo('book')">Book Now</a></li>
-    <li><a onclick="scrollTo('jobs')">Find Work</a></li>
-    <li><a onclick="scrollTo('pricing')">Pricing</a></li>
-    <li><a onclick="scrollTo('compare')">Why Us</a></li>
+    <li><a onclick="scrollToSection('services')">Services</a></li>
+    <li><a onclick="scrollToSection('book')">Book Now</a></li>
+    <li><a onclick="scrollToSection('jobs')">Find Work</a></li>
+    <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
+    <li><a onclick="scrollToSection('compare')">Why Us</a></li>
   </ul>
   <div class="nav-cta">
     <button class="btn-outline" onclick="openModal('client')">Book a Service</button>
+    <button class="btn-outline" onclick="openModal('login')">Worker Login</button>
     <button class="btn-solid" onclick="openModal('worker')">Join as Worker</button>
   </div>
 </nav>
@@ -811,8 +812,8 @@
       The platform where clients get notary, tax, and legal document work done at prices that beat every national competitor — and where skilled workers build a real income with daily pay.
     </p>
     <div class="hero-actions">
-      <button class="btn-hero-primary" onclick="scrollTo('book')">Book a Service Now</button>
-      <button class="btn-hero-secondary" onclick="scrollTo('jobs')">Find Work Near You →</button>
+      <button class="btn-hero-primary" onclick="scrollToSection('book')">Book a Service Now</button>
+      <button class="btn-hero-secondary" onclick="scrollToSection('jobs')">Find Work Near You →</button>
     </div>
     <div class="hero-stats">
       <div>
@@ -824,8 +825,8 @@
         <div class="stat-label">Tax Returns From</div>
       </div>
       <div>
-        <div class="stat-num">$250</div>
-        <div class="stat-label">Worker First Job Bonus</div>
+        <div class="stat-num">$50</div>
+        <div class="stat-label">Bonus After 5 Jobs</div>
       </div>
       <div>
         <div class="stat-num">24h</div>
@@ -853,7 +854,7 @@
         <li><span class="step-num">04</span> Worker confirms your appointment</li>
         <li><span class="step-num">05</span> Documents done — download or receive in person</li>
       </ul>
-      <button class="path-btn" onclick="scrollTo('book')">Book Now</button>
+      <button class="path-btn" onclick="scrollToSection('book')">Book Now</button>
     </div>
     <div class="path-card worker">
       <div class="path-tag">For Workers</div>
@@ -1040,7 +1041,7 @@
 
       <div style="padding:14px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;margin-bottom:16px;font-size:13px;">
         <div style="color:var(--teal);font-weight:700;margin-bottom:8px;">Why Workers Choose Us Over Everyone Else</div>
-        <div style="margin-bottom:4px;">✓ <strong>$250 bonus</strong> on your first completed job — automatic</div>
+        <div style="margin-bottom:4px;">✓ <strong>$50 bonus</strong> after your first 5 completed jobs — automatic</div>
         <div style="margin-bottom:4px;">✓ <strong>75-85%</strong> of every job (highest in the industry)</div>
         <div style="margin-bottom:4px;">✓ <strong>Paid daily</strong> — not weekly like Notarize, Snapdocs, H&R Block</div>
         <div style="margin-bottom:4px;">✓ <strong>$0 to join</strong> — Notarize charges $249/year just to work</div>
@@ -1174,7 +1175,7 @@
           <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Worker Pay</th>
           <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Setup Fee</th>
           <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Pay Schedule</th>
-          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">First Job Bonus</th>
+          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">5-Job Bonus</th>
         </tr>
       </thead>
       <tbody>
@@ -1211,7 +1212,7 @@
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--gold);">75-85% of job</td>
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$0 FREE</td>
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">DAILY</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$250 ✓</td>
+          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$50 ✓</td>
         </tr>
       </tbody>
     </table>
@@ -1303,7 +1304,7 @@
   <div style="margin-top:32px;padding:24px 28px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
     <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--gold);">Save up to 70%</div>
     <div style="font-size:15px;color:var(--gray);font-weight:300;max-width:480px;">Compared to national competitors. Same quality. Verified workers. Fair prices.</div>
-    <button class="btn-hero-primary" style="margin-left:auto;" onclick="scrollTo('book')">Book Now</button>
+    <button class="btn-hero-primary" style="margin-left:auto;" onclick="scrollToSection('book')">Book Now</button>
   </div>
 </section>
 
@@ -1363,11 +1364,11 @@
     <div class="footer-col">
       <h5>Platform</h5>
       <ul>
-        <li><a onclick="scrollTo('book')">Book a Service</a></li>
+        <li><a onclick="scrollToSection('book')">Book a Service</a></li>
         <li><a onclick="openModal('worker')">Become a Worker</a></li>
-        <li><a onclick="scrollTo('jobs')">Job Board</a></li>
-        <li><a onclick="scrollTo('pricing')">Pricing</a></li>
-        <li><a onclick="scrollTo('compare')">Why Us</a></li>
+        <li><a onclick="scrollToSection('jobs')">Job Board</a></li>
+        <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
+        <li><a onclick="scrollToSection('compare')">Why Us</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -1377,7 +1378,7 @@
         <li><a>Contact</a></li>
         <li><a>Privacy</a></li>
         <li><a>Terms</a></li>
-        <li><a onclick="scrollTo('conference')">Conferences</a></li>
+        <li><a onclick="scrollToSection('conference')">Conferences</a></li>
       </ul>
     </div>
   </div>
@@ -1476,6 +1477,57 @@
   </div>
 </div>
 
+<!-- WORKER LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login')">×</button>
+    <div id="loginForm">
+      <div class="modal-tag worker">Worker Login</div>
+      <h3>Welcome Back</h3>
+      <p>Log in to see your jobs, earnings, and claim new work.</p>
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"></div>
+      <div id="loginError" style="display:none;color:var(--red);font-size:13px;margin-bottom:12px;"></div>
+      <button class="modal-submit worker" onclick="submitLogin()">Log In →</button>
+      <div class="modal-switch">New here? <a onclick="switchModal('worker')">Apply as a worker</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORKER DASHBOARD (shown after successful login) -->
+<div class="modal-overlay" id="dashboardModal">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closeModal('dashboard')">×</button>
+    <div class="modal-tag worker">Your Dashboard</div>
+    <h3 id="dashWelcome">Welcome back</h3>
+    <p id="dashStatus"></p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;">
+      <div style="padding:16px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;">
+        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Total Earned</div>
+        <div id="dashEarned" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);">$0</div>
+      </div>
+      <div style="padding:16px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;">
+        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Pending Payout</div>
+        <div id="dashPending" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);">$0</div>
+      </div>
+      <div style="padding:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:6px;">
+        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Jobs Completed</div>
+        <div id="dashJobsDone" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--white);">0</div>
+      </div>
+      <div style="padding:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:6px;">
+        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Available Jobs</div>
+        <div id="dashAvailable" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--white);">0</div>
+      </div>
+    </div>
+
+    <div id="dashBonusMsg" style="display:none;padding:14px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.25);border-radius:6px;margin-bottom:20px;font-size:13px;color:var(--green);"></div>
+
+    <button class="modal-submit worker" onclick="closeModal('dashboard'); scrollToSection('jobs');">View & Claim Jobs →</button>
+    <div class="modal-switch"><a onclick="logoutWorker()">Log out</a></div>
+  </div>
+</div>
+
 <!-- CLAIM JOB MODAL -->
 <div class="modal-overlay" id="claimModal">
   <div class="modal">
@@ -1519,7 +1571,7 @@ const STRIPE = {
 function goStripe(key) { window.open(STRIPE[key], '_blank'); }
 
 // ── Scroll ───────────────────────────────────────────────────
-function scrollTo(id) {
+function scrollToSection(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
@@ -1690,6 +1742,100 @@ async function submitWorkerModal() {
   document.getElementById('workerSuccess').style.display = 'block';
   if (plan !== 'starter') setTimeout(() => goStripe('worker_' + plan), 2000);
 }
+
+// ── Worker Login & Dashboard ───────────────────────────────
+async function submitLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  if (!email || !password) {
+    errEl.textContent = 'Please enter your email and password.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const form = new URLSearchParams();
+    form.append('username', email);
+    form.append('password', password);
+
+    const res = await fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
+    });
+
+    if (!res.ok) {
+      errEl.textContent = 'Login failed. Check your email and password.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const data = await res.json();
+    localStorage.setItem('pgusa_token', data.access_token);
+    localStorage.setItem('pgusa_name', data.name);
+
+    closeModal('login');
+    await showDashboard(data.access_token, data.name);
+  } catch (e) {
+    console.error('Login failed', e);
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.style.display = 'block';
+  }
+}
+
+async function showDashboard(token, name) {
+  document.getElementById('dashWelcome').textContent = 'Welcome back, ' + (name || 'there') + '!';
+
+  try {
+    const res = await fetch(API_BASE + '/workers/dashboard', {
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    if (!res.ok) throw new Error('Dashboard fetch failed');
+    const data = await res.json();
+
+    document.getElementById('dashStatus').textContent =
+      'Status: ' + data.worker.status + ' · Plan: ' + data.worker.plan + ' · Payout rate: ' + data.earnings.payout_rate;
+    document.getElementById('dashEarned').textContent = '$' + data.earnings.total_earned.toFixed(2);
+    document.getElementById('dashPending').textContent = '$' + data.earnings.pending_payout.toFixed(2);
+    document.getElementById('dashJobsDone').textContent = data.jobs.total_completed;
+    document.getElementById('dashAvailable').textContent = data.jobs.available;
+
+    const bonusEl = document.getElementById('dashBonusMsg');
+    if (data.bonuses.bonus_message) {
+      bonusEl.textContent = data.bonuses.bonus_message;
+      bonusEl.style.display = 'block';
+    } else {
+      bonusEl.style.display = 'none';
+    }
+  } catch (e) {
+    console.error('Could not load dashboard data', e);
+    document.getElementById('dashStatus').textContent = 'Could not load your stats right now — try refreshing.';
+  }
+
+  openModal('dashboard');
+}
+
+function logoutWorker() {
+  localStorage.removeItem('pgusa_token');
+  localStorage.removeItem('pgusa_name');
+  closeModal('dashboard');
+}
+
+// On page load, if already logged in, offer to jump straight to dashboard
+window.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('pgusa_token');
+  const name = localStorage.getItem('pgusa_name');
+  if (token) {
+    const navWorkerBtn = document.querySelector('.nav-cta .btn-outline:nth-child(2)');
+    if (navWorkerBtn) {
+      navWorkerBtn.textContent = 'My Dashboard';
+      navWorkerBtn.onclick = () => showDashboard(token, name);
+    }
+  }
+});
 
 // ── Calendar ─────────────────────────────────────────────────
 function buildCalendar() {
