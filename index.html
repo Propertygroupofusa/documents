@@ -1405,11 +1405,11 @@
       <h3>Book Your Service</h3>
       <p>Tell us what you need and we'll match you with a verified worker fast.</p>
       <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" placeholder="First"></div>
-        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last"></div>
+        <div class="form-group"><label>First Name</label><input type="text" id="modalFirst" placeholder="First"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="modalLast" placeholder="Last"></div>
       </div>
-      <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" placeholder="(210) 555-0000"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="modalEmail" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="modalPhone" placeholder="(210) 555-0000"></div>
       <div class="form-group">
         <label>Service Needed</label>
         <select id="modalService">
@@ -1423,8 +1423,8 @@
         </select>
       </div>
       <div class="form-group"><label>State</label>
-        <select>
-          <option>Texas</option><option>California</option><option>Florida</option><option>New York</option><option>Other</option>
+        <select id="modalState">
+          <option value="Texas">Texas</option><option value="California">California</option><option value="Florida">Florida</option><option value="New York">New York</option><option value="Other">Other</option>
         </select>
       </div>
       <button class="modal-submit client" onclick="submitClientModal()">Book & Pay →</button>
@@ -1812,6 +1812,36 @@ async function submitWorker() {
 
 async function submitClientModal() {
   const service = document.getElementById('modalService').value;
+  const first = document.getElementById('modalFirst').value;
+  const last = document.getElementById('modalLast').value;
+  const email = document.getElementById('modalEmail').value;
+  const phone = document.getElementById('modalPhone').value;
+  const state = document.getElementById('modalState').value;
+
+  if (!service) { alert('Please select a service.'); return; }
+  if (!first || !email) { alert('Please fill in your name and email.'); return; }
+
+  // Create real job in backend
+  try {
+    await fetch(API_BASE + '/jobs/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_type: service,
+        description: `Client: ${first} ${last} | Email: ${email} | Phone: ${phone}`,
+        location: state,
+        state: state,
+        is_remote: service === 'notary_remote',
+        scheduled_date: null,
+        scheduled_time: null,
+        is_urgent: false,
+        notes: null,
+      })
+    });
+  } catch(e) {
+    console.error('Modal job creation failed', e);
+  }
+
   document.getElementById('clientForm').style.display = 'none';
   document.getElementById('clientSuccess').style.display = 'block';
   if (service) setTimeout(() => goStripe(service), 1500);
