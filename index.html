@@ -335,6 +335,10 @@
     transition: all 0.2s;
     text-align: center;
     font-size: 13px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .service-option:hover,
@@ -500,6 +504,8 @@
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Inter', sans-serif;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
   }
 
   .filter-btn:hover,
@@ -586,6 +592,8 @@
     padding: 32px 28px;
     transition: border-color 0.2s;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
   }
 
   .service-card:hover { border-color: var(--gold); }
@@ -782,7 +790,7 @@
   <div class="ticker-inner">
     <div class="ticker-item">First Month Pro FREE <span>$29 Value — No Card Needed</span></div>
     <div class="ticker-item">75-85% Worker Pay <span>Highest In The Industry</span></div>
-    <div class="ticker-item">Paid DAILY <span>Not Weekly Like Everyone Else</span></div>
+    <div class="ticker-item">Paid Every 4 Days <span>Faster Than Weekly</span></div>
     <div class="ticker-item">$25 Referral Bonus <span>Every Worker You Bring In</span></div>
     <div class="ticker-item">5-Star Bonus <span>80% Pay For Top Rated Workers</span></div>
     <div class="ticker-item">Volume Bonus <span>85% When You Hit 10+ Jobs/Month</span></div>
@@ -792,7 +800,7 @@
     <div class="ticker-item">Join FREE <span>No Setup Fees Ever</span></div>
     <div class="ticker-item">First Month Pro FREE <span>$29 Value — No Card Needed</span></div>
     <div class="ticker-item">75-85% Worker Pay <span>Highest In The Industry</span></div>
-    <div class="ticker-item">Paid DAILY <span>Not Weekly Like Everyone Else</span></div>
+    <div class="ticker-item">Paid Every 4 Days <span>Faster Than Weekly</span></div>
     <div class="ticker-item">$25 Referral Bonus <span>Every Worker You Bring In</span></div>
     <div class="ticker-item">5-Star Bonus <span>80% Pay For Top Rated Workers</span></div>
     <div class="ticker-item">Volume Bonus <span>85% When You Hit 10+ Jobs/Month</span></div>
@@ -809,7 +817,7 @@
     <div class="hero-eyebrow">Property Group USA — Documents</div>
     <h1>Documents Done.<br><em>Revenue Built.</em><br>Nationwide.</h1>
     <p class="hero-sub">
-      The platform where clients get notary, tax, and legal document work done at prices that beat every national competitor — and where skilled workers build a real income with daily pay.
+      The platform where clients get notary, tax, and legal document work done at prices that beat every national competitor — and where skilled workers build a real income with reliable pay every 4 days.
     </p>
     <div class="hero-actions">
       <button class="btn-hero-primary" onclick="scrollToSection('book')">Book a Service Now</button>
@@ -859,13 +867,13 @@
     <div class="path-card worker">
       <div class="path-tag">For Workers</div>
       <h3>Ready to Earn?</h3>
-      <p>Sign up free, get matched with clients in your area automatically, get paid daily.</p>
+      <p>Sign up free, get matched with clients in your area automatically, get paid every 4 days.</p>
       <ul class="path-steps">
         <li><span class="step-num">01</span> Create your free worker profile</li>
         <li><span class="step-num">02</span> Submit your credentials and certifications</li>
         <li><span class="step-num">03</span> Get approved in 24–48 hours</li>
         <li><span class="step-num">04</span> Receive automatic job matches near you</li>
-        <li><span class="step-num">05</span> Complete work and get paid daily</li>
+        <li><span class="step-num">05</span> Complete work and get paid every 4 days</li>
       </ul>
       <button class="path-btn" onclick="openModal('worker')">Apply as a Worker</button>
     </div>
@@ -1043,7 +1051,7 @@
         <div style="color:var(--teal);font-weight:700;margin-bottom:8px;">Why Workers Choose Us Over Everyone Else</div>
         <div style="margin-bottom:4px;">✓ <strong>$50 bonus</strong> after your first 5 completed jobs — automatic</div>
         <div style="margin-bottom:4px;">✓ <strong>75-85%</strong> of every job (highest in the industry)</div>
-        <div style="margin-bottom:4px;">✓ <strong>Paid daily</strong> — not weekly like Notarize, Snapdocs, H&R Block</div>
+        <div style="margin-bottom:4px;">✓ <strong>Paid every 4 days</strong> — faster than weekly like Notarize, Snapdocs, H&R Block</div>
         <div style="margin-bottom:4px;">✓ <strong>$0 to join</strong> — Notarize charges $249/year just to work</div>
         <div style="margin-bottom:4px;">✓ <strong>$25 referral bonus</strong> for every worker you bring in</div>
         <div style="margin-bottom:4px;">✓ <strong>5-star bonus</strong> — earn 80% automatically with great ratings</div>
@@ -1122,8 +1130,8 @@
 <!-- REVENUE MODEL -->
 <section class="section dark-section" id="workers">
   <div class="section-label">Worker Pay Structure</div>
-  <div class="section-title">Transparent splits.<br>Daily pay. No games.</div>
-  <p class="section-sub">We pay more than every competitor — and we pay daily, not weekly. Here's exactly how it works.</p>
+  <div class="section-title">Transparent splits.<br>Reliable pay. No games.</div>
+  <p class="section-sub">We pay more than every competitor — and we pay every 4 days, faster than weekly. Here's exactly how it works.</p>
 
   <div class="revenue-bar">
     <div class="revenue-grid">
@@ -1211,7 +1219,7 @@
           <td style="padding:10px 14px;font-size:14px;font-weight:700;color:var(--gold);">Property Group USA ✓</td>
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--gold);">75-85% of job</td>
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$0 FREE</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">DAILY</td>
+          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">EVERY 4 DAYS</td>
           <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$50 ✓</td>
         </tr>
       </tbody>
@@ -1236,7 +1244,7 @@
         <li>Basic job matching</li>
         <li>75% payout per job</li>
         <li>First month Pro FREE ($29 value)</li>
-        <li>Daily pay</li>
+        <li>Paid every 4 days</li>
       </ul>
       <button class="pricing-btn" onclick="openModal('worker')">Start Free</button>
     </div>
@@ -1437,7 +1445,7 @@
     <div id="workerForm">
       <div class="modal-tag worker">Worker</div>
       <h3>Start Earning Today</h3>
-      <p>First month Pro plan FREE ($29 value). $50 bonus after 5 jobs. 75% of every job. Paid daily. Free to join.</p>
+      <p>First month Pro plan FREE ($29 value). $50 bonus after 5 jobs. 75% of every job. Paid every 4 days. Free to join.</p>
       <div class="form-row">
         <div class="form-group"><label>First Name</label><input type="text" placeholder="First"></div>
         <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last"></div>
@@ -1523,8 +1531,81 @@
 
     <div id="dashBonusMsg" style="display:none;padding:14px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.25);border-radius:6px;margin-bottom:20px;font-size:13px;color:var(--green);"></div>
 
+    <div id="dashPayoutBox" style="display:none;padding:14px;border-radius:6px;margin-bottom:20px;font-size:13px;"></div>
+
+    <div id="dashComplianceBox" style="display:none;padding:14px;border-radius:6px;margin-bottom:20px;font-size:13px;"></div>
+
+    <button class="modal-submit worker" style="background:transparent;border:1px solid var(--teal);color:var(--teal);" onclick="openModal('w9')">Submit W-9 →</button>
+    <button class="modal-submit worker" style="background:transparent;border:1px solid var(--gold);color:var(--gold);margin-top:8px;" onclick="openModal('credentials')">Submit Notary/RON Credentials →</button>
+
     <button class="modal-submit worker" onclick="closeModal('dashboard'); scrollToSection('jobs');">View & Claim Jobs →</button>
     <div class="modal-switch"><a onclick="logoutWorker()">Log out</a></div>
+  </div>
+</div>
+
+<!-- W-9 MODAL -->
+<div class="modal-overlay" id="w9Modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('w9')">×</button>
+    <div id="w9Form">
+      <div class="modal-tag worker">Tax Info</div>
+      <h3>Submit W-9</h3>
+      <p>Required before $600+ in earnings — used to issue your 1099-NEC. We only store the last 4 digits of your SSN/EIN here; your full tax ID is collected securely by Stripe when you set up payouts.</p>
+      <div class="form-group"><label>Legal Name (as shown on tax return)</label><input type="text" id="w9Name" placeholder="Full legal name"></div>
+      <div class="form-group">
+        <label>Tax Classification</label>
+        <select id="w9Classification">
+          <option value="individual">Individual / Sole Proprietor</option>
+          <option value="llc">LLC</option>
+          <option value="corporation">Corporation</option>
+          <option value="partnership">Partnership</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Last 4 of SSN or EIN</label><input type="text" id="w9Tin" maxlength="4" placeholder="1234"></div>
+      <div class="form-group"><label>Address</label><textarea id="w9Address" placeholder="Street, City, State, ZIP"></textarea></div>
+      <button class="modal-submit worker" onclick="submitW9()">Submit W-9 →</button>
+    </div>
+    <div class="success-state" id="w9Success">
+      <span class="success-icon">✅</span>
+      <h3>W-9 Saved</h3>
+      <p>Your tax info is on file.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CREDENTIALS MODAL -->
+<div class="modal-overlay" id="credentialsModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('credentials')">×</button>
+    <div id="credentialsForm">
+      <div class="modal-tag worker">Credentials</div>
+      <h3>Notary / RON Credentials</h3>
+      <p>Required to claim notary, RON, or real estate closing jobs. Submitted info is reviewed by our team before approval — usually within 24–48 hours.</p>
+      <div class="form-group"><label>Notary Commission Number</label><input type="text" id="credCommissionNum" placeholder="e.g. 123456789"></div>
+      <div class="form-group"><label>Commission State</label>
+        <select id="credCommissionState">
+          <option value="">Select state</option>
+          <option>Texas</option><option>California</option><option>Florida</option>
+          <option>New York</option><option>Georgia</option><option>Illinois</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Commission Expiration Date</label><input type="date" id="credExpires"></div>
+      <div class="form-group">
+        <label>Remote Online Notary (RON) Authorized?</label>
+        <select id="credRonAuthorized">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+      <div class="form-group"><label>RON Authorization State (if applicable)</label><input type="text" id="credRonState" placeholder="State that authorized your RON status"></div>
+      <button class="modal-submit worker" onclick="submitCredentials()">Submit for Review →</button>
+    </div>
+    <div class="success-state" id="credentialsSuccess">
+      <span class="success-icon">✅</span>
+      <h3>Submitted for Review</h3>
+      <p>We'll verify your credentials and notify you once approved.</p>
+    </div>
   </div>
 </div>
 
@@ -1815,7 +1896,149 @@ async function showDashboard(token, name) {
     document.getElementById('dashStatus').textContent = 'Could not load your stats right now — try refreshing.';
   }
 
+  await checkPayoutStatus(token);
+  await checkComplianceStatus(token);
   openModal('dashboard');
+}
+
+async function checkComplianceStatus(token) {
+  const box = document.getElementById('dashComplianceBox');
+  try {
+    const res = await fetch(API_BASE + '/workers/compliance/status', {
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    if (!res.ok) throw new Error('Compliance check failed');
+    const data = await res.json();
+
+    box.style.display = 'block';
+    const items = [];
+    items.push(data.w9_submitted ? '✅ W-9 on file' : '⚠️ W-9 not submitted yet');
+    if (!data.credentials_submitted) {
+      items.push('⚠️ Notary/RON credentials not submitted');
+    } else if (!data.credentials_verified) {
+      items.push('⏳ Credentials submitted — pending review');
+    } else {
+      items.push('✅ Credentials verified — you can claim notary/RON/closing jobs');
+    }
+
+    const allGood = data.w9_submitted && data.credentials_verified;
+    box.style.background = allGood ? 'rgba(46,204,113,0.1)' : 'rgba(201,168,76,0.1)';
+    box.style.border = allGood ? '1px solid rgba(46,204,113,0.25)' : '1px solid rgba(201,168,76,0.25)';
+    box.innerHTML = items.join('<br>');
+  } catch (e) {
+    console.error('Compliance status check failed', e);
+    box.style.display = 'none';
+  }
+}
+
+async function submitW9() {
+  const token = localStorage.getItem('pgusa_token');
+  const legal_name = document.getElementById('w9Name').value;
+  const tax_classification = document.getElementById('w9Classification').value;
+  const tin_last4 = document.getElementById('w9Tin').value;
+  const address = document.getElementById('w9Address').value;
+
+  if (!legal_name || !tin_last4 || !address) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  if (tin_last4.length !== 4 || !/^\d{4}$/.test(tin_last4)) {
+    alert('Last 4 of SSN/EIN must be exactly 4 digits.');
+    return;
+  }
+
+  try {
+    const res = await fetch(API_BASE + '/workers/compliance/w9', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ legal_name, tax_classification, tin_last4, address }),
+    });
+    if (!res.ok) { alert('Could not save W-9. Please try again.'); return; }
+
+    document.getElementById('w9Form').style.display = 'none';
+    document.getElementById('w9Success').style.display = 'block';
+  } catch (e) {
+    console.error(e);
+    alert('Network error — please try again.');
+  }
+}
+
+async function submitCredentials() {
+  const token = localStorage.getItem('pgusa_token');
+  const notary_commission_number = document.getElementById('credCommissionNum').value || null;
+  const notary_commission_state = document.getElementById('credCommissionState').value || null;
+  const expiresRaw = document.getElementById('credExpires').value;
+  const notary_commission_expires = expiresRaw || null;
+  const ron_authorized = document.getElementById('credRonAuthorized').value === 'true';
+  const ron_authorization_state = document.getElementById('credRonState').value || null;
+
+  try {
+    const res = await fetch(API_BASE + '/workers/compliance/credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        notary_commission_number, notary_commission_state,
+        notary_commission_expires, ron_authorized, ron_authorization_state,
+      }),
+    });
+    if (!res.ok) { alert('Could not submit credentials. Please try again.'); return; }
+
+    document.getElementById('credentialsForm').style.display = 'none';
+    document.getElementById('credentialsSuccess').style.display = 'block';
+  } catch (e) {
+    console.error(e);
+    alert('Network error — please try again.');
+  }
+}
+
+async function checkPayoutStatus(token) {
+  const box = document.getElementById('dashPayoutBox');
+  try {
+    const res = await fetch(API_BASE + '/payments/worker/payout-status', {
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    if (!res.ok) throw new Error('Status check failed');
+    const data = await res.json();
+
+    box.style.display = 'block';
+    if (data.payouts_enabled) {
+      box.style.background = 'rgba(46,204,113,0.1)';
+      box.style.border = '1px solid rgba(46,204,113,0.25)';
+      box.innerHTML = '✅ Your bank account is connected. Payouts go out every 4 days.';
+    } else if (data.connected) {
+      box.style.background = 'rgba(201,168,76,0.1)';
+      box.style.border = '1px solid rgba(201,168,76,0.25)';
+      box.innerHTML = '⚠️ Almost done — finish linking your bank account to get paid. <br><br><button class="modal-submit worker" style="margin-top:8px;" onclick="startPayoutSetup()">Finish Bank Setup →</button>';
+    } else {
+      box.style.background = 'rgba(26,139,139,0.1)';
+      box.style.border = '1px solid rgba(26,139,139,0.25)';
+      box.innerHTML = '💳 Add your bank account to start getting paid for completed jobs. <br><br><button class="modal-submit worker" style="margin-top:8px;" onclick="startPayoutSetup()">Set Up Payouts →</button>';
+    }
+  } catch (e) {
+    console.error('Payout status check failed', e);
+    box.style.display = 'none';
+  }
+}
+
+async function startPayoutSetup() {
+  const token = localStorage.getItem('pgusa_token');
+  if (!token) return;
+
+  try {
+    const res = await fetch(API_BASE + '/payments/worker/connect-onboarding', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    if (!res.ok) {
+      alert('Could not start bank setup. Please try again.');
+      return;
+    }
+    const data = await res.json();
+    window.location.href = data.onboarding_url;
+  } catch (e) {
+    console.error('Payout setup failed', e);
+    alert('Network error — please try again.');
+  }
 }
 
 function logoutWorker() {
@@ -1946,7 +2169,7 @@ function renderJobs(filter) {
         <div class="location">📍 ${job.location}</div>
         <div class="pay">${job.pay}</div>
         <div class="details">⏰ ${job.time}${job.docs ? '<br>📄 ' + job.docs : ''}</div>
-        <button class="claim-btn" onclick="claimJob('${job.title.replace(/'/g, "\\'")}')">Claim This Job</button>
+        <button class="claim-btn" onclick="claimJob('${job.id || ''}', '${job.title.replace(/'/g, "\\'")}')">Claim This Job</button>
       </div>
     `;
   });
@@ -1959,36 +2182,74 @@ function filterJobs(filter, btn) {
   renderJobs(filter);
 }
 
-// ── Claim Job (proper modal, replaces old prompt()) ──────────
+// ── Claim Job (real backend claim, requires worker login) ────
+let claimingJobId = null;
 let claimingJobTitle = null;
 
-function claimJob(title) {
+function claimJob(jobId, title) {
+  const token = localStorage.getItem('pgusa_token');
+
+  if (!token) {
+    closeModal('claim');
+    alert('Please log in as a worker first to claim jobs.');
+    openModal('login');
+    return;
+  }
+
+  if (!jobId) {
+    alert('This is a sample listing and can\'t be claimed yet. Check back once real jobs are posted in your area.');
+    return;
+  }
+
+  claimingJobId = jobId;
   claimingJobTitle = title;
   document.getElementById('claimJobTitle').textContent = 'Claim: ' + title;
+
+  // Skip the contact-info form for logged-in workers — go straight to confirm
+  document.getElementById('claimForm').innerHTML = `
+    <div class="modal-tag worker">Claim Job</div>
+    <h3>Claim: ${title}</h3>
+    <p>You're logged in. Confirm to claim this job — it will be assigned to you immediately.</p>
+    <button class="modal-submit worker" onclick="submitClaim()">Confirm Claim →</button>
+  `;
   openModal('claim');
 }
 
 async function submitClaim() {
-  const first = document.getElementById('claimFirst').value;
-  const email = document.getElementById('claimEmail').value;
-  if (!first || !email) { alert('Please fill in your name and email.'); return; }
+  const token = localStorage.getItem('pgusa_token');
+  if (!token || !claimingJobId) {
+    alert('Something went wrong. Please log in again.');
+    return;
+  }
 
   try {
-    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
+    const res = await fetch(API_BASE + '/workers/jobs/' + claimingJobId + '/claim', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        type: 'JOB CLAIM',
-        name: first + ' ' + document.getElementById('claimLast').value,
-        email,
-        phone: document.getElementById('claimPhone').value,
-        job: claimingJobTitle,
-      })
+      headers: { 'Authorization': 'Bearer ' + token },
     });
-  } catch(e) {}
 
-  document.getElementById('claimForm').style.display = 'none';
-  document.getElementById('claimSuccess').style.display = 'block';
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert(err.detail || 'Could not claim this job. It may already be taken, or your account may not be approved yet.');
+      return;
+    }
+
+    const data = await res.json();
+    document.getElementById('claimForm').style.display = 'none';
+    const successEl = document.getElementById('claimSuccess');
+    successEl.innerHTML = `
+      <span class="success-icon">✅</span>
+      <h3>Job Claimed!</h3>
+      <p>You'll earn $${data.worker_pay}. This job is now on your dashboard.</p>
+    `;
+    successEl.style.display = 'block';
+
+    // Refresh the job board so the claimed job disappears from "open" listings
+    loadJobsFromBackend();
+  } catch (e) {
+    console.error('Claim request failed', e);
+    alert('Network error — please try again.');
+  }
 }
 
 // ── QR Code (simple SVG-based) ───────────────────────────────
