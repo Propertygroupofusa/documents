@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA — Alternate History Engine</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void:    #080C10;
+  --deep:    #0D1117;
+  --surface: #161B22;
+  --raised:  #1C2330;
+  --border:  #2A3441;
+  --gold:    #C9A84C;
+  --gold-dim:#7A6430;
+  --teal:    #1A8B8B;
+  --green:   #2ECC71;
+  --red:     #E74C3C;
+  --amber:   #F39C12;
+  --mist:    #8B9BB4;
+  --text:    #CDD9E5;
+  --bright:  #E6EDF3;
+  --mono:    'Courier New', Courier, monospace;
+  --sans:    system-ui, -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 52px 0 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 52px;
+}
+
+.header-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-tag::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.header-title {
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  color: var(--bright);
+  margin-bottom: 14px;
+}
+
+.header-title .branch {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.header-sub {
+  font-size: 15px;
+  color: var(--mist);
+  max-width: 580px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+/* Platform state bar */
+.state-bar {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.state-cell {
+  flex: 1;
+  background: var(--surface);
+  padding: 14px 16px;
+  min-width: 0;
+}
+
+.state-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 5px;
+}
+
+.state-val {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── FORKING TIMELINE ── */
+.timeline-section {
+  margin-bottom: 56px;
+}
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bright);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--mist);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.timeline-svg-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 20px;
+  overflow-x: auto;
+}
+
+svg.fork-timeline {
+  display: block;
+  min-width: 600px;
+  width: 100%;
+  height: auto;
+}
+
+/* ── SCENARIO CARDS ── */
+.scenarios-section { margin-bottom: 56px; }
+
+.scenarios-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scenario-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.scenario-card:hover { border-color: var(--gold-dim); }
+
+.scenario-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.scenario-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold-dim);
+  letter-spacing: 1px;
+}
+
+.scenario-title-wrap {}
+
+.scenario-dimension {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 3px;
+}
+
+.scenario-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bright);
+  letter-spacing: -0.2px;
+}
+
+.scenario-toggle {
+  font-size: 18px;
+  color: var(--gold-dim);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+
+.scenario-card.open .scenario-toggle {
+  transform: rotate(45deg);
+}
+
+.scenario-body {
+  display: none;
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.scenario-card.open .scenario-body { display: block; }
+
+/* Reality vs Alternate split */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+@media (max-width: 580px) { .split { grid-template-columns: 1fr; } }
+
+.split-panel {
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.split-panel.reality {
+  background: rgba(139,155,180,0.07);
+  border: 1px solid rgba(139,155,180,0.15);
+}
+
+.split-panel.alternate {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.split-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.split-panel.reality .split-label { color: var(--mist); }
+.split-panel.alternate .split-label { color: var(--gold); }
+
+.split-decision {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bright);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.split-rationale {
+  font-size: 12px;
+  color: var(--mist);
+  line-height: 1.6;
+}
+
+/* Score meters */
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 580px) { .score-row { grid-template-columns: 1fr; } }
+
+.score-block {
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.score-metric {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 8px;
+}
+
+.score-bars { display: flex; flex-direction: column; gap: 6px; }
+
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-bar-label {
+  font-size: 10px;
+  color: var(--mist);
+  min-width: 60px;
+  font-family: var(--mono);
+}
+
+.score-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+.fill-reality  { background: var(--mist); }
+.fill-alt      { background: var(--gold); }
+
+.score-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  min-width: 28px;
+  text-align: right;
+}
+
+.num-reality { color: var(--mist); }
+.num-alt     { color: var(--gold); }
+
+/* Delta badge */
+.delta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.delta-badge {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.delta-pos { color: var(--green); }
+.delta-neg { color: var(--red); }
+.delta-neu { color: var(--amber); }
+
+.delta-label {
+  font-size: 13px;
+  color: var(--mist);
+  line-height: 1.5;
+}
+
+.delta-label strong { color: var(--bright); }
+
+/* AI analysis button */
+.analyze-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  margin-top: 8px;
+}
+
+.analyze-btn:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: var(--gold);
+}
+
+.analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ai-spin {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* AI output area */
+.ai-result {
+  margin-top: 14px;
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 18px 20px;
+  border-left: 2px solid var(--gold-dim);
+  display: none;
+}
+
+.ai-result-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+}
+
+.ai-result-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+.ai-improvement {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(46,204,113,0.07);
+  border: 1px solid rgba(46,204,113,0.2);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  line-height: 1.5;
+}
+
+/* ── OVERALL SCORE ── */
+.overall-section { margin-bottom: 56px; }
+
+.overall-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.overall-title {
+  font-size: 13px;
+  font-family: var(--mono);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 24px;
+}
+
+.overall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.overall-metric {
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+}
+
+.om-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 10px;
+}
+
+.om-now {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mist);
+  margin-bottom: 4px;
+}
+
+.om-alt {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: -1px;
+}
+
+.om-delta {
+  font-family: var(--mono);
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.om-delta.up   { color: var(--green); }
+.om-delta.down { color: var(--red); }
+.om-delta.flat { color: var(--amber); }
+
+/* Verdict */
+.verdict {
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(26,139,139,0.04));
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  padding: 24px 28px;
+}
+
+.verdict-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+}
+
+.verdict-text {
+  font-size: 15px;
+  color: var(--bright);
+  line-height: 1.75;
+}
+
+/* ── CUSTOM SCENARIO ── */
+.custom-section { margin-bottom: 56px; }
+
+.custom-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 560px) { .input-grid { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--bright);
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--gold-dim);
+}
+
+.field select option { background: var(--deep); }
+
+.field.full { grid-column: 1 / -1; }
+
+.run-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--void);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 28px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.run-btn:hover { opacity: 0.85; }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.run-spin {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(8,12,16,0.3);
+  border-top-color: var(--void);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+.custom-output {
+  margin-top: 20px;
+  display: none;
+}
+
+/* Score card generated */
+.gen-score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.gen-metric {
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.gen-metric-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 8px;
+}
+
+.gen-metric-score {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.score-great  { color: var(--green); }
+.score-good   { color: var(--gold); }
+.score-ok     { color: var(--amber); }
+.score-poor   { color: var(--red); }
+
+.gen-analysis {
+  background: var(--raised);
+  border-radius: 8px;
+  padding: 20px 22px;
+  border-left: 2px solid var(--gold-dim);
+}
+
+.gen-analysis-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+}
+
+.gen-analysis-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.gen-improvement-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(46,204,113,0.07);
+  border: 1px solid rgba(46,204,113,0.2);
+  border-radius: 6px;
+}
+
+.gen-improvement-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--green);
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.gen-improvement-text {
+  font-size: 13px;
+  color: var(--mist);
+  line-height: 1.5;
+}
+
+.gen-improvement-text strong { color: var(--bright); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="header-tag">PGUSA Documents Platform · Strategic Intelligence</div>
+  <h1 class="header-title">Alternate<br><span class="branch">History</span><br>Engine</h1>
+  <p class="header-sub">Five real launch decisions. Five alternate paths not taken. AI-scored analysis of what would have happened — and what it means for where we go next.</p>
+
+  <div class="state-bar">
+    <div class="state-cell">
+      <div class="state-label">Platform</div>
+      <div class="state-val">PGUSA Docs</div>
+    </div>
+    <div class="state-cell">
+      <div class="state-label">Worker Base Rate</div>
+      <div class="state-val">75% payout</div>
+    </div>
+    <div class="state-cell">
+      <div class="state-label">Plans</div>
+      <div class="state-val">Free / $29 / $79</div>
+    </div>
+    <div class="state-cell">
+      <div class="state-label">Stack</div>
+      <div class="state-val">FastAPI + Railway</div>
+    </div>
+    <div class="state-cell">
+      <div class="state-label">Launch Market</div>
+      <div class="state-val">Texas · National</div>
+    </div>
+    <div class="state-cell">
+      <div class="state-label">Services</div>
+      <div class="state-val">5 service types</div>
+    </div>
+  </div>
+</header>
+
+<!-- FORKING TIMELINE -->
+<div class="timeline-section">
+  <div class="section-eyebrow">Decision Map</div>
+  <div class="section-title">Where the paths diverged</div>
+  <div class="section-desc">Every launch involves dozens of decisions. These five shaped everything downstream — pricing architecture, worker quality, platform trust, and growth velocity.</div>
+
+  <div class="timeline-svg-wrap">
+    <svg class="fork-timeline" viewBox="0 0 900 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main timeline spine -->
+      <line x1="60" y1="130" x2="840" y2="130" stroke="#2A3441" stroke-width="1.5"/>
+
+      <!-- DECISION NODES -->
+      <!-- Node 1: Pricing -->
+      <circle cx="160" cy="130" r="6" fill="#C9A84C"/>
+      <text x="160" y="118" fill="#C9A84C" font-family="Courier New" font-size="9" text-anchor="middle">PRICING</text>
+      <!-- Reality fork up -->
+      <path d="M160 130 Q220 80 280 75" stroke="#8B9BB4" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <circle cx="280" cy="75" r="4" fill="#8B9BB4"/>
+      <text x="280" y="63" fill="#8B9BB4" font-family="Courier New" font-size="8" text-anchor="middle">REALITY</text>
+      <text x="280" y="53" fill="#8B9BB4" font-family="Courier New" font-size="7" text-anchor="middle">$14.99–$149</text>
+      <!-- Alt fork down -->
+      <path d="M160 130 Q220 180 280 185" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+      <circle cx="280" cy="185" r="4" fill="#C9A84C" opacity="0.7"/>
+      <text x="280" y="198" fill="#C9A84C" font-family="Courier New" font-size="8" text-anchor="middle" opacity="0.8">ALTERNATE</text>
+      <text x="280" y="208" fill="#C9A84C" font-family="Courier New" font-size="7" text-anchor="middle" opacity="0.8">Value-tier entry</text>
+
+      <!-- Node 2: Worker Tiers -->
+      <circle cx="330" cy="130" r="6" fill="#C9A84C"/>
+      <text x="330" y="118" fill="#C9A84C" font-family="Courier New" font-size="9" text-anchor="middle">TIERS</text>
+      <path d="M280 75 Q305 75 330 130" stroke="#8B9BB4" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+      <path d="M280 185 Q305 185 330 130" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+
+      <!-- Node 3: Stack -->
+      <circle cx="500" cy="130" r="6" fill="#C9A84C"/>
+      <text x="500" y="118" fill="#C9A84C" font-family="Courier New" font-size="9" text-anchor="middle">STACK</text>
+      <path d="M330 130 Q365 80 440 72" stroke="#8B9BB4" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <circle cx="440" cy="72" r="4" fill="#8B9BB4"/>
+      <text x="440" y="60" fill="#8B9BB4" font-family="Courier New" font-size="8" text-anchor="middle">FastAPI/Railway</text>
+      <path d="M330 130 Q365 180 440 188" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+      <circle cx="440" cy="188" r="4" fill="#C9A84C" opacity="0.7"/>
+      <text x="440" y="202" fill="#C9A84C" font-family="Courier New" font-size="8" text-anchor="middle" opacity="0.8">No-code first</text>
+      <path d="M440 72 Q470 72 500 130" stroke="#8B9BB4" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+      <path d="M440 188 Q470 188 500 130" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+
+      <!-- Node 4: Go-to-market -->
+      <circle cx="660" cy="130" r="6" fill="#C9A84C"/>
+      <text x="660" y="118" fill="#C9A84C" font-family="Courier New" font-size="9" text-anchor="middle">GTM</text>
+      <path d="M500 130 Q580 78 630 75" stroke="#8B9BB4" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <circle cx="630" cy="75" r="4" fill="#8B9BB4"/>
+      <text x="630" y="63" fill="#8B9BB4" font-family="Courier New" font-size="8" text-anchor="middle">Texas-first</text>
+      <path d="M500 130 Q580 182 630 185" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+      <circle cx="630" cy="185" r="4" fill="#C9A84C" opacity="0.7"/>
+      <text x="630" y="199" fill="#C9A84C" font-family="Courier New" font-size="8" text-anchor="middle" opacity="0.8">B2B-first</text>
+      <path d="M630 75 Q645 75 660 130" stroke="#8B9BB4" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+      <path d="M630 185 Q645 185 660 130" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+
+      <!-- Node 5: Onboarding -->
+      <circle cx="800" cy="130" r="6" fill="#C9A84C"/>
+      <text x="800" y="118" fill="#C9A84C" font-family="Courier New" font-size="9" text-anchor="middle">ONBOARD</text>
+      <path d="M660 130 Q730 80 800 130" stroke="#8B9BB4" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.7"/>
+      <path d="M660 130 Q730 180 800 130" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+
+      <!-- Legend -->
+      <line x1="60" y1="235" x2="100" y2="235" stroke="#8B9BB4" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="108" y="239" fill="#8B9BB4" font-family="Courier New" font-size="9">REALITY (path taken)</text>
+      <line x1="240" y1="235" x2="280" y2="235" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.7"/>
+      <text x="288" y="239" fill="#C9A84C" font-family="Courier New" font-size="9" opacity="0.8">ALTERNATE (what if)</text>
+    </svg>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="scenarios-section">
+  <div class="section-eyebrow">Five Decisions · Five Alternate Paths</div>
+  <div class="section-title">What if we had chosen differently?</div>
+  <div class="section-desc">Click any scenario to open the full analysis. Each one scores Reality vs Alternate across four dimensions — then runs an AI deep-dive on request.</div>
+
+  <div class="scenarios-grid">
+
+    <!-- SCENARIO 1: PRICING -->
+    <div class="scenario-card" id="sc1">
+      <div class="scenario-header" onclick="toggleScenario('sc1')">
+        <div class="scenario-num">01 / 05</div>
+        <div class="scenario-title-wrap">
+          <div class="scenario-dimension">Pricing Architecture</div>
+          <div class="scenario-name">What if we launched with a premium-only pricing model?</div>
+        </div>
+        <div class="scenario-toggle">+</div>
+      </div>
+      <div class="scenario-body">
+        <div class="split">
+          <div class="split-panel reality">
+            <div class="split-label">Reality — What we built</div>
+            <div class="split-decision">Tiered pricing: RON at $14.99, Mobile Notary $39, Tax Prep $49–$149. Low-cost entry to capture volume and compete on price vs national platforms.</div>
+            <div class="split-rationale">Rationale: Undercut competitors (TurboTax $300+, Notarize $25+) to attract first customers and prove demand before raising prices.</div>
+          </div>
+          <div class="split-panel alternate">
+            <div class="split-label">Alternate — What if</div>
+            <div class="split-decision">Premium positioning: Notary $89 flat, Tax Prep $149–$299, Real Estate $199. "White glove, verified professional" framing. No race to the bottom.</div>
+            <div class="split-rationale">Premise: The market for trusted, vetted document services is inelastic at the top. Clients who need a real estate closing done right will pay $199, not $99.</div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block">
+            <div class="score-metric">Revenue per transaction</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:38%"></div></div>
+                <div class="score-num num-reality">$62 avg</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:82%"></div></div>
+                <div class="score-num num-alt">$164 avg</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Client acquisition speed</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:72%"></div></div>
+                <div class="score-num num-reality">72</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:38%"></div></div>
+                <div class="score-num num-alt">38</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Worker payout quality</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:55%"></div></div>
+                <div class="score-num num-reality">55</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:88%"></div></div>
+                <div class="score-num num-alt">88</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Platform sustainability</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:48%"></div></div>
+                <div class="score-num num-reality">48</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:79%"></div></div>
+                <div class="score-num num-alt">79</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-row">
+          <div class="delta-badge delta-pos">+164%</div>
+          <div class="delta-label"><strong>Revenue per transaction advantage</strong> — Premium pricing would have generated $164 avg vs $62 reality, but with ~47% slower client acquisition. Break-even point: ~Month 4 at comparable volume.</div>
+        </div>
+
+        <button class="analyze-btn" onclick="runScenarioAI(1, this)">
+          <div class="ai-spin"></div>
+          <span>Run Deep Analysis</span>
+        </button>
+        <div class="ai-result" id="ai-result-1">
+          <div class="ai-result-label">AI Analysis</div>
+          <div class="ai-result-text"></div>
+          <div class="ai-improvement"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIO 2: WORKER TIERS -->
+    <div class="scenario-card" id="sc2">
+      <div class="scenario-header" onclick="toggleScenario('sc2')">
+        <div class="scenario-num">02 / 05</div>
+        <div class="scenario-title-wrap">
+          <div class="scenario-dimension">Worker Tier Structure</div>
+          <div class="scenario-name">What if we launched with credential-gated access from day one?</div>
+        </div>
+        <div class="scenario-toggle">+</div>
+      </div>
+      <div class="scenario-body">
+        <div class="split">
+          <div class="split-panel reality">
+            <div class="split-label">Reality — What we built</div>
+            <div class="split-decision">Three tiers (Starter free, Pro $29, Elite $79) with Starter auto-approved. Workers access jobs immediately. Credential verification is optional and async.</div>
+            <div class="split-rationale">Rationale: Lower friction to build supply. Get workers onto the platform first, verify credentials over time as the relationship develops.</div>
+          </div>
+          <div class="split-panel alternate">
+            <div class="split-label">Alternate — What if</div>
+            <div class="split-decision">Credential-first: All workers must submit verified notary commission or PTIN before accessing any jobs. Approval is 24-hour SLA with human review. Premium positioning from launch.</div>
+            <div class="split-rationale">Premise: Supply quality beats supply quantity. Ten verified, excellent workers fill jobs better than 100 unverified ones, and B2B clients require verified workers anyway.</div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block">
+            <div class="score-metric">Worker quality score</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:60%"></div></div>
+                <div class="score-num num-reality">60</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:91%"></div></div>
+                <div class="score-num num-alt">91</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Supply ramp speed</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:80%"></div></div>
+                <div class="score-num num-reality">80</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:32%"></div></div>
+                <div class="score-num num-alt">32</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">B2B readiness</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:44%"></div></div>
+                <div class="score-num num-reality">44</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:94%"></div></div>
+                <div class="score-num num-alt">94</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Job fill rate</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:67%"></div></div>
+                <div class="score-num num-reality">67</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:55%"></div></div>
+                <div class="score-num num-alt">55</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-row">
+          <div class="delta-badge delta-neg">−48%</div>
+          <div class="delta-label"><strong>Supply ramp disadvantage</strong> — Credential-first would have produced half the workers in the first 60 days, but B2B readiness would have been 2× higher, unlocking enterprise contracts sooner. Net verdict: right idea, wrong timing.</div>
+        </div>
+
+        <button class="analyze-btn" onclick="runScenarioAI(2, this)">
+          <div class="ai-spin"></div>
+          <span>Run Deep Analysis</span>
+        </button>
+        <div class="ai-result" id="ai-result-2">
+          <div class="ai-result-label">AI Analysis</div>
+          <div class="ai-result-text"></div>
+          <div class="ai-improvement"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIO 3: TECH STACK -->
+    <div class="scenario-card" id="sc3">
+      <div class="scenario-header" onclick="toggleScenario('sc3')">
+        <div class="scenario-num">03 / 05</div>
+        <div class="scenario-title-wrap">
+          <div class="scenario-dimension">Technology Architecture</div>
+          <div class="scenario-name">What if we had used a no-code platform instead of FastAPI + Railway?</div>
+        </div>
+        <div class="scenario-toggle">+</div>
+      </div>
+      <div class="scenario-body">
+        <div class="split">
+          <div class="split-panel reality">
+            <div class="split-label">Reality — What we built</div>
+            <div class="split-decision">FastAPI backend on Railway, PostgreSQL, async SQLAlchemy, 8 routers, Stripe Connect, Twilio SMS, GitHub Pages frontend. Full custom stack built from scratch.</div>
+            <div class="split-rationale">Rationale: Custom stack gives full control over worker compliance, payment flows, credential verification, and the ability to add any feature without platform limitations.</div>
+          </div>
+          <div class="split-panel alternate">
+            <div class="split-label">Alternate — What if</div>
+            <div class="split-decision">Bubble.io or Glide for frontend + backend, Stripe Checkout (not Connect) for payments, Airtable for worker database, Zapier for automation. Launched in 2 weeks instead of 8.</div>
+            <div class="split-rationale">Premise: No-code launches faster, tests the market sooner, and defers technical debt until product-market fit is confirmed.</div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block">
+            <div class="score-metric">Time to first transaction</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:40%"></div></div>
+                <div class="score-num num-reality">8 wks</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:90%"></div></div>
+                <div class="score-num num-alt">2 wks</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Scalability ceiling</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:95%"></div></div>
+                <div class="score-num num-reality">∞</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:35%"></div></div>
+                <div class="score-num num-alt">Low</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Feature flexibility</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:95%"></div></div>
+                <div class="score-num num-reality">95</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:28%"></div></div>
+                <div class="score-num num-alt">28</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Monthly infra cost</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:30%"></div></div>
+                <div class="score-num num-reality">~$20</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:75%"></div></div>
+                <div class="score-num num-alt">~$200</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-row">
+          <div class="delta-badge delta-pos">✓ CORRECT</div>
+          <div class="delta-label"><strong>Reality wins this one decisively.</strong> No-code would have launched faster but hit a hard ceiling at ~500 workers and couldn't have supported Stripe Connect payouts, credential verification webhooks, or the compliance router. The custom stack was the right call — but the 8-week timeline could have been compressed to 3 with better scaffolding decisions.</div>
+        </div>
+
+        <button class="analyze-btn" onclick="runScenarioAI(3, this)">
+          <div class="ai-spin"></div>
+          <span>Run Deep Analysis</span>
+        </button>
+        <div class="ai-result" id="ai-result-3">
+          <div class="ai-result-label">AI Analysis</div>
+          <div class="ai-result-text"></div>
+          <div class="ai-improvement"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIO 4: GO TO MARKET -->
+    <div class="scenario-card" id="sc4">
+      <div class="scenario-header" onclick="toggleScenario('sc4')">
+        <div class="scenario-num">04 / 05</div>
+        <div class="scenario-title-wrap">
+          <div class="scenario-dimension">Go-to-Market Strategy</div>
+          <div class="scenario-name">What if we had gone B2B-first instead of consumer worker recruiting?</div>
+        </div>
+        <div class="scenario-toggle">+</div>
+      </div>
+      <div class="scenario-body">
+        <div class="split">
+          <div class="split-panel reality">
+            <div class="split-label">Reality — What we built</div>
+            <div class="split-decision">Worker-first consumer GTM: recruit individual notaries and tax preparers via social media, Gumroad, TikTok, and direct outreach. Build supply, then attract demand.</div>
+            <div class="split-rationale">Rationale: Supply-side marketplaces need workers before clients. Seeded with Kisha Dial as first worker. Plans to market services to individual clients through the documents frontend.</div>
+          </div>
+          <div class="split-panel alternate">
+            <div class="split-label">Alternate — What if</div>
+            <div class="split-decision">B2B-first: Sign 3 title companies and 2 mortgage brokers as anchor clients before recruiting a single worker. Guaranteed job volume attracts workers. Revenue from Day 1.</div>
+            <div class="split-rationale">Premise: In a marketplace, demand certainty is more valuable than supply abundance. One title company closing 40 transactions/month is worth more than 40 individual client bookings.</div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block">
+            <div class="score-metric">Revenue Month 1</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:15%"></div></div>
+                <div class="score-num num-reality">Low</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:78%"></div></div>
+                <div class="score-num num-alt">High</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Worker retention</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:52%"></div></div>
+                <div class="score-num num-reality">52</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:88%"></div></div>
+                <div class="score-num num-alt">88</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Sales cycle risk</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:20%"></div></div>
+                <div class="score-num num-reality">Low</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:75%"></div></div>
+                <div class="score-num num-alt">High</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Brand recognition</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:65%"></div></div>
+                <div class="score-num num-reality">65</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:35%"></div></div>
+                <div class="score-num num-alt">35</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-row">
+          <div class="delta-badge delta-pos">+$8K–12K</div>
+          <div class="delta-label"><strong>Estimated Month 1 revenue advantage</strong> of the B2B-first path — but with a 60–90 day pre-launch sales cycle risk. B2B requires no-supply-yet credibility that's hard to establish. The hybrid answer: run both in parallel from Month 2 onward.</div>
+        </div>
+
+        <button class="analyze-btn" onclick="runScenarioAI(4, this)">
+          <div class="ai-spin"></div>
+          <span>Run Deep Analysis</span>
+        </button>
+        <div class="ai-result" id="ai-result-4">
+          <div class="ai-result-label">AI Analysis</div>
+          <div class="ai-result-text"></div>
+          <div class="ai-improvement"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIO 5: ONBOARDING -->
+    <div class="scenario-card" id="sc5">
+      <div class="scenario-header" onclick="toggleScenario('sc5')">
+        <div class="scenario-num">05 / 05</div>
+        <div class="scenario-title-wrap">
+          <div class="scenario-dimension">Worker Onboarding Flow</div>
+          <div class="scenario-name">What if workers could claim a job before creating an account?</div>
+        </div>
+        <div class="scenario-toggle">+</div>
+      </div>
+      <div class="scenario-body">
+        <div class="split">
+          <div class="split-panel reality">
+            <div class="split-label">Reality — What we built</div>
+            <div class="split-decision">Standard gate: Sign up → Wait for approval → Log in → Browse jobs → Claim. Multiple steps before value. W-9 and payout setup prompted from dashboard before any earnings.</div>
+            <div class="split-rationale">Rationale: Sequential onboarding is the industry standard and ensures compliance before workers access jobs.</div>
+          </div>
+          <div class="split-panel alternate">
+            <div class="split-label">Alternate — What if</div>
+            <div class="split-decision">Claim-first: Worker sees a job on social media, taps "Claim this job," enters name + phone, account is created in the background. Compliance collected after first claim. Value before friction.</div>
+            <div class="split-rationale">Premise: Workers need to feel the value (a real job, real pay) before they'll complete compliance steps. Reverse the sequence — show the carrot first.</div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block">
+            <div class="score-metric">Signup→first job conversion</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:28%"></div></div>
+                <div class="score-num num-reality">~28%</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:67%"></div></div>
+                <div class="score-num num-alt">~67%</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">W-9 completion rate</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:35%"></div></div>
+                <div class="score-num num-reality">35%</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:82%"></div></div>
+                <div class="score-num num-alt">82%</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Compliance risk</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:12%"></div></div>
+                <div class="score-num num-reality">Low</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:55%"></div></div>
+                <div class="score-num num-alt">Medium</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-block">
+            <div class="score-metric">Time to first payout</div>
+            <div class="score-bars">
+              <div class="score-bar-row">
+                <div class="score-bar-label">Reality</div>
+                <div class="score-track"><div class="score-fill fill-reality" style="width:25%"></div></div>
+                <div class="score-num num-reality">Days</div>
+              </div>
+              <div class="score-bar-row">
+                <div class="score-bar-label">Alternate</div>
+                <div class="score-track"><div class="score-fill fill-alt" style="width:85%"></div></div>
+                <div class="score-num num-alt">Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-row">
+          <div class="delta-badge delta-pos">+139%</div>
+          <div class="delta-label"><strong>Conversion rate lift</strong> — Claim-first onboarding would have nearly tripled the signup-to-active-worker rate. The compliance risk is manageable by holding the job in "pending" state until minimum info is collected. This is buildable in a single sprint.</div>
+        </div>
+
+        <button class="analyze-btn" onclick="runScenarioAI(5, this)">
+          <div class="ai-spin"></div>
+          <span>Run Deep Analysis</span>
+        </button>
+        <div class="ai-result" id="ai-result-5">
+          <div class="ai-result-label">AI Analysis</div>
+          <div class="ai-result-text"></div>
+          <div class="ai-improvement"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- OVERALL SCORE -->
+<div class="overall-section">
+  <div class="section-eyebrow">Platform Delta</div>
+  <div class="section-title">How much better could we have been?</div>
+  <div class="section-desc">Aggregating all five alternate paths into a single platform improvement score — what the combined impact of different decisions would have produced.</div>
+
+  <div class="overall-card">
+    <div class="overall-title">Reality vs Best-of-Alternates — Platform Performance Index</div>
+
+    <div class="overall-grid">
+      <div class="overall-metric">
+        <div class="om-label">Monthly Revenue</div>
+        <div class="om-now">Reality: baseline</div>
+        <div class="om-alt">+2.4×</div>
+        <div class="om-delta up">▲ Premium pricing + B2B GTM</div>
+      </div>
+      <div class="overall-metric">
+        <div class="om-label">Worker Activation</div>
+        <div class="om-now">Reality: ~28%</div>
+        <div class="om-alt">67%</div>
+        <div class="om-delta up">▲ Claim-first onboarding</div>
+      </div>
+      <div class="overall-metric">
+        <div class="om-label">Worker Quality</div>
+        <div class="om-now">Reality: 60/100</div>
+        <div class="om-alt">91/100</div>
+        <div class="om-delta up">▲ Credential-first tiers</div>
+      </div>
+      <div class="overall-metric">
+        <div class="om-label">B2B Readiness</div>
+        <div class="om-now">Reality: 44/100</div>
+        <div class="om-alt">94/100</div>
+        <div class="om-delta up">▲ B2B-first GTM</div>
+      </div>
+      <div class="overall-metric">
+        <div class="om-label">Infra Cost</div>
+        <div class="om-now">Reality: ~$20/mo</div>
+        <div class="om-alt">~$20/mo</div>
+        <div class="om-delta flat">→ FastAPI was correct</div>
+      </div>
+      <div class="overall-metric">
+        <div class="om-label">Platform Sustainability</div>
+        <div class="om-now">Reality: 48/100</div>
+        <div class="om-alt">79/100</div>
+        <div class="om-delta up">▲ Premium + credential combo</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Overall Verdict</div>
+      <div class="verdict-text">
+        The stack decision was right — FastAPI on Railway is the correct foundation and no alternate would have served the platform better long-term. Every other major decision has a better alternate path.
+        The highest-leverage single change would have been <strong>claim-first onboarding</strong> — it costs one sprint to build and would have nearly tripled worker activation with no architectural changes.
+        Second highest: <strong>B2B channel from Month 2</strong>, not Month 6. The consumer-first path was right for proving the product, but B2B revenue should have been pursued in parallel from the start.
+        Combined, the alternate-history version of PGUSA would be operating at approximately <strong>2–3× current revenue run rate</strong> with meaningfully higher worker quality and platform sustainability scores.
+        The good news: none of these are permanently foreclosed. Every alternate path is still executable — they're not history, they're the roadmap.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM SCENARIO -->
+<div class="custom-section">
+  <div class="section-eyebrow">Build Your Own</div>
+  <div class="section-title">Run a custom alternate history scenario</div>
+  <div class="section-desc">Define any real decision PGUSA made, describe an alternate path, and get an AI-scored analysis of what would have happened.</div>
+
+  <div class="custom-card">
+    <div class="input-grid">
+      <div class="field">
+        <label>The real decision made</label>
+        <input type="text" id="ci-reality" placeholder="e.g. Launched with 5 service types simultaneously">
+      </div>
+      <div class="field">
+        <label>The alternate decision</label>
+        <input type="text" id="ci-alternate" placeholder="e.g. Launched with notary-only, expanded later">
+      </div>
+      <div class="field">
+        <label>Decision category</label>
+        <select id="ci-category">
+          <option>Pricing</option>
+          <option>Product / Features</option>
+          <option>Go-to-Market</option>
+          <option>Technology</option>
+          <option>Operations</option>
+          <option>Worker / Supply Side</option>
+          <option>Client / Demand Side</option>
+          <option>Timing</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Time horizon</label>
+        <select id="ci-horizon">
+          <option>30 days</option>
+          <option>90 days</option>
+          <option>6 months</option>
+          <option>12 months</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Additional context (optional)</label>
+        <textarea id="ci-context" rows="2" placeholder="Any relevant details about why the decision was made, market conditions, constraints..."></textarea>
+      </div>
+    </div>
+
+    <button class="run-btn" id="customRunBtn" onclick="runCustomScenario()">
+      <div class="run-spin" id="customSpin"></div>
+      <span id="customLabel">▶ Simulate Alternate History</span>
+    </button>
+
+    <div class="custom-output" id="customOutput">
+      <div class="gen-score-grid" id="customScoreGrid"></div>
+      <div class="gen-analysis">
+        <div class="gen-analysis-label">AI Analysis</div>
+        <div class="gen-analysis-text" id="customAnalysisText"></div>
+        <div class="gen-improvement-bar" id="customImprovementBar">
+          <div class="gen-improvement-num" id="customImprovementNum"></div>
+          <div class="gen-improvement-text" id="customImprovementText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── Toggle accordion ──────────────────────────────────────────
+function toggleScenario(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// ── Scenario AI analysis ──────────────────────────────────────
+const SCENARIOS = {
+  1: {
+    dimension: 'Pricing Architecture',
+    reality: 'Tiered pricing: RON $14.99, Mobile Notary $39, Tax Prep $49–$149. Low-cost entry to compete on price vs national platforms.',
+    alternate: 'Premium positioning: Notary $89 flat, Tax Prep $149–$299, Real Estate $199. White-glove, verified professional framing targeting clients who need it done right.',
+  },
+  2: {
+    dimension: 'Worker Tier Structure',
+    reality: 'Three tiers (Starter free, Pro $29, Elite $79) with Starter auto-approved. Workers access jobs immediately. Credential verification optional and async.',
+    alternate: 'Credential-first: All workers submit verified notary commission or PTIN before any job access. 24-hour human review. Premium positioning from launch.',
+  },
+  3: {
+    dimension: 'Technology Stack',
+    reality: 'FastAPI on Railway, PostgreSQL, async SQLAlchemy, 8 routers, Stripe Connect, Twilio. Full custom stack. ~8 weeks to launch.',
+    alternate: 'No-code: Bubble.io + Glide frontend, Stripe Checkout (not Connect), Airtable database, Zapier automation. 2-week launch, $200/mo platform cost.',
+  },
+  4: {
+    dimension: 'Go-to-Market Strategy',
+    reality: 'Worker-first consumer GTM: recruit individual notaries/tax preparers via social media. Build supply then attract demand. Individual client bookings.',
+    alternate: 'B2B-first: Sign 3 title companies and 2 mortgage brokers as anchor clients before recruiting workers. Guaranteed volume attracts workers. Revenue from Day 1.',
+  },
+  5: {
+    dimension: 'Worker Onboarding Flow',
+    reality: 'Sequential gate: sign up → approval → login → browse → claim. W-9 and payout setup from dashboard before earnings. Standard compliance-first flow.',
+    alternate: 'Claim-first: Worker sees job on social, taps claim, enters name+phone, account created in background. Compliance collected after first claim. Value before friction.',
+  },
+};
+
+async function runScenarioAI(num, btn) {
+  const sc = SCENARIOS[num];
+  const resultDiv = document.getElementById(`ai-result-${num}`);
+  const spin = btn.querySelector('.ai-spin');
+  const label = btn.querySelector('span');
+
+  btn.disabled = true;
+  spin.style.display = 'block';
+  label.textContent = 'Analyzing...';
+
+  const prompt = `You are a strategic business analyst for PGUSA Documents Platform — a marketplace connecting credentialed notaries, tax preparers, and legal document workers with clients. The platform runs on FastAPI/Railway with Stripe Connect payouts, launched in Texas, with worker plans (Free/Pro $29/Elite $79) and service pricing ($14.99–$149).
+
+Analyze this specific alternate history scenario:
+
+DECISION DIMENSION: ${sc.dimension}
+
+REALITY (what was built): ${sc.reality}
+
+ALTERNATE PATH (what if): ${sc.alternate}
+
+Provide a sharp, specific analysis in this exact JSON format:
+{
+  "key_insight": "One sentence capturing the core strategic tradeoff between these two paths",
+  "reality_advantages": ["concrete advantage 1", "concrete advantage 2"],
+  "alternate_advantages": ["concrete advantage 1", "concrete advantage 2"],
+  "hidden_risk_of_alternate": "The non-obvious downside of the alternate path most people would miss",
+  "hidden_risk_of_reality": "The non-obvious downside of the actual path taken",
+  "net_verdict": "2-3 sentences: was reality the right call? What would you do differently knowing what we know now?",
+  "improvement_pct": 15,
+  "improvement_description": "Specific description of what the X% improvement represents (revenue, conversion, retention, etc.)"
+}
+
+improvement_pct should be a realistic integer: negative if reality was better, positive if alternate was better. Be specific to PGUSA's actual situation.
+Return ONLY the JSON.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 900,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content[0].text.replace(/```json|```/g, '').trim();
+    const r = JSON.parse(raw);
+
+    const pct = r.improvement_pct;
+    const pctStr = pct > 0 ? `+${pct}%` : `${pct}%`;
+    const pctClass = pct > 10 ? 'delta-pos' : pct < -10 ? 'delta-neg' : 'delta-neu';
+
+    resultDiv.querySelector('.ai-result-text').innerHTML = `
+      <p style="margin-bottom:12px;font-style:italic;color:var(--gold);font-size:14px;">"${r.key_insight}"</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--bright);">Reality advantages:</strong> ${r.reality_advantages.join(' · ')}</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--gold);">Alternate advantages:</strong> ${r.alternate_advantages.join(' · ')}</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--red);">Hidden risk of alternate:</strong> ${r.hidden_risk_of_alternate}</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--amber);">Hidden risk of reality:</strong> ${r.hidden_risk_of_reality}</p>
+      <p style="color:var(--bright);">${r.net_verdict}</p>
+    `;
+
+    resultDiv.querySelector('.ai-improvement').innerHTML = `
+      <span class="${pctClass}" style="font-family:var(--mono);font-size:20px;font-weight:900;margin-right:10px;">${pctStr}</span>
+      ${r.improvement_description}
+    `;
+
+    resultDiv.style.display = 'block';
+
+  } catch(e) {
+    resultDiv.querySelector('.ai-result-text').textContent = 'Analysis failed — please try again.';
+    resultDiv.style.display = 'block';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    spin.style.display = 'none';
+    label.textContent = 'Run Deep Analysis';
+  }
+}
+
+// ── Custom scenario ───────────────────────────────────────────
+async function runCustomScenario() {
+  const reality   = document.getElementById('ci-reality').value.trim();
+  const alternate = document.getElementById('ci-alternate').value.trim();
+  const category  = document.getElementById('ci-category').value;
+  const horizon   = document.getElementById('ci-horizon').value;
+  const context   = document.getElementById('ci-context').value.trim();
+
+  if (!reality || !alternate) {
+    alert('Please fill in both the real decision and the alternate decision.');
+    return;
+  }
+
+  const btn   = document.getElementById('customRunBtn');
+  const spin  = document.getElementById('customSpin');
+  const label = document.getElementById('customLabel');
+  const output = document.getElementById('customOutput');
+
+  btn.disabled = true;
+  spin.style.display = 'block';
+  label.textContent = 'Simulating...';
+  output.style.display = 'none';
+
+  const prompt = `You are a strategic business analyst for PGUSA Documents Platform — a gig-economy marketplace for credentialed notaries, tax preparers, and legal document workers in Texas (and growing nationally). FastAPI/Railway backend, Stripe Connect payouts, worker plans (Free/Pro $29/Elite $79), service pricing $14.99–$149, launched mid-2026.
+
+Simulate this alternate history scenario:
+
+CATEGORY: ${category}
+TIME HORIZON: ${horizon}
+REALITY: ${reality}
+ALTERNATE: ${alternate}
+${context ? `CONTEXT: ${context}` : ''}
+
+Return ONLY valid JSON in this exact format:
+{
+  "scores": {
+    "revenue_impact": { "reality": 55, "alternate": 78, "label": "Revenue Impact" },
+    "growth_speed":   { "reality": 70, "alternate": 45, "label": "Growth Speed" },
+    "risk_level":     { "reality": 30, "alternate": 60, "label": "Risk Level" },
+    "sustainability": { "reality": 50, "alternate": 80, "label": "Sustainability" }
+  },
+  "analysis": "3-4 sentences of specific, grounded analysis comparing these two paths for PGUSA's actual situation — mention real numbers, specific platform features, or market dynamics where possible",
+  "improvement_pct": 23,
+  "improvement_label": "projected revenue uplift over ${horizon}",
+  "improvement_detail": "Specific detail: what drives this number and what would need to be true for it to materialize"
+}
+
+All score values are 0–100. improvement_pct can be negative if reality was better. Be honest and specific.
+Return ONLY the JSON, no preamble.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 700,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    const r = JSON.parse(raw);
+
+    // Render score grid
+    const scoreGrid = document.getElementById('customScoreGrid');
+    scoreGrid.innerHTML = '';
+    for (const [key, s] of Object.entries(r.scores)) {
+      const diff = s.alternate - s.reality;
+      const altClass = s.alternate >= 75 ? 'score-great' : s.alternate >= 55 ? 'score-good' : s.alternate >= 35 ? 'score-ok' : 'score-poor';
+      scoreGrid.innerHTML += `
+        <div class="gen-metric">
+          <div class="gen-metric-label">${s.label}</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--mist);margin-bottom:4px;">Reality: ${s.reality}</div>
+          <div class="gen-metric-score ${altClass}">${s.alternate}</div>
+          <div style="font-family:var(--mono);font-size:10px;margin-top:6px;color:${diff>0?'var(--green)':diff<0?'var(--red)':'var(--amber)'}">
+            ${diff>0?'▲':'▼'} ${Math.abs(diff)} pts
+          </div>
+        </div>`;
+    }
+
+    // Analysis
+    document.getElementById('customAnalysisText').textContent = r.analysis;
+
+    // Improvement bar
+    const pct = r.improvement_pct;
+    const pctStr = pct > 0 ? `+${pct}%` : `${pct}%`;
+    const pctColor = pct > 10 ? 'var(--green)' : pct < -10 ? 'var(--red)' : 'var(--amber)';
+    document.getElementById('customImprovementNum').textContent = pctStr;
+    document.getElementById('customImprovementNum').style.color = pctColor;
+    document.getElementById('customImprovementText').innerHTML = `<strong>${r.improvement_label}</strong><br>${r.improvement_detail}`;
+
+    output.style.display = 'block';
+
+  } catch(e) {
+    document.getElementById('customAnalysisText').textContent = 'Simulation failed — please try again.';
+    output.style.display = 'block';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    spin.style.display = 'none';
+    label.textContent = '▶ Simulate Alternate History';
+  }
+}
+</script>
+</body>
+</html>
