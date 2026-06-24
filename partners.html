@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA Documents Platform — Partner with Us</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:    #C9A84C;
+  --gold-lt: #E8C96A;
+  --ink:     #111111;
+  --body:    #333333;
+  --muted:   #777777;
+  --rule:    #E5E5E0;
+  --bg:      #FAFAF8;
+  --white:   #FFFFFF;
+  --teal:    #1A7A7A;
+  --green:   #1A6E3C;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--white);
+  color: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  color: rgba(255,255,255,0.6);
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  text-align: center;
+  padding: 8px 20px;
+  letter-spacing: 0.5px;
+}
+
+.topbar strong { color: var(--gold); }
+
+/* ── NAV ── */
+nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  font-family: system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+.nav-brand span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.15s;
+}
+
+.nav-cta:hover { background: var(--gold-lt); }
+
+/* ── HERO ── */
+.hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 72px 32px 64px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px 40px; }
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+}
+
+.hero-eyebrow {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.hero-title {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-desc {
+  font-size: 17px;
+  color: var(--body);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--white);
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.15s;
+  display: inline-block;
+}
+
+.btn-primary:hover { background: #333; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1.5px solid var(--rule);
+  letter-spacing: 0.3px;
+  transition: border-color 0.15s;
+  display: inline-block;
+}
+
+.btn-secondary:hover { border-color: var(--ink); }
+
+/* ── ROI CALCULATOR ── */
+.roi-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.roi-title {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.roi-field { margin-bottom: 16px; }
+
+.roi-label {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.roi-select, .roi-range {
+  width: 100%;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.roi-select {
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--white);
+  color: var(--ink);
+  outline: none;
+  cursor: pointer;
+}
+
+.roi-select:focus { border-color: var(--gold); }
+
+.roi-range {
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--rule);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.roi-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+}
+
+.roi-range-val {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 700;
+  margin-top: 4px;
+  display: block;
+}
+
+.roi-divider {
+  height: 1px;
+  background: var(--rule);
+  margin: 18px 0;
+}
+
+.roi-result {
+  background: var(--ink);
+  border-radius: 8px;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.roi-result-label {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+}
+
+.roi-result-num {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.roi-result-sub {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+}
+
+.roi-breakdown {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.roi-line {
+  display: flex;
+  justify-content: space-between;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.roi-line strong { color: var(--ink); }
+
+/* ── LOGOS ── */
+.logos-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.logos-label {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logos-row {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo-pill {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 8px 20px;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* ── HOW IT WORKS ── */
+.section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 64px 32px;
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 760px) { .section { padding: 48px 20px; } }
+
+.section-eyebrow {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+
+.section-desc {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 540px;
+  margin-bottom: 40px;
+  line-height: 1.65;
+}
+
+/* Steps */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.step {
+  background: var(--white);
+  padding: 28px 24px;
+}
+
+.step-num {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── PARTNER TYPES ── */
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.partner-card {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 28px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.partner-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.1);
+}
+
+.partner-icon { font-size: 28px; margin-bottom: 14px; }
+
+.partner-type {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.partner-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.partner-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.partner-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.svc-tag {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  color: var(--body);
+}
+
+.partner-stat {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* ── VALUE PROPS ── */
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+}
+
+.value-item {}
+
+.value-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.value-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.value-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── PRICING ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.pricing-card {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 28px;
+}
+
+.pricing-card.featured {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.04);
+  position: relative;
+}
+
+.featured-badge {
+  position: absolute;
+  top: -1px; left: 24px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 0 0 6px 6px;
+}
+
+.pricing-tier {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.pricing-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.pricing-price {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.pricing-price span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.pricing-note {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.pricing-features li {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--body);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.4;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pricing-cta {
+  display: block;
+  text-align: center;
+  padding: 11px 20px;
+  border-radius: 4px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+}
+
+.pricing-card.featured .pricing-cta {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+.pricing-cta:hover { opacity: 0.8; }
+
+/* ── TESTIMONIAL ── */
+.testimonial-block {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 36px 40px;
+  position: relative;
+}
+
+.testimonial-block::before {
+  content: '"';
+  position: absolute;
+  top: 20px; left: 32px;
+  font-size: 80px;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+  font-family: Georgia, serif;
+}
+
+.testimonial-text {
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-source {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.testimonial-source strong { color: var(--ink); }
+
+/* ── FORM ── */
+.form-section {
+  background: var(--ink);
+  padding: 64px 32px;
+}
+
+.form-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.form-eyebrow {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.form-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+
+.form-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 36px;
+  line-height: 1.65;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field.full { grid-column: 1 / -1; }
+
+.form-field label {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--white);
+  font-family: Georgia, serif;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--gold); }
+
+.form-field select option { background: #222; }
+
+.form-submit {
+  width: 100%;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+  margin-top: 6px;
+}
+
+.form-submit:hover { background: var(--gold-lt); }
+.form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.form-success-icon { font-size: 48px; margin-bottom: 16px; }
+
+.form-success-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.form-success-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.form-note {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  margin-top: 14px;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+  padding: 32px;
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.footer-brand span { color: var(--gold); }
+
+.footer-desc {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-links a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <strong>Texas-based.</strong> Verified workers. Same-day availability. Paid every 4 days. &nbsp;·&nbsp; Serving title companies, mortgage brokers, and law firms statewide.
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Property Group <span>USA</span> · Documents</div>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#partners">Who we serve</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="nav-cta">Become a Partner →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">B2B Partnership Program</div>
+    <h1 class="hero-title">Your closing desk,<br><em>fully staffed</em><br>on demand.</h1>
+    <p class="hero-desc">PGUSA connects title companies, mortgage brokers, and law firms with verified, credentialed notaries and document professionals — available same day, paid every 4 days, no coordinator overhead.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request a Partnership Call</a>
+      <a href="#how-it-works" class="btn-secondary">See how it works</a>
+    </div>
+  </div>
+
+  <!-- ROI CALCULATOR -->
+  <div class="roi-card">
+    <div class="roi-title">Your Monthly ROI Calculator</div>
+
+    <div class="roi-field">
+      <label class="roi-label">Business type</label>
+      <select class="roi-select" id="bizType" onchange="calcROI()">
+        <option value="title">Title Company</option>
+        <option value="mortgage">Mortgage Broker</option>
+        <option value="law">Law Firm</option>
+      </select>
+    </div>
+
+    <div class="roi-field">
+      <label class="roi-label">Transactions per month: <span class="roi-range-val" id="txnVal">40</span></label>
+      <input type="range" class="roi-range" id="txnRange" min="5" max="150" value="40" oninput="calcROI()">
+    </div>
+
+    <div class="roi-field">
+      <label class="roi-label">Current coordinator hours/month: <span class="roi-range-val" id="hrVal">20</span> hrs</label>
+      <input type="range" class="roi-range" id="hrRange" min="5" max="80" value="20" oninput="calcROI()">
+    </div>
+
+    <div class="roi-divider"></div>
+
+    <div class="roi-result">
+      <div class="roi-result-label">Monthly Value Delivered</div>
+      <div class="roi-result-num" id="roiNum">$4,820</div>
+      <div class="roi-result-sub">in time saved + reliable coverage</div>
+    </div>
+
+    <div class="roi-breakdown" id="roiBreakdown">
+      <div class="roi-line"><span>Transactions covered</span><strong id="rb1">40 jobs</strong></div>
+      <div class="roi-line"><span>Coordinator hours saved</span><strong id="rb2">20 hrs ($600)</strong></div>
+      <div class="roi-line"><span>Avg service value</span><strong id="rb3">$110/job</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGOS -->
+<div class="logos-section">
+  <div class="logos-label">Serving professionals across Texas and growing nationally</div>
+  <div class="logos-row">
+    <span class="logo-pill">Title Companies</span>
+    <span class="logo-pill">Mortgage Brokers</span>
+    <span class="logo-pill">Real Estate Attorneys</span>
+    <span class="logo-pill">Escrow Officers</span>
+    <span class="logo-pill">Loan Signing Agents</span>
+    <span class="logo-pill">Tax Professionals</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section" id="how-it-works">
+  <div class="section-eyebrow">The Process</div>
+  <div class="section-title">From request to closing<br>in under 2 hours.</div>
+  <div class="section-desc">No coordinator calls. No contractor hunting. No payment delays. Your team submits the job, we handle everything else.</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">STEP 01</div>
+      <div class="step-title">You submit the job</div>
+      <div class="step-desc">Your team posts the closing, signing, or document job through your dedicated partner portal. Takes under 60 seconds.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 02</div>
+      <div class="step-title">We match instantly</div>
+      <div class="step-desc">Our platform notifies credentialed workers in your area via SMS. Available workers claim the job in real time — first confirmed match wins.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 03</div>
+      <div class="step-title">Worker shows up</div>
+      <div class="step-desc">You get the worker's name, credentials, and confirmation before the appointment. Every worker is verified — commission number, state, expiration date on file.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 04</div>
+      <div class="step-title">You pay one invoice</div>
+      <div class="step-desc">Monthly consolidated billing. No per-transaction hassle. No chasing contractors. One line item on your books — the way a vendor relationship should work.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PARTNER TYPES -->
+<div class="section" id="partners">
+  <div class="section-eyebrow">Who We Serve</div>
+  <div class="section-title">Three partner types.<br>One platform.</div>
+  <div class="section-desc">Each partner type has different volume, timing, and compliance needs. We've built for all three.</div>
+
+  <div class="partner-grid">
+    <div class="partner-card">
+      <div class="partner-icon">🏠</div>
+      <div class="partner-type">Title Companies</div>
+      <div class="partner-title">Reliable notaries for every closing</div>
+      <div class="partner-desc">Your closing calendar doesn't wait. We provide same-day, last-minute, and scheduled notary coverage for purchase transactions, refinances, and cash deals — statewide.</div>
+      <div class="partner-services">
+        <span class="svc-tag">Purchase closings</span>
+        <span class="svc-tag">Refi signings</span>
+        <span class="svc-tag">Cash transactions</span>
+        <span class="svc-tag">RON sessions</span>
+      </div>
+      <div class="partner-stat">↑ Avg 40–100 closings/mo covered per partner</div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-icon">📋</div>
+      <div class="partner-type">Mortgage Brokers</div>
+      <div class="partner-title">Loan signing agents on demand</div>
+      <div class="partner-desc">Your borrowers need to sign at odd hours in locations across the metro. Our network of certified loan signing agents covers same-day requests with no coordinator overhead on your end.</div>
+      <div class="partner-services">
+        <span class="svc-tag">Loan signings</span>
+        <span class="svc-tag">After-hours coverage</span>
+        <span class="svc-tag">Multi-location</span>
+        <span class="svc-tag">Remote online</span>
+      </div>
+      <div class="partner-stat">↑ 2-hour average time from request to confirmed agent</div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-icon">⚖️</div>
+      <div class="partner-type">Law Firms</div>
+      <div class="partner-title">Document professionals for legal work</div>
+      <div class="partner-desc">From notarizing affidavits to preparing legal documents and filing support, our platform gives your firm flexible, credentialed document professionals without adding to headcount.</div>
+      <div class="partner-services">
+        <span class="svc-tag">Notarizations</span>
+        <span class="svc-tag">Legal doc prep</span>
+        <span class="svc-tag">Affidavits</span>
+        <span class="svc-tag">Client intake</span>
+      </div>
+      <div class="partner-stat">↑ Credentialed workers verified before first assignment</div>
+    </div>
+  </div>
+</div>
+
+<!-- VALUE PROPS -->
+<div class="section" style="background:var(--bg);max-width:100%;padding-left:0;padding-right:0;border-bottom:1px solid var(--rule);">
+  <div style="max-width:960px;margin:0 auto;padding:64px 32px;">
+    <div class="section-eyebrow">Why PGUSA</div>
+    <div class="section-title">What makes this different<br>from calling a contractor.</div>
+    <div class="section-desc">Every professional services firm has dealt with the notary who doesn't show, the contractor who isn't credentialed, the invoice that never comes. We built the platform that fixes all three.</div>
+
+    <div class="value-grid">
+      <div class="value-item">
+        <div class="value-icon">✓</div>
+        <div class="value-title">Every worker pre-verified</div>
+        <div class="value-desc">Commission number, state, expiration date, and W-9 on file before a worker claims their first job. You never have to check credentials yourself.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">⚡</div>
+        <div class="value-title">Same-day availability</div>
+        <div class="value-desc">Workers receive SMS alerts the moment a job is posted. Average claim time is under 30 minutes for Texas markets. Last-minute closings covered.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">📊</div>
+        <div class="value-title">One consolidated invoice</div>
+        <div class="value-desc">Monthly billing with job-by-job detail. No per-transaction payment processing, no individual contractor invoices, no reimbursement paperwork.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🔒</div>
+        <div class="value-title">Guaranteed coverage</div>
+        <div class="value-desc">If we can't fill a job with a verified worker, you don't pay. We don't send unverified contractors to cover gaps — we tell you in advance so you can plan.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">📱</div>
+        <div class="value-title">Full visibility</div>
+        <div class="value-desc">Partner portal shows every job, every worker assigned, every status in real time. No phone tag with a coordinator to find out where your notary is.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🤝</div>
+        <div class="value-title">Dedicated account contact</div>
+        <div class="value-desc">Every partner gets a direct line to a PGUSA account contact — not a support ticket queue. Issues resolved same day.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="section" id="pricing">
+  <div class="section-eyebrow">Partnership Tiers</div>
+  <div class="section-title">Straightforward pricing.<br>No surprises.</div>
+  <div class="section-desc">Pay per transaction at volume rates. No monthly platform fee until you're ready to scale. Cancel anytime — we earn your business every month.</div>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Tier 1</div>
+      <div class="pricing-name">Referral Partner</div>
+      <div class="pricing-price">$0 <span>/ month</span></div>
+      <div class="pricing-note">Pay per job at standard rates</div>
+      <ul class="pricing-features">
+        <li>Up to 20 jobs/month</li>
+        <li>Standard 48-hr booking window</li>
+        <li>Per-job invoicing</li>
+        <li>Access to verified worker network</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Get started</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <div class="pricing-tier">Tier 2</div>
+      <div class="pricing-name">Preferred Partner</div>
+      <div class="pricing-price">$299 <span>/ month</span></div>
+      <div class="pricing-note">Includes 25 jobs · $12/job overage</div>
+      <ul class="pricing-features">
+        <li>25 jobs included monthly</li>
+        <li>Same-day booking priority</li>
+        <li>Monthly consolidated invoice</li>
+        <li>Dedicated account contact</li>
+        <li>Partner portal access</li>
+        <li>Volume pricing on overages</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Request partnership</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Tier 3</div>
+      <div class="pricing-name">Enterprise Partner</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-note">Unlimited volume · white-glove service</div>
+      <ul class="pricing-features">
+        <li>Unlimited monthly volume</li>
+        <li>Guaranteed SLA coverage</li>
+        <li>Custom invoicing & reporting</li>
+        <li>API integration available</li>
+        <li>Dedicated coordinator</li>
+        <li>Revenue share options</li>
+        <li>City franchise rights available</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Talk to us</a>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="section" style="border-bottom:1px solid var(--rule);">
+  <div class="testimonial-block">
+    <p class="testimonial-text">We were spending 8–10 hours a month just tracking down notaries for last-minute closings, chasing credentials, and dealing with no-shows. Having a platform that handles all of that and sends us a single invoice at the end of the month — that's the kind of vendor relationship we've been looking for since we opened.</p>
+    <div class="testimonial-source"><strong>Operations Director, Texas Title Company</strong> · San Antonio, TX</div>
+  </div>
+</div>
+
+<!-- CONTACT FORM -->
+<div class="form-section" id="contact">
+  <div class="form-inner">
+    <div class="form-eyebrow">Get Started</div>
+    <div class="form-title">Request a partnership call.</div>
+    <div class="form-desc">We'll reach out within one business day to walk you through the platform, answer questions, and set up your partner account — no commitment required.</div>
+
+    <div id="partnerForm">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>First name</label>
+          <input type="text" id="pFirst" placeholder="First name">
+        </div>
+        <div class="form-field">
+          <label>Last name</label>
+          <input type="text" id="pLast" placeholder="Last name">
+        </div>
+        <div class="form-field">
+          <label>Business name</label>
+          <input type="text" id="pBiz" placeholder="Company name">
+        </div>
+        <div class="form-field">
+          <label>Business type</label>
+          <select id="pType">
+            <option>Title Company</option>
+            <option>Mortgage Broker</option>
+            <option>Law Firm</option>
+            <option>Real Estate Agency</option>
+            <option>Escrow Company</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="pEmail" placeholder="you@company.com">
+        </div>
+        <div class="form-field">
+          <label>Phone</label>
+          <input type="tel" id="pPhone" placeholder="(210) 555-0000">
+        </div>
+        <div class="form-field">
+          <label>City / State</label>
+          <input type="text" id="pCity" placeholder="San Antonio, TX">
+        </div>
+        <div class="form-field">
+          <label>Avg monthly transactions</label>
+          <select id="pVolume">
+            <option>Under 10</option>
+            <option>10–25</option>
+            <option selected>25–50</option>
+            <option>50–100</option>
+            <option>100+</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label>Anything specific you need covered?</label>
+          <textarea id="pNotes" rows="3" placeholder="e.g. last-minute closings, after-hours signings, RON sessions, specific counties..."></textarea>
+        </div>
+      </div>
+
+      <button class="form-submit" id="submitBtn" onclick="submitPartner()">
+        Request Partnership Call →
+      </button>
+      <div class="form-note">No commitment. We'll follow up within 1 business day. · propertygroupofusa@gmail.com</div>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="form-success-icon">✅</div>
+      <div class="form-success-title">Request received.</div>
+      <div class="form-success-desc">We'll reach out to you within one business day to schedule your partnership call. Check your email for a confirmation from propertygroupofusa@gmail.com.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Property Group <span>USA</span> · Documents Platform</div>
+  <div class="footer-desc">San Antonio, Texas · Serving the nation · propertygroupofusa@gmail.com</div>
+  <div class="footer-links">
+    <a href="https://propertygroupofusa.github.io/documents">Main Platform</a>
+    <a href="https://propertygroupofusa.github.io/documents/privacy.html">Privacy</a>
+    <a href="https://propertygroupofusa.github.io/documents/terms.html">Terms</a>
+    <a href="mailto:propertygroupofusa@gmail.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ── ROI Calculator ────────────────────────────────────────────
+const AVG_JOB = { title: 120, mortgage: 95, law: 149 };
+const COORD_RATE = 30; // $30/hr coordinator cost
+
+function calcROI() {
+  const biz   = document.getElementById('bizType').value;
+  const txns  = parseInt(document.getElementById('txnRange').value);
+  const hrs   = parseInt(document.getElementById('hrRange').value);
+
+  document.getElementById('txnVal').textContent = txns;
+  document.getElementById('hrVal').textContent  = hrs;
+
+  const jobVal   = AVG_JOB[biz] * txns;
+  const timeVal  = hrs * COORD_RATE;
+  const total    = jobVal + timeVal;
+
+  document.getElementById('roiNum').textContent =
+    '$' + total.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+  document.getElementById('rb1').textContent = txns + ' jobs';
+  document.getElementById('rb2').textContent = hrs + ' hrs ($' + (hrs * COORD_RATE).toLocaleString() + ')';
+  document.getElementById('rb3').textContent = '$' + AVG_JOB[biz] + '/job';
+}
+
+calcROI();
+
+// ── Partner Form ──────────────────────────────────────────────
+async function submitPartner() {
+  const first  = document.getElementById('pFirst').value.trim();
+  const last   = document.getElementById('pLast').value.trim();
+  const biz    = document.getElementById('pBiz').value.trim();
+  const type   = document.getElementById('pType').value;
+  const email  = document.getElementById('pEmail').value.trim();
+  const phone  = document.getElementById('pPhone').value.trim();
+  const city   = document.getElementById('pCity').value.trim();
+  const volume = document.getElementById('pVolume').value;
+  const notes  = document.getElementById('pNotes').value.trim();
+  const btn    = document.getElementById('submitBtn');
+
+  if (!first || !email || !biz) {
+    alert('Please fill in your name, business name, and email.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        type: 'B2B PARTNERSHIP REQUEST',
+        name: first + ' ' + last,
+        business: biz,
+        business_type: type,
+        email, phone, city,
+        monthly_volume: volume,
+        notes: notes || 'None provided',
+      })
+    });
+  } catch(e) {
+    console.error('Formspree error', e);
+  }
+
+  // Also attempt backend logging
+  try {
+    await fetch('https://pgusa-platform-production.up.railway.app/partners/inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: first + ' ' + last,
+        business: biz,
+        business_type: type,
+        email, phone, city,
+        monthly_volume: volume,
+        notes,
+      })
+    });
+  } catch(e) {
+    // Backend endpoint optional — Formspree is primary
+  }
+
+  document.getElementById('partnerForm').style.display  = 'none';
+  document.getElementById('formSuccess').style.display  = 'block';
+}
+</script>
+</body>
+</html>
