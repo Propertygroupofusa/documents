@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA B2B Outreach Kit</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:  #C9A84C;
+  --ink:   #111111;
+  --body:  #333333;
+  --muted: #777777;
+  --rule:  #E5E5E0;
+  --bg:    #FAFAF8;
+  --white: #FFFFFF;
+  --green: #1A6E3C;
+  --teal:  #1A7A7A;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--body);
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 24px;
+  margin-bottom: 48px;
+}
+
+.page-eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-family: Georgia, serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.page-desc {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 560px;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 40px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: system-ui, sans-serif;
+}
+
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+
+.tab:hover { color: var(--ink); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── EMAIL CARDS ── */
+.email-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.email-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.email-header {
+  background: var(--ink);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.email-day {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.email-timing {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+
+.email-meta {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.meta-row:last-child { margin-bottom: 0; }
+
+.meta-key {
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.meta-val { color: var(--body); }
+
+.email-body {
+  padding: 24px;
+  position: relative;
+}
+
+.email-text {
+  font-family: Georgia, serif;
+  font-size: 15px;
+  color: var(--body);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.email-text .placeholder {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-style: italic;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  font-family: system-ui, sans-serif;
+}
+
+.copy-btn:hover {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+.copy-btn.copied {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+
+.email-notes {
+  padding: 14px 24px;
+  border-top: 1px solid var(--rule);
+  background: rgba(201,168,76,0.04);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.email-notes strong { color: var(--ink); }
+
+/* Target selector */
+.target-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.target-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--rule);
+  color: var(--muted);
+  background: var(--white);
+  transition: all 0.15s;
+  font-family: system-ui, sans-serif;
+}
+
+.target-btn.active {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+/* ── ONE-PAGER ── */
+.onepager {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.onepager-header {
+  background: var(--ink);
+  padding: 32px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.op-brand {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.op-headline {
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  max-width: 360px;
+}
+
+.op-contact {
+  text-align: right;
+}
+
+.op-contact-line {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 3px;
+}
+
+.op-contact-val {
+  font-size: 13px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.op-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 600px) { .op-stats { grid-template-columns: repeat(2, 1fr); } }
+
+.op-stat {
+  background: var(--bg);
+  padding: 20px;
+  text-align: center;
+}
+
+.op-stat-num {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.op-stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.op-body {
+  padding: 32px 36px;
+}
+
+.op-section-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.op-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 580px) { .op-grid { grid-template-columns: 1fr; } }
+
+.op-block {}
+
+.op-block-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.op-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.op-list li {
+  font-size: 13px;
+  color: var(--body);
+  display: flex;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.op-list li::before {
+  content: '→';
+  color: var(--gold);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.op-divider {
+  height: 1px;
+  background: var(--rule);
+  margin: 24px 0;
+}
+
+.op-pricing-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 560px) { .op-pricing-row { grid-template-columns: 1fr; } }
+
+.op-price {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.op-price.featured {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.04);
+}
+
+.op-price-name {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.op-price-num {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.op-price-note {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.op-cta {
+  background: var(--ink);
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.op-cta-text {
+  font-size: 15px;
+  color: var(--white);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.op-cta-text span { color: var(--gold); }
+
+.op-cta-url {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+}
+
+/* Print button */
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  margin-bottom: 16px;
+  transition: background 0.15s;
+}
+
+.print-btn:hover { background: #333; }
+
+/* ── TIPS ── */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.tip-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.tip-icon { font-size: 20px; margin-bottom: 10px; }
+.tip-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.tip-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header">
+    <div class="page-eyebrow">PGUSA Documents Platform</div>
+    <div class="page-title">B2B Outreach Kit</div>
+    <div class="page-desc">Three email templates, a printable one-pager, and execution tips. Everything you need to land your first title company, mortgage broker, or law firm partner this week.</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('emails')">📧 Email Sequence</button>
+    <button class="tab" onclick="switchTab('onepager')">📄 One-Pager</button>
+    <button class="tab" onclick="switchTab('tips')">⚡ Execution Tips</button>
+  </div>
+
+  <!-- ── EMAIL SEQUENCE ── -->
+  <div class="tab-content active" id="tab-emails">
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Select your target to see tailored copy:</div>
+      <div class="target-bar">
+        <button class="target-btn active" onclick="setTarget('title', this)">🏠 Title Company</button>
+        <button class="target-btn" onclick="setTarget('mortgage', this)">📋 Mortgage Broker</button>
+        <button class="target-btn" onclick="setTarget('law', this)">⚖️ Law Firm</button>
+      </div>
+    </div>
+
+    <div class="email-sequence" id="emailSequence"></div>
+  </div>
+
+  <!-- ── ONE-PAGER ── -->
+  <div class="tab-content" id="tab-onepager">
+
+    <button class="print-btn" onclick="window.print()">🖨️ Print One-Pager</button>
+
+    <div class="onepager">
+      <div class="onepager-header">
+        <div>
+          <div class="op-brand">Property Group USA · Documents Platform</div>
+          <div class="op-headline">On-demand document professionals for your closing desk.</div>
+        </div>
+        <div class="op-contact">
+          <div class="op-contact-line">Website</div>
+          <div class="op-contact-val">propertygroupofusa.github.io/documents/partners</div>
+          <div class="op-contact-line" style="margin-top:8px;">Email</div>
+          <div class="op-contact-val">propertygroupofusa@gmail.com</div>
+          <div class="op-contact-line" style="margin-top:8px;">Based in</div>
+          <div class="op-contact-val">San Antonio, Texas</div>
+        </div>
+      </div>
+
+      <div class="op-stats">
+        <div class="op-stat">
+          <div class="op-stat-num">2 hrs</div>
+          <div class="op-stat-label">Avg time from request to confirmed worker</div>
+        </div>
+        <div class="op-stat">
+          <div class="op-stat-num">75–82%</div>
+          <div class="op-stat-label">Worker payout rate (industry-highest)</div>
+        </div>
+        <div class="op-stat">
+          <div class="op-stat-num">5 types</div>
+          <div class="op-stat-label">Notary, RON, Tax, Legal, Real Estate</div>
+        </div>
+        <div class="op-stat">
+          <div class="op-stat-num">$0</div>
+          <div class="op-stat-label">Platform fee to get started</div>
+        </div>
+      </div>
+
+      <div class="op-body">
+        <div class="op-grid">
+          <div class="op-block">
+            <div class="op-section-title">What We Do</div>
+            <div class="op-block-title">Verified professionals, on demand.</div>
+            <ul class="op-list">
+              <li>Credentialed notaries available same-day in Texas markets</li>
+              <li>Certified loan signing agents for mortgage closings</li>
+              <li>Remote Online Notarization (RON) for out-of-area signers</li>
+              <li>Tax document prep and legal document preparation</li>
+              <li>Real estate closing coordination and support</li>
+            </ul>
+          </div>
+          <div class="op-block">
+            <div class="op-section-title">How Partners Benefit</div>
+            <div class="op-block-title">Less coordination. More closings.</div>
+            <ul class="op-list">
+              <li>No coordinator overhead — we handle worker matching</li>
+              <li>Every worker credential-verified before first assignment</li>
+              <li>One monthly invoice — not per-transaction billing chaos</li>
+              <li>Real-time job status visibility through partner portal</li>
+              <li>Guaranteed coverage or you don't pay</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="op-divider"></div>
+
+        <div class="op-section-title">Services & Pricing</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Per-transaction pricing for partners. Volume discounts available at 25+ jobs/month.</div>
+
+        <div style="margin-bottom:20px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">
+            <div style="background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Remote Online Notary</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$14.99</div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Mobile Notary</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$39</div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Real Estate Closing</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$99</div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Tax Prep (W-2)</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$49</div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Legal Documents</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$35</div>
+            </div>
+            <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:12px 14px;">
+              <div style="font-size:11px;color:var(--gold);margin-bottom:4px;">Preferred Partner</div>
+              <div style="font-size:18px;font-weight:700;color:var(--ink);">$299/mo</div>
+              <div style="font-size:10px;color:var(--muted);">25 jobs included</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="op-divider"></div>
+
+        <div class="op-section-title">Worker Verification Standards</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:24px;">
+          <div style="font-size:13px;color:var(--body);display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:var(--green);font-weight:700;">✓</span> Notary commission number on file
+          </div>
+          <div style="font-size:13px;color:var(--body);display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:var(--green);font-weight:700;">✓</span> State and expiration verified
+          </div>
+          <div style="font-size:13px;color:var(--body);display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:var(--green);font-weight:700;">✓</span> W-9 tax documentation on file
+          </div>
+          <div style="font-size:13px;color:var(--body);display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:var(--green);font-weight:700;">✓</span> RON authorization verified where applicable
+          </div>
+        </div>
+
+        <div class="op-cta">
+          <div>
+            <div class="op-cta-text">Ready to partner? <span>Schedule a 20-minute call</span> — we'll set up your account the same day.</div>
+            <div class="op-cta-url">propertygroupofusa.github.io/documents/partners.html</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.5);">Or email directly:</div>
+            <div style="font-size:14px;color:var(--white);font-weight:600;">propertygroupofusa@gmail.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TIPS ── -->
+  <div class="tab-content" id="tab-tips">
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🎯</div>
+        <div class="tip-title">Target ops managers, not owners</div>
+        <div class="tip-desc">At title companies and mortgage brokers, the person who feels the notary-scheduling pain daily is the operations manager or closing coordinator — not the owner. Address them directly.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📅</div>
+        <div class="tip-title">Send Email 1 on Tuesday or Wednesday</div>
+        <div class="tip-desc">Monday = buried in weekend catchup. Thursday/Friday = mentally checked out. Tuesday and Wednesday 9–11am have the highest open rates for B2B cold outreach.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📍</div>
+        <div class="tip-title">Lead with San Antonio specifically</div>
+        <div class="tip-desc">Don't say "Texas." Say "San Antonio." Local specificity builds credibility and trust. Ops managers are skeptical of platforms that claim to cover everywhere — name their city first.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🏠</div>
+        <div class="tip-title">Find title companies on BCAD</div>
+        <div class="tip-desc">Search the Bexar County Appraisal District records for recent closings — the title company name is listed on every transaction. Build your prospect list from actual closing records.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📞</div>
+        <div class="tip-title">Follow Email 2 with a call</div>
+        <div class="tip-desc">Send Email 2, then call the same day. Say: "I just sent you an email about notary coverage — I wanted to put a face to it. Do you have 90 seconds?" That's all you need to get the meeting.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📄</div>
+        <div class="tip-title">Print the one-pager, don't email it</div>
+        <div class="tip-desc">Walk into the title company with two printed copies of the one-pager. Leave one. Physical materials get kept; PDF attachments get deleted. The walk-in costs nothing and books more meetings than cold email alone.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💬</div>
+        <div class="tip-title">The only ask in meeting 1</div>
+        <div class="tip-desc">Don't try to close a contract in the first meeting. The only ask: "Can we try one closing? No commitment, no monthly fee — just let us fill one job and see how it goes." That converts at 60–70%.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔁</div>
+        <div class="tip-title">One partner opens the next</div>
+        <div class="tip-desc">Title companies talk to each other. Mortgage brokers know other brokers. Once you have one active partner who's happy, ask them: "Who else do you know who has this problem?" That referral is your fastest path to partner #2.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Email content by target ───────────────────────────────────
+const EMAILS = {
+  title: {
+    label: 'Title Company',
+    e1: {
+      day: 'Email 1', timing: 'Day 1 — Tuesday or Wednesday, 9–11am',
+      to: '[Name], Operations Manager / Closing Coordinator',
+      subject: 'Notary coverage for your closings — San Antonio',
+      body: `Hi [First Name],
+
+I'm Delfine Stennis, founder of Property Group USA's Documents Platform — we connect title companies in San Antonio with credentialed, verified notaries available same-day.
+
+Quick question: when you have a last-minute closing or a no-show notary, what does that process look like for your team right now?
+
+We built our platform specifically for that problem. Closing coordinators submit the job, we match a verified notary in under 2 hours, and you get one monthly invoice instead of tracking down individual contractors.
+
+Every worker on our platform has their commission number, state, and expiration date on file before they touch their first job.
+
+Would a 20-minute call this week make sense? I can show you exactly how it works for a title office your size.
+
+Delfine Stennis
+Property Group USA · Documents Platform
+propertygroupofusa@gmail.com
+propertygroupofusa.github.io/documents/partners`,
+      notes: '<strong>Subject line tip:</strong> Keep it specific to their city and their job. "Notary coverage for your closings — San Antonio" outperforms generic subject lines by 2–3×. Don\'t mention your platform name in the subject — it reads like a sales pitch before they open it.'
+    },
+    e2: {
+      day: 'Email 2', timing: 'Day 5 — Follow-up if no reply',
+      to: 'Same contact',
+      subject: 'Re: Notary coverage for your closings — San Antonio',
+      body: `Hi [First Name],
+
+Following up on my note from earlier this week.
+
+I know closing coordination is one of those things that only becomes a priority when something goes wrong — a no-show at a cash closing, a last-minute refi that needs a notary by 5pm.
+
+We've built the platform that handles exactly that. No coordinator overhead, no chasing credentials, one monthly invoice.
+
+I'm happy to do a trial — no monthly commitment, no platform fee. Just submit one job through our system and see how fast we fill it.
+
+If that sounds worth 20 minutes, I'm available Thursday or Friday this week.
+
+Delfine
+propertygroupofusa@gmail.com`,
+      notes: '<strong>Reply thread:</strong> Send this as a reply to Email 1 so it shows the original thread. Subject line stays as "Re:" — this signals familiarity and gets opened more than a new email. Keep it short. This email exists to get a reply, not to inform.'
+    },
+    e3: {
+      day: 'Email 3', timing: 'Day 10 — Final touch',
+      to: 'Same contact',
+      subject: 'Last note — PGUSA partner program',
+      body: `Hi [First Name],
+
+Last note — I don't want to keep filling your inbox.
+
+If notary staffing ever becomes a priority, we're at propertygroupofusa.github.io/documents/partners — you can see exactly how the partner program works and request a call there.
+
+If timing isn't right, I completely understand. I'll leave it with you.
+
+Either way, if you ever need a verified notary on short notice in San Antonio — we're the fastest option in the market right now.
+
+Delfine Stennis
+Property Group USA
+propertygroupofusa@gmail.com`,
+      notes: '<strong>The breakup email works.</strong> Saying "last note" and giving them an out creates a pattern interrupt. Many responses come on Email 3. The link to the partners page gives them something to act on independently without needing a call first.'
+    }
+  },
+  mortgage: {
+    label: 'Mortgage Broker',
+    e1: {
+      day: 'Email 1', timing: 'Day 1 — Tuesday or Wednesday, 9–11am',
+      to: '[Name], Loan Officer / Operations Lead',
+      subject: 'Loan signing agents in San Antonio — same-day',
+      body: `Hi [First Name],
+
+I'm Delfine Stennis, founder of PGUSA Documents Platform. We place certified loan signing agents for mortgage brokers in San Antonio — same-day availability, verified credentials, single monthly invoice.
+
+One thing I hear from loan officers a lot: last-minute signings are the biggest scheduling headache in the business. Borrower is ready to close, the signing agent falls through, and someone on your team spends an hour making calls.
+
+We've built the platform that eliminates that problem. You submit the signing job, we match a certified LSA in under 2 hours, and you never have to track down credentials or send separate checks.
+
+Would a quick call this week be useful? I'd rather spend 20 minutes showing you how it works than send three more emails.
+
+Delfine Stennis
+Property Group USA · Documents Platform
+propertygroupofusa@gmail.com`,
+      notes: '<strong>LSA = Loan Signing Agent.</strong> Using the right terminology shows you know the industry. Mortgage brokers are skeptical of generic document services — show you understand their specific workflow from the first sentence.'
+    },
+    e2: {
+      day: 'Email 2', timing: 'Day 5 — Follow-up',
+      to: 'Same contact',
+      subject: 'Re: Loan signing agents in San Antonio — same-day',
+      body: `Hi [First Name],
+
+Quick follow-up.
+
+I know the signing agent problem usually gets solved by whoever happens to answer the phone that day. We're the more reliable version of that.
+
+Verified LSAs. Same-day coverage. One invoice at month end.
+
+Worth a trial on your next last-minute signing? No commitment, no monthly fee until you've seen it work.
+
+I'm available this week if a 20-minute call makes sense.
+
+Delfine
+propertygroupofusa@gmail.com`,
+      notes: '<strong>Keep Email 2 short.</strong> If Email 1 didn\'t get a reply, they\'re busy — not uninterested. A short second email with a clear low-commitment ask (trial, no fee) converts better than a longer follow-up.'
+    },
+    e3: {
+      day: 'Email 3', timing: 'Day 10 — Final touch',
+      to: 'Same contact',
+      subject: 'Last note — signing agent coverage',
+      body: `Hi [First Name],
+
+Last note from me.
+
+If you ever need a certified loan signing agent in San Antonio on short notice — we're at propertygroupofusa.github.io/documents/partners. No phone calls, no waiting — just submit the job and we'll fill it.
+
+I'll leave it there. If timing is ever right, I'd love the chance to earn your business.
+
+Delfine Stennis
+Property Group USA
+propertygroupofusa@gmail.com`,
+      notes: '<strong>Leave the door open.</strong> Mortgage volume fluctuates. A broker who doesn\'t need you today may desperately need you in 60 days when their usual signing agent moves or retires. The goal of Email 3 is to be remembered.'
+    }
+  },
+  law: {
+    label: 'Law Firm',
+    e1: {
+      day: 'Email 1', timing: 'Day 1 — Tuesday or Wednesday, 9–11am',
+      to: '[Name], Office Manager / Managing Attorney',
+      subject: 'Notary and document prep coverage — San Antonio law firms',
+      body: `Hi [First Name],
+
+I'm Delfine Stennis, founder of PGUSA Documents Platform — we provide credentialed notaries and legal document preparation professionals to law firms in San Antonio on an on-demand basis.
+
+Most firms I talk to handle notarizations in one of two ways: they rely on whoever in the office happens to be commissioned, or they scramble to find someone when that person is out. Neither is a system.
+
+We are the system. Verified notaries available same-day, legal document preparation support, one invoice at month-end. Every professional on our platform has credentials on file before they work their first job.
+
+Would a 20-minute call be worth your time this week? I can walk you through how firms similar to yours are using the platform.
+
+Delfine Stennis
+Property Group USA · Documents Platform
+propertygroupofusa@gmail.com`,
+      notes: '<strong>Law firms respond to credibility first.</strong> Lead with verification and process — attorneys care about liability. The phrase "credentials on file before they work their first job" is doing a lot of work in this email.'
+    },
+    e2: {
+      day: 'Email 2', timing: 'Day 5 — Follow-up',
+      to: 'Same contact',
+      subject: 'Re: Notary and document prep coverage — San Antonio law firms',
+      body: `Hi [First Name],
+
+Following up briefly.
+
+I know adding a vendor relationship requires trust that takes time to build — so I'll just say this: we're happy to fill one job for your firm at no cost to see how it works. No contract, no monthly commitment.
+
+If the service is what we say it is, we earn your business from that first job. If not, you've lost nothing.
+
+Available to connect this week if it's useful.
+
+Delfine
+propertygroupofusa@gmail.com`,
+      notes: '<strong>The free trial offer works well with law firms</strong> because it removes the procurement risk. Attorneys are trained to be skeptical — a no-cost first job removes the barrier entirely and lets the platform prove itself.'
+    },
+    e3: {
+      day: 'Email 3', timing: 'Day 10 — Final touch',
+      to: 'Same contact',
+      subject: 'Last note — PGUSA Documents',
+      body: `Hi [First Name],
+
+Last note.
+
+If notarization or document preparation ever becomes a staffing problem for your firm, we're at propertygroupofusa.github.io/documents/partners — verified professionals, same-day coverage, one invoice.
+
+I appreciate your time. If timing is ever right, I'd welcome the conversation.
+
+Delfine Stennis
+Property Group USA
+propertygroupofusa@gmail.com`,
+      notes: '<strong>With law firms, brevity is respect.</strong> Attorneys\' time is billed by the hour. A short, professional third email that respects their time and leaves a clear door open is more effective than a longer message.'
+    }
+  }
+};
+
+let currentTarget = 'title';
+
+function setTarget(target, btn) {
+  currentTarget = target;
+  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEmails();
+}
+
+function renderEmails() {
+  const data = EMAILS[currentTarget];
+  const seq  = document.getElementById('emailSequence');
+  const emails = [data.e1, data.e2, data.e3];
+
+  seq.innerHTML = emails.map((e, i) => `
+    <div class="email-card">
+      <div class="email-header">
+        <div class="email-day">${e.day} of 3</div>
+        <div class="email-timing">${e.timing}</div>
+      </div>
+      <div class="email-meta">
+        <div class="meta-row"><span class="meta-key">To:</span><span class="meta-val">${e.to}</span></div>
+        <div class="meta-row"><span class="meta-key">Subject:</span><span class="meta-val">${e.subject}</span></div>
+      </div>
+      <div class="email-body">
+        <button class="copy-btn" onclick="copyEmail(${i}, this)">Copy</button>
+        <div class="email-text">${e.body.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>')}</div>
+      </div>
+      <div class="email-notes">${e.notes}</div>
+    </div>
+  `).join('');
+}
+
+function copyEmail(idx, btn) {
+  const emails = [
+    EMAILS[currentTarget].e1,
+    EMAILS[currentTarget].e2,
+    EMAILS[currentTarget].e3
+  ];
+  const text = `Subject: ${emails[idx].subject}\n\n${emails[idx].body}`;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Init
+renderEmails();
+</script>
+</body>
+</html>
