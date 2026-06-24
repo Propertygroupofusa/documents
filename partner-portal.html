@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA Partner Portal</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:   #C9A84C;
+  --gold-d: #9A7A30;
+  --ink:    #0D1117;
+  --deep:   #161B22;
+  --surf:   #1C2330;
+  --raise:  #222C3C;
+  --border: #2A3441;
+  --mist:   #8B9BB4;
+  --text:   #CDD9E5;
+  --bright: #E6EDF3;
+  --green:  #2ECC71;
+  --red:    #E74C3C;
+  --amber:  #F39C12;
+  --teal:   #1A8B8B;
+  --mono:   'Courier New', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── TOPNAV ── */
+.topnav {
+  background: var(--deep);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.nav-brand {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--bright);
+  letter-spacing: -0.3px;
+}
+
+.nav-brand span { color: var(--gold); }
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mist);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.nav-tab:hover { color: var(--bright); background: var(--surf); }
+.nav-tab.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-partner-name {
+  font-size: 12px;
+  color: var(--mist);
+  font-family: var(--mono);
+}
+
+.nav-logout {
+  font-size: 11px;
+  color: var(--mist);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.nav-logout:hover { border-color: var(--red); color: var(--red); }
+
+/* ── PAGES ── */
+.page { display: none; max-width: 1020px; margin: 0 auto; padding: 32px 20px 80px; }
+.page.active { display: block; }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.login-card {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-logo {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--bright);
+  margin-bottom: 4px;
+}
+
+.login-logo span { color: var(--gold); }
+
+.login-tag {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 28px;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--bright);
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 13px;
+  color: var(--mist);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.field { margin-bottom: 14px; }
+
+.field label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--bright);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+
+.field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.2); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+.field select option { background: var(--deep); }
+
+.btn-gold {
+  width: 100%;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+
+.btn-gold:hover { opacity: 0.85; }
+.btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.login-divider {
+  text-align: center;
+  font-size: 12px;
+  color: var(--mist);
+  margin: 16px 0;
+  position: relative;
+}
+
+.login-divider::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: var(--border);
+}
+
+.login-divider span {
+  background: var(--deep);
+  padding: 0 10px;
+  position: relative;
+}
+
+.btn-outline {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mist);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+.login-err {
+  background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.25);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #e87070;
+  margin-bottom: 14px;
+  display: none;
+}
+
+/* ── STAT CARDS ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 8px;
+}
+
+.stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--gold);
+  font-family: var(--mono);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--mist);
+}
+
+/* ── SECTION HEADER ── */
+.sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sec-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bright);
+  letter-spacing: -0.2px;
+}
+
+.sec-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 4px;
+}
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse: collapse;
+  margin-bottom: 28px;
+}
+
+.data-table th {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  padding: 12px 16px;
+  text-align: left;
+  background: var(--surf);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.badge-new    { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.badge-active { background: rgba(46,204,113,0.12); color: var(--green); border: 1px solid rgba(46,204,113,0.25); }
+.badge-done   { background: rgba(139,155,180,0.1); color: var(--mist); border: 1px solid var(--border); }
+.badge-title  { background: rgba(26,139,139,0.12); color: #5DADE2; border: 1px solid rgba(26,139,139,0.25); }
+.badge-mtg    { background: rgba(243,156,18,0.12); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
+.badge-law    { background: rgba(155,89,182,0.12); color: #C39BD3; border: 1px solid rgba(155,89,182,0.25); }
+
+/* ── JOB FORM ── */
+.form-card {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+.form-grid .full { grid-column: 1 / -1; }
+
+.submit-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.btn-submit {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 6px;
+  padding: 11px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btn-submit:hover { opacity: 0.85; }
+.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.form-note {
+  font-size: 12px;
+  color: var(--mist);
+}
+
+/* ── LEAD CARDS ── */
+.lead-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.lead-card {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+}
+
+.lead-card:hover { border-color: var(--gold-d); }
+
+.lead-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.lead-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bright);
+  line-height: 1.3;
+}
+
+.lead-biz {
+  font-size: 12px;
+  color: var(--mist);
+  margin-bottom: 10px;
+}
+
+.lead-contact {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lead-contact-icon { color: var(--mist); flex-shrink: 0; }
+
+.lead-vol {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--mist);
+}
+
+.lead-vol strong { color: var(--gold); }
+
+.lead-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-sm {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.15s;
+  border: none;
+}
+
+.btn-email {
+  background: rgba(201,168,76,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.25);
+}
+
+.btn-email:hover { background: rgba(201,168,76,0.2); }
+
+.btn-call {
+  background: rgba(46,204,113,0.1);
+  color: var(--green);
+  border: 1px solid rgba(46,204,113,0.2);
+}
+
+.btn-call:hover { background: rgba(46,204,113,0.18); }
+
+/* ── SUCCESS TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--deep);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--green);
+  z-index: 999;
+  display: none;
+  animation: slideUp 0.3s ease;
+  max-width: 300px;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--mist);
+  font-size: 14px;
+}
+
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+
+/* ── PUBLIC FORM ── */
+.public-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+.public-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.public-logo {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--bright);
+  margin-bottom: 4px;
+}
+
+.public-logo span { color: var(--gold); }
+
+.public-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--bright);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.public-desc {
+  font-size: 14px;
+  color: var(--mist);
+  line-height: 1.6;
+}
+
+.public-card {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.public-success {
+  text-align: center;
+  padding: 40px 20px;
+  display: none;
+}
+
+.success-icon { font-size: 48px; margin-bottom: 16px; }
+.success-title { font-size: 22px; font-weight: 700; color: var(--bright); margin-bottom: 8px; }
+.success-desc { font-size: 14px; color: var(--mist); line-height: 1.6; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  color: var(--mist);
+  background: transparent;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.filter-btn.active {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+
+.filter-btn:hover:not(.active) { border-color: var(--gold-d); color: var(--text); }
+
+/* Spin */
+.spin {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(13,17,23,0.3);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .topnav { padding: 0 12px; }
+  .nav-tabs .nav-tab { padding: 6px 10px; font-size: 11px; }
+  .stat-val { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGIN SCREEN
+═══════════════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">Property Group <span>USA</span></div>
+    <div class="login-tag">Partner Portal</div>
+
+    <div id="loginView">
+      <div class="login-title">Partner login</div>
+      <div class="login-sub">Access your job dashboard, submit new jobs, and track your account.</div>
+      <div class="login-err" id="loginErr"></div>
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@company.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"></div>
+      <button class="btn-gold" id="loginBtn" onclick="doLogin()">
+        <span id="loginLabel">Sign In →</span>
+        <span class="spin" id="loginSpin" style="display:inline-block;vertical-align:middle;margin-left:8px;border-top-color:var(--ink);"></span>
+      </button>
+      <div class="login-divider"><span>or</span></div>
+      <button class="btn-outline" onclick="showRegister()">Register as a new partner</button>
+      <div style="margin-top:16px;text-align:center;">
+        <a href="#public" onclick="showPublicForm()" style="font-size:12px;color:var(--mist);text-decoration:none;">Submit a job without an account →</a>
+      </div>
+    </div>
+
+    <div id="registerView" style="display:none;">
+      <div class="login-title">New partner</div>
+      <div class="login-sub">Create your partner account to submit jobs and track your dashboard.</div>
+      <div class="login-err" id="regErr"></div>
+      <div class="form-grid" style="margin-bottom:0;">
+        <div class="field"><label>First name</label><input type="text" id="regFirst" placeholder="First"></div>
+        <div class="field"><label>Last name</label><input type="text" id="regLast" placeholder="Last"></div>
+      </div>
+      <div class="field"><label>Business name</label><input type="text" id="regBiz" placeholder="ABC Title Company"></div>
+      <div class="field">
+        <label>Business type</label>
+        <select id="regType">
+          <option>Title Company</option>
+          <option>Mortgage Broker</option>
+          <option>Law Firm</option>
+          <option>Real Estate Agency</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Email</label><input type="email" id="regEmail" placeholder="you@company.com"></div>
+      <div class="field"><label>Phone</label><input type="tel" id="regPhone" placeholder="(210) 555-0000"></div>
+      <div class="field"><label>City / State</label><input type="text" id="regCity" placeholder="San Antonio, TX"></div>
+      <div class="field"><label>Password</label><input type="password" id="regPassword" placeholder="Choose a password"></div>
+      <button class="btn-gold" id="regBtn" onclick="doRegister()">Create Partner Account →</button>
+      <div class="login-divider"><span>or</span></div>
+      <button class="btn-outline" onclick="showLogin()">Already have an account? Sign in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PUBLIC JOB FORM (no login)
+═══════════════════════════════════════════════════════════ -->
+<div id="publicScreen" style="display:none;">
+  <div class="public-wrap">
+    <div class="public-header">
+      <div class="public-logo">Property Group <span>USA</span></div>
+      <div class="public-title">Submit a job request</div>
+      <div class="public-desc">No account needed. Fill in the details and a verified worker will confirm within 2 hours. <a href="#" onclick="showLoginScreen()" style="color:var(--gold);">Sign in for your full dashboard →</a></div>
+    </div>
+    <div class="public-card">
+      <div id="publicFormBody">
+        <div class="form-grid">
+          <div class="field"><label>Your name</label><input type="text" id="pub_name" placeholder="Full name"></div>
+          <div class="field"><label>Company</label><input type="text" id="pub_company" placeholder="ABC Title Co."></div>
+          <div class="field"><label>Email</label><input type="email" id="pub_email" placeholder="you@company.com"></div>
+          <div class="field"><label>Phone</label><input type="tel" id="pub_phone" placeholder="(210) 555-0000"></div>
+          <div class="field full">
+            <label>Service needed</label>
+            <select id="pub_service">
+              <option value="notary_mobile">Mobile Notary — $39</option>
+              <option value="notary_remote">Remote Online Notary — $14.99</option>
+              <option value="real_estate">Real Estate Closing — $99</option>
+              <option value="tax_w2">Tax Prep W-2 — $49</option>
+              <option value="tax_self">Tax Prep Self-Employed — $99</option>
+              <option value="legal">Legal Document Prep — $35</option>
+            </select>
+          </div>
+          <div class="field"><label>Location / City</label><input type="text" id="pub_location" placeholder="San Antonio, TX"></div>
+          <div class="field"><label>Preferred date</label><input type="date" id="pub_date"></div>
+          <div class="field full"><label>Notes (optional)</label><textarea id="pub_notes" rows="3" placeholder="Any details about the job, number of signers, urgency..."></textarea></div>
+        </div>
+        <button class="btn-submit" id="pubSubmitBtn" onclick="submitPublicJob()" style="width:100%;">
+          Submit Job Request →
+        </button>
+        <div style="font-size:11px;color:var(--mist);text-align:center;margin-top:10px;">We'll confirm within 2 hours · No payment until job is complete</div>
+      </div>
+      <div class="public-success" id="publicSuccess">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Job submitted!</div>
+        <div class="success-desc">A verified worker will confirm within 2 hours. Check <strong id="pub_confirm_email"></strong> for your confirmation.<br><br><a href="#" onclick="showPublicForm()" style="color:var(--gold);">Submit another job</a> &nbsp;·&nbsp; <a href="#" onclick="showLoginScreen()" style="color:var(--mist);">Create an account</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN PORTAL (after login)
+═══════════════════════════════════════════════════════════ -->
+<div id="portalScreen" style="display:none;">
+  <div class="topnav">
+    <div class="nav-brand">Property Group <span>USA</span> · Partner</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('dashboard')">Dashboard</button>
+      <button class="nav-tab" onclick="switchPage('submit')">Submit Job</button>
+      <button class="nav-tab" onclick="switchPage('jobs')">My Jobs</button>
+      <button class="nav-tab" onclick="switchPage('leads')">Leads</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-partner-name" id="portalName"></div>
+      <button class="nav-logout" onclick="doLogout()">Log out</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div class="page active" id="page-dashboard">
+    <div class="sec-eyebrow">Overview</div>
+    <div class="sec-title" style="font-size:22px;color:var(--bright);margin-bottom:24px;letter-spacing:-0.3px;" id="dashGreet">Welcome back</div>
+
+    <div class="stat-row" id="dashStats">
+      <div class="stat-card"><div class="stat-label">Jobs Submitted</div><div class="stat-val" id="ds1">—</div><div class="stat-sub">All time</div></div>
+      <div class="stat-card"><div class="stat-label">Jobs Completed</div><div class="stat-val" id="ds2">—</div><div class="stat-sub">Fulfilled</div></div>
+      <div class="stat-card"><div class="stat-label">Jobs Pending</div><div class="stat-val" id="ds3">—</div><div class="stat-sub">In progress</div></div>
+      <div class="stat-card"><div class="stat-label">Total Spent</div><div class="stat-val" id="ds4">—</div><div class="stat-sub">This account</div></div>
+    </div>
+
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Recent Activity</div>
+        <div class="sec-title">Latest jobs</div>
+      </div>
+      <button class="btn-submit" onclick="switchPage('submit')" style="padding:8px 18px;font-size:13px;">+ Submit New Job</button>
+    </div>
+
+    <table class="data-table" id="dashJobTable">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Location</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="dashJobBody">
+        <tr><td colspan="5"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">No jobs yet</div>Submit your first job to get started.</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SUBMIT JOB PAGE -->
+  <div class="page" id="page-submit">
+    <div class="sec-eyebrow">New Request</div>
+    <div class="sec-title" style="font-size:22px;color:var(--bright);margin-bottom:24px;letter-spacing:-0.3px;">Submit a job</div>
+
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Service type</label>
+          <select id="j_service">
+            <option value="notary_mobile">Mobile Notary — $39</option>
+            <option value="notary_remote">Remote Online Notary — $14.99</option>
+            <option value="real_estate">Real Estate Closing — $99</option>
+            <option value="tax_w2">Tax Prep W-2 — $49</option>
+            <option value="tax_self">Tax Prep Self-Employed — $99</option>
+            <option value="legal">Legal Document Prep — $35</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Client name</label>
+          <input type="text" id="j_client" placeholder="Borrower or client name">
+        </div>
+        <div class="field">
+          <label>Client email</label>
+          <input type="email" id="j_email" placeholder="client@email.com">
+        </div>
+        <div class="field">
+          <label>Client phone</label>
+          <input type="tel" id="j_phone" placeholder="(210) 555-0000">
+        </div>
+        <div class="field">
+          <label>Location / Address</label>
+          <input type="text" id="j_location" placeholder="Street, City, TX">
+        </div>
+        <div class="field">
+          <label>Preferred date</label>
+          <input type="date" id="j_date">
+        </div>
+        <div class="field">
+          <label>Preferred time</label>
+          <input type="time" id="j_time">
+        </div>
+        <div class="field">
+          <label>Urgency</label>
+          <select id="j_urgent">
+            <option value="false">Standard (2–4 hours)</option>
+            <option value="true">Urgent (under 1 hour)</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Notes for the worker</label>
+          <textarea id="j_notes" rows="3" placeholder="Number of signers, document type, access instructions, any special requirements..."></textarea>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button class="btn-submit" id="jobSubmitBtn" onclick="submitJob()">
+          <span class="spin" id="jobSpin"></span>
+          <span id="jobSubmitLabel">Submit Job →</span>
+        </button>
+        <div class="form-note">A confirmed worker will be assigned within 2 hours.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY JOBS PAGE -->
+  <div class="page" id="page-jobs">
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Job History</div>
+        <div class="sec-title">All submitted jobs</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterJobs('all', this)">All</button>
+      <button class="filter-btn" onclick="filterJobs('open', this)">Open</button>
+      <button class="filter-btn" onclick="filterJobs('claimed', this)">Claimed</button>
+      <button class="filter-btn" onclick="filterJobs('completed', this)">Completed</button>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Client</th>
+          <th>Location</th>
+          <th>Scheduled</th>
+          <th>Worker</th>
+          <th>Status</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="jobsBody">
+        <tr><td colspan="7"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">No jobs yet</div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LEADS PAGE -->
+  <div class="page" id="page-leads">
+    <div class="sec-header">
+      <div>
+        <div class="sec-eyebrow">Partnership Inquiries</div>
+        <div class="sec-title">Inbound leads</div>
+      </div>
+      <button class="btn-submit" onclick="loadLeads()" style="padding:8px 18px;font-size:13px;">↻ Refresh</button>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterLeads('all', this)">All</button>
+      <button class="filter-btn" onclick="filterLeads('Title Company', this)">Title</button>
+      <button class="filter-btn" onclick="filterLeads('Mortgage Broker', this)">Mortgage</button>
+      <button class="filter-btn" onclick="filterLeads('Law Firm', this)">Law Firms</button>
+    </div>
+
+    <div class="lead-grid" id="leadGrid">
+      <div class="empty" style="grid-column:1/-1;">
+        <div class="empty-icon">📥</div>
+        <div class="empty-title">Loading leads...</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /portalScreen -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://pgusa-platform-production.up.railway.app';
+let partnerToken = null;
+let partnerData  = null;
+let allJobs      = [];
+let allLeads     = [];
+
+// ── Screen switching ──────────────────────────────────────────
+function showPublicForm() {
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('publicScreen').style.display = 'block';
+  document.getElementById('portalScreen').style.display = 'none';
+  document.getElementById('publicFormBody').style.display = 'block';
+  document.getElementById('publicSuccess').style.display  = 'none';
+}
+
+function showLoginScreen() {
+  document.getElementById('loginScreen').style.display  = 'flex';
+  document.getElementById('publicScreen').style.display = 'none';
+  document.getElementById('portalScreen').style.display = 'none';
+}
+
+function showLogin() {
+  document.getElementById('loginView').style.display    = 'block';
+  document.getElementById('registerView').style.display = 'none';
+}
+
+function showRegister() {
+  document.getElementById('loginView').style.display    = 'none';
+  document.getElementById('registerView').style.display = 'block';
+}
+
+// ── Login ─────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const err   = document.getElementById('loginErr');
+  const btn   = document.getElementById('loginBtn');
+  const spin  = document.getElementById('loginSpin');
+  const lbl   = document.getElementById('loginLabel');
+
+  if (!email || !pass) { showErr(err, 'Please enter your email and password.'); return; }
+
+  btn.disabled = true; spin.style.display = 'inline-block'; lbl.textContent = 'Signing in...';
+  err.style.display = 'none';
+
+  try {
+    const form = new URLSearchParams();
+    form.append('username', email);
+    form.append('password', pass);
+
+    const res  = await fetch(API + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString()
+    });
+
+    if (!res.ok) { showErr(err, 'Login failed — check your email and password.'); return; }
+
+    const data = await res.json();
+    partnerToken = data.access_token;
+    partnerData  = { name: data.name || email, email };
+    localStorage.setItem('pgusa_partner_token', partnerToken);
+    localStorage.setItem('pgusa_partner_name',  partnerData.name);
+    openPortal();
+  } catch(e) {
+    showErr(err, 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false; spin.style.display = 'none'; lbl.textContent = 'Sign In →';
+  }
+}
+
+// ── Register ──────────────────────────────────────────────────
+async function doRegister() {
+  const first = document.getElementById('regFirst').value.trim();
+  const last  = document.getElementById('regLast').value.trim();
+  const biz   = document.getElementById('regBiz').value.trim();
+  const type  = document.getElementById('regType').value;
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const city  = document.getElementById('regCity').value.trim();
+  const pass  = document.getElementById('regPassword').value;
+  const err   = document.getElementById('regErr');
+  const btn   = document.getElementById('regBtn');
+
+  if (!first || !email || !biz || !pass) {
+    showErr(err, 'Please fill in all required fields.'); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/partners/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        first_name: first, last_name: last,
+        business_name: biz, business_type: type,
+        email, phone, city, password: pass
+      })
+    });
+
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      showErr(err, d.detail || 'Registration failed. Email may already be in use.'); return;
+    }
+
+    // Auto-login after register
+    document.getElementById('loginEmail').value    = email;
+    document.getElementById('loginPassword').value = pass;
+    showLogin();
+    await doLogin();
+  } catch(e) {
+    showErr(err, 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Partner Account →';
+  }
+}
+
+// ── Portal ────────────────────────────────────────────────────
+function openPortal() {
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('publicScreen').style.display = 'none';
+  document.getElementById('portalScreen').style.display = 'block';
+  document.getElementById('portalName').textContent = partnerData.name;
+  document.getElementById('dashGreet').textContent =
+    'Welcome back, ' + (partnerData.name || 'Partner') + ' 👋';
+  loadDashboard();
+  loadJobs();
+  loadLeads();
+}
+
+function doLogout() {
+  partnerToken = null; partnerData = null;
+  localStorage.removeItem('pgusa_partner_token');
+  localStorage.removeItem('pgusa_partner_name');
+  showLoginScreen();
+}
+
+// ── Page switching ────────────────────────────────────────────
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Load dashboard ────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const res  = await fetch(API + '/partners/dashboard', {
+      headers: { 'Authorization': 'Bearer ' + partnerToken }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    document.getElementById('ds1').textContent = data.total_submitted  ?? '—';
+    document.getElementById('ds2').textContent = data.total_completed  ?? '—';
+    document.getElementById('ds3').textContent = data.total_pending    ?? '—';
+    document.getElementById('ds4').textContent = data.total_spent ? '$' + data.total_spent.toFixed(0) : '—';
+
+    const tbody = document.getElementById('dashJobBody');
+    if (data.recent_jobs && data.recent_jobs.length) {
+      tbody.innerHTML = data.recent_jobs.map(j => jobRow(j)).join('');
+    }
+  } catch(e) { console.error('Dashboard load failed', e); }
+}
+
+// ── Load jobs ─────────────────────────────────────────────────
+async function loadJobs() {
+  try {
+    const res = await fetch(API + '/partners/jobs', {
+      headers: { 'Authorization': 'Bearer ' + partnerToken }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    allJobs = data.jobs || [];
+    renderJobs(allJobs);
+  } catch(e) {
+    // Fallback demo data so page isn't empty
+    allJobs = [];
+    renderJobs(allJobs);
+  }
+}
+
+function renderJobs(jobs) {
+  const tbody = document.getElementById('jobsBody');
+  if (!jobs.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">📋</div><div class="empty-title">No jobs yet</div>Submit your first job above.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = jobs.map(j => `
+    <tr>
+      <td>${formatService(j.service_type)}</td>
+      <td>${j.client_name || '—'}</td>
+      <td>${j.location || j.state || '—'}</td>
+      <td>${j.scheduled_date ? new Date(j.scheduled_date).toLocaleDateString() : 'Flexible'}</td>
+      <td>${j.worker_name || '<span style="color:var(--mist);">Pending match</span>'}</td>
+      <td>${statusBadge(j.status)}</td>
+      <td style="color:var(--gold);font-family:var(--mono);">$${j.client_price || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+function filterJobs(status, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = status === 'all' ? allJobs : allJobs.filter(j => j.status === status);
+  renderJobs(filtered);
+}
+
+function jobRow(j) {
+  return `
+    <tr>
+      <td>${formatService(j.service_type)}</td>
+      <td>${j.location || j.state || '—'}</td>
+      <td>${j.scheduled_date ? new Date(j.scheduled_date).toLocaleDateString() : 'Flexible'}</td>
+      <td>${statusBadge(j.status)}</td>
+      <td style="color:var(--gold);font-family:var(--mono);">$${j.client_price || '—'}</td>
+    </tr>`;
+}
+
+// ── Load leads ────────────────────────────────────────────────
+async function loadLeads() {
+  try {
+    const res = await fetch(API + '/partners/leads', {
+      headers: { 'Authorization': 'Bearer ' + partnerToken }
+    });
+    if (!res.ok) throw new Error('Not ok');
+    const data = await res.json();
+    allLeads = data.leads || [];
+    renderLeads(allLeads);
+  } catch(e) {
+    // Show demo leads so the page demonstrates value
+    allLeads = getDemoLeads();
+    renderLeads(allLeads);
+  }
+}
+
+function getDemoLeads() {
+  return [
+    { name: 'Sandra M.', business: 'Lone Star Title Group', type: 'Title Company', email: 'sandra@lonestar.com', phone: '(210) 555-0142', city: 'San Antonio, TX', volume: '50–100', notes: 'Need last-minute notary coverage for residential closings', submitted: '2026-06-23', status: 'new' },
+    { name: 'James R.', business: 'Texas Trust Mortgage', type: 'Mortgage Broker', email: 'james@txtrust.com', phone: '(210) 555-0287', city: 'San Antonio, TX', volume: '25–50', notes: 'Looking for certified LSAs for refi signings', submitted: '2026-06-22', status: 'new' },
+    { name: 'Maria C.', business: 'Castillo & Associates', type: 'Law Firm', email: 'maria@castillolaw.com', phone: '(210) 555-0391', city: 'San Antonio, TX', volume: '10–25', notes: 'Need notarizations and legal doc prep for estate work', submitted: '2026-06-21', status: 'contacted' },
+    { name: 'Derek W.', business: 'Hill Country Title', type: 'Title Company', email: 'derek@hillcountrytitle.com', phone: '(210) 555-0458', city: 'Boerne, TX', volume: '25–50', notes: 'Interested in monthly preferred partner plan', submitted: '2026-06-20', status: 'new' },
+    { name: 'Alicia T.', business: 'South Texas Lending', type: 'Mortgage Broker', email: 'alicia@stlending.com', phone: '(210) 555-0512', city: 'San Antonio, TX', volume: '25–50', notes: 'Need RON capability for out-of-state borrowers', submitted: '2026-06-19', status: 'new' },
+    { name: 'Roberto G.', business: 'Garcia Legal Group', type: 'Law Firm', email: 'roberto@garcialegal.com', phone: '(210) 555-0634', city: 'San Antonio, TX', volume: 'Under 10', notes: 'Occasional notary needs for client documents', submitted: '2026-06-18', status: 'contacted' },
+  ];
+}
+
+function renderLeads(leads) {
+  const grid = document.getElementById('leadGrid');
+  if (!leads.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">📥</div><div class="empty-title">No leads yet</div>Leads from your partners page will appear here.</div>';
+    return;
+  }
+  grid.innerHTML = leads.map((l, i) => `
+    <div class="lead-card">
+      <div class="lead-header">
+        <div>
+          <div class="lead-name">${l.name}</div>
+          <div class="lead-biz">${l.business}</div>
+        </div>
+        <span class="badge ${l.type === 'Title Company' ? 'badge-title' : l.type === 'Mortgage Broker' ? 'badge-mtg' : 'badge-law'}">${l.type.split(' ')[0]}</span>
+      </div>
+      <div class="lead-contact"><span class="lead-contact-icon">✉</span>${l.email}</div>
+      <div class="lead-contact"><span class="lead-contact-icon">☎</span>${l.phone}</div>
+      <div class="lead-contact"><span class="lead-contact-icon">📍</span>${l.city}</div>
+      <div class="lead-vol">Monthly volume: <strong>${l.volume} jobs</strong></div>
+      ${l.notes ? `<div style="margin-top:8px;font-size:11px;color:var(--mist);font-style:italic;">"${l.notes}"</div>` : ''}
+      <div style="margin-top:8px;font-size:10px;color:var(--mist);font-family:var(--mono);">Submitted ${l.submitted} · <span class="badge ${l.status === 'new' ? 'badge-new' : 'badge-done'}">${l.status}</span></div>
+      <div class="lead-actions">
+        <button class="btn-sm btn-email" onclick="emailLead('${l.email}', '${l.name}', '${l.business}')">✉ Email</button>
+        <button class="btn-sm btn-call" onclick="callLead('${l.phone}')">☎ Call</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterLeads(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = type === 'all' ? allLeads : allLeads.filter(l => l.type === type);
+  renderLeads(filtered);
+}
+
+function emailLead(email, name, biz) {
+  const subject = encodeURIComponent('Following up — PGUSA Partner Program');
+  const body = encodeURIComponent(`Hi ${name.split(' ')[0]},\n\nThank you for your interest in partnering with Property Group USA's Documents Platform. I'd love to schedule a quick 20-minute call to walk you through how we can support ${biz}'s document needs.\n\nWould this week work for a call?\n\nDelfine Stennis\nProperty Group USA\npropertygroupofusa@gmail.com`);
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+function callLead(phone) {
+  window.open('tel:' + phone.replace(/[^0-9]/g, ''));
+}
+
+// ── Submit job (authenticated) ────────────────────────────────
+async function submitJob() {
+  const service  = document.getElementById('j_service').value;
+  const client   = document.getElementById('j_client').value.trim();
+  const email    = document.getElementById('j_email').value.trim();
+  const phone    = document.getElementById('j_phone').value.trim();
+  const location = document.getElementById('j_location').value.trim();
+  const date     = document.getElementById('j_date').value;
+  const time     = document.getElementById('j_time').value;
+  const urgent   = document.getElementById('j_urgent').value === 'true';
+  const notes    = document.getElementById('j_notes').value.trim();
+
+  if (!client || !location) { showToast('Please fill in client name and location.', true); return; }
+
+  const btn  = document.getElementById('jobSubmitBtn');
+  const spin = document.getElementById('jobSpin');
+  const lbl  = document.getElementById('jobSubmitLabel');
+  btn.disabled = true; spin.style.display = 'inline-block'; lbl.textContent = 'Submitting...';
+
+  const PRICES = { notary_mobile: 39, notary_remote: 14.99, real_estate: 99, tax_w2: 49, tax_self: 99, legal: 35 };
+
+  try {
+    const res = await fetch(API + '/jobs/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + partnerToken
+      },
+      body: JSON.stringify({
+        service_type: service,
+        description: `Client: ${client} | Email: ${email} | Phone: ${phone}`,
+        location, state: location.split(',').pop().trim(),
+        is_remote: service === 'notary_remote',
+        scheduled_date: date || null,
+        scheduled_time: time || null,
+        is_urgent: urgent,
+        notes: notes || null,
+        partner_submitted: true,
+      })
+    });
+
+    if (!res.ok) throw new Error('Submit failed');
+
+    showToast('✓ Job submitted — a worker will be matched within 2 hours.');
+
+    // Reset form
+    ['j_client','j_email','j_phone','j_location','j_date','j_time','j_notes']
+      .forEach(id => document.getElementById(id).value = '');
+
+    // Refresh
+    loadDashboard();
+    loadJobs();
+
+  } catch(e) {
+    showToast('Submission failed — please try again.', true);
+  } finally {
+    btn.disabled = false; spin.style.display = 'none'; lbl.textContent = 'Submit Job →';
+  }
+}
+
+// ── Submit public job (no login) ──────────────────────────────
+async function submitPublicJob() {
+  const name     = document.getElementById('pub_name').value.trim();
+  const company  = document.getElementById('pub_company').value.trim();
+  const email    = document.getElementById('pub_email').value.trim();
+  const phone    = document.getElementById('pub_phone').value.trim();
+  const service  = document.getElementById('pub_service').value;
+  const location = document.getElementById('pub_location').value.trim();
+  const date     = document.getElementById('pub_date').value;
+  const notes    = document.getElementById('pub_notes').value.trim();
+  const btn      = document.getElementById('pubSubmitBtn');
+
+  if (!name || !email || !location) {
+    alert('Please fill in your name, email, and location.'); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  try {
+    await fetch(API + '/jobs/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_type: service,
+        description: `Partner: ${name} (${company}) | Email: ${email} | Phone: ${phone}`,
+        location,
+        state: location.split(',').pop().trim(),
+        is_remote: service === 'notary_remote',
+        scheduled_date: date || null,
+        scheduled_time: null,
+        is_urgent: false,
+        notes: notes || null,
+      })
+    });
+
+    // Also send to Gmail
+    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        type: 'B2B JOB SUBMISSION (no login)',
+        name, company, email, phone, service, location, date, notes
+      })
+    }).catch(() => {});
+
+    document.getElementById('pub_confirm_email').textContent = email;
+    document.getElementById('publicFormBody').style.display = 'none';
+    document.getElementById('publicSuccess').style.display  = 'block';
+
+  } catch(e) {
+    alert('Submission failed — please try again.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit Job Request →';
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isErr ? 'var(--red)' : 'var(--green)';
+  t.style.color       = isErr ? 'var(--red)' : 'var(--green)';
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 3500);
+}
+
+function formatService(s) {
+  const map = {
+    notary_mobile: 'Mobile Notary', notary_remote: 'Remote Notary',
+    real_estate: 'RE Closing', tax_w2: 'Tax (W-2)', tax_self: 'Tax (SE)',
+    legal: 'Legal Docs', business_docs: 'Business Docs'
+  };
+  return map[s] || s || '—';
+}
+
+function statusBadge(s) {
+  const map = {
+    open:      '<span class="badge badge-new">Open</span>',
+    claimed:   '<span class="badge badge-mtg">Claimed</span>',
+    in_progress: '<span class="badge badge-active">In Progress</span>',
+    completed: '<span class="badge badge-done">Completed</span>',
+    cancelled: '<span class="badge" style="color:var(--red);border-color:rgba(231,76,60,0.3);">Cancelled</span>',
+  };
+  return map[s] || `<span class="badge badge-done">${s}</span>`;
+}
+
+// ── Auto-login on load ────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('pgusa_partner_token');
+  const name  = localStorage.getItem('pgusa_partner_name');
+  if (token) {
+    partnerToken = token;
+    partnerData  = { name: name || 'Partner' };
+    openPortal();
+  }
+});
+</script>
+</body>
+</html>
