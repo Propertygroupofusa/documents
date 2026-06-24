@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Ocean Strategy — Language Learning Platform</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ocean:    #0A3D62;
+  --deep:     #051E30;
+  --wave:     #1B6CA8;
+  --foam:     #E8F4FD;
+  --sand:     #F5F0E8;
+  --coral:    #E84545;
+  --gold:     #F0A500;
+  --seafoam:  #2ECC71;
+  --ink:      #0D1B2A;
+  --mist:     #7F8C9A;
+  --white:    #FFFFFF;
+  --red-ocean: #C0392B;
+  --blue-ocean: #0A3D62;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--deep);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── AMBIENT OCEAN BG ── */
+.ocean-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse at 20% 50%, #0e3460 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, #0d2d4d 0%, transparent 50%),
+              var(--deep);
+  pointer-events: none;
+}
+
+.wave-line {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  background: linear-gradient(to top, rgba(27,108,168,0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 48px 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 48px;
+}
+
+.header-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.header-title {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  font-family: Georgia, serif;
+}
+
+.header-title em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+}
+
+.header-sub {
+  margin-top: 14px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+.header-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+}
+
+.meta-pill.active {
+  background: rgba(240,165,0,0.15);
+  border-color: rgba(240,165,0,0.4);
+  color: var(--gold);
+}
+
+/* ── SECTION ── */
+.section { margin-bottom: 64px; }
+
+.section-eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 28px;
+  line-height: 1.6;
+  max-width: 620px;
+}
+
+/* ── ERRC GRID ── */
+.errc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 600px) { .errc-grid { grid-template-columns: 1fr; } }
+
+.errc-card {
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.errc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+
+.errc-card.eliminate::before { background: var(--coral); }
+.errc-card.reduce::before    { background: var(--gold); }
+.errc-card.raise::before     { background: var(--wave); }
+.errc-card.create::before    { background: var(--seafoam); }
+
+.errc-verb {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.errc-card.eliminate .errc-verb { color: var(--coral); }
+.errc-card.reduce .errc-verb    { color: var(--gold); }
+.errc-card.raise .errc-verb     { color: #5DADE2; }
+.errc-card.create .errc-verb    { color: var(--seafoam); }
+
+.errc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.errc-item:last-child { border-bottom: none; }
+
+.errc-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.eliminate .errc-dot { background: var(--coral); }
+.reduce .errc-dot    { background: var(--gold); }
+.raise .errc-dot     { background: #5DADE2; }
+.create .errc-dot    { background: var(--seafoam); }
+
+.errc-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.errc-item-desc {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+/* ── STRATEGY CANVAS ── */
+.canvas-wrap {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 28px;
+  overflow-x: auto;
+}
+
+.canvas-legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.legend-line {
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.canvas-chart {
+  position: relative;
+  min-width: 600px;
+}
+
+.canvas-axes {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.canvas-row {
+  display: grid;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 10px 0;
+}
+
+.canvas-row.header-row {
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  margin-bottom: 4px;
+  padding-bottom: 14px;
+}
+
+.canvas-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  padding-right: 12px;
+  line-height: 1.3;
+  grid-column: 1;
+}
+
+.canvas-bars {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  grid-column: 2;
+  padding-left: 8px;
+}
+
+.bar-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+.bar-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+.bar-fill {
+  width: 100%;
+  border-radius: 3px;
+  position: relative;
+}
+
+.col-header {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(255,255,255,0.35);
+  padding: 0 4px;
+}
+
+/* ── USE CASES ── */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.usecase-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 22px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+
+.usecase-card:hover {
+  border-color: rgba(240,165,0,0.3);
+  background: rgba(240,165,0,0.04);
+}
+
+.usecase-card.overlooked {
+  border-color: rgba(46,204,113,0.2);
+  background: rgba(46,204,113,0.04);
+}
+
+.usecase-icon { font-size: 28px; margin-bottom: 12px; }
+
+.usecase-tag {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.tag-overlooked {
+  background: rgba(46,204,113,0.15);
+  color: var(--seafoam);
+  border: 1px solid rgba(46,204,113,0.3);
+}
+
+.tag-existing {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.usecase-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-family: Georgia, serif;
+}
+
+.usecase-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+}
+
+.usecase-size {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── ONBOARDING FRICTION MAP ── */
+.friction-flow {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.friction-step {
+  flex-shrink: 0;
+  width: 180px;
+  position: relative;
+}
+
+.friction-step::after {
+  content: '→';
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: rgba(255,255,255,0.2);
+  z-index: 2;
+}
+
+.friction-step:last-child::after { display: none; }
+
+.friction-card {
+  margin-right: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 16px;
+  height: 100%;
+}
+
+.friction-card.high-friction {
+  border-color: rgba(232,69,69,0.35);
+  background: rgba(232,69,69,0.06);
+}
+
+.friction-card.med-friction {
+  border-color: rgba(240,165,0,0.25);
+  background: rgba(240,165,0,0.04);
+}
+
+.friction-card.low-friction {
+  border-color: rgba(46,204,113,0.2);
+  background: rgba(46,204,113,0.04);
+}
+
+.friction-step-num {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 6px;
+}
+
+.friction-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.friction-level {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.high-friction .friction-level {
+  background: rgba(232,69,69,0.2);
+  color: #e87070;
+}
+
+.med-friction .friction-level {
+  background: rgba(240,165,0,0.2);
+  color: var(--gold);
+}
+
+.low-friction .friction-level {
+  background: rgba(46,204,113,0.2);
+  color: var(--seafoam);
+}
+
+.friction-issue {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.friction-fix {
+  font-size: 11px;
+  color: var(--seafoam);
+  line-height: 1.5;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── SIGNATURE FEATURE ── */
+.feature-hero {
+  background: linear-gradient(135deg, rgba(10,61,98,0.8), rgba(5,30,48,0.95));
+  border: 1px solid rgba(27,108,168,0.4);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,165,0,0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(240,165,0,0.15);
+  border: 1px solid rgba(240,165,0,0.35);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.feature-title {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 800;
+  font-family: Georgia, serif;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.feature-title span { color: var(--gold); }
+
+.feature-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.feature-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.pillar {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.pillar-icon { font-size: 22px; margin-bottom: 10px; }
+.pillar-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.pillar-desc { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+.feature-moat {
+  background: rgba(240,165,0,0.08);
+  border: 1px solid rgba(240,165,0,0.2);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.moat-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.moat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.moat-item {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+
+.moat-check { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+
+/* ── AI CANVAS GENERATOR ── */
+.ai-panel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.ai-input-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.ai-input {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--white);
+  font-family: inherit;
+  outline: none;
+}
+
+.ai-input::placeholder { color: rgba(255,255,255,0.3); }
+.ai-input:focus { border-color: rgba(240,165,0,0.5); }
+
+.ai-select {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--white);
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.ai-select option { background: #0A3D62; color: white; }
+
+.gen-btn {
+  background: var(--gold);
+  color: var(--deep);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
+}
+
+.gen-btn:hover { opacity: 0.85; }
+.gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(0,0,0,0.25);
+  border-top-color: var(--deep);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ai-output {
+  min-height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ai-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 40px;
+  color: rgba(255,255,255,0.2);
+  font-size: 13px;
+  text-align: center;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+.ai-placeholder-icon { font-size: 32px; opacity: 0.4; }
+
+/* ── GENERATED RESULTS ── */
+.result-section {
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.result-header {
+  padding: 14px 18px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.result-header.elim { color: var(--coral); background: rgba(232,69,69,0.06); }
+.result-header.red  { color: var(--gold); background: rgba(240,165,0,0.06); }
+.result-header.rais { color: #5DADE2; background: rgba(93,173,226,0.06); }
+.result-header.cre  { color: var(--seafoam); background: rgba(46,204,113,0.06); }
+.result-header.feat { color: var(--gold); background: rgba(240,165,0,0.06); }
+
+.result-body { padding: 16px 18px; }
+
+.result-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.75);
+}
+
+.result-item:last-child { margin-bottom: 0; }
+.result-bullet { flex-shrink: 0; margin-top: 2px; }
+
+.result-feature {
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ── MARKET MAP ── */
+.market-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) { .market-map { grid-template-columns: 1fr; } }
+
+.ocean-zone {
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ocean-zone.red {
+  background: rgba(192,57,43,0.1);
+  border: 1px solid rgba(192,57,43,0.25);
+}
+
+.ocean-zone.blue {
+  background: rgba(10,61,98,0.4);
+  border: 1px solid rgba(27,108,168,0.4);
+}
+
+.ocean-zone-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.red .ocean-zone-label { color: #e87070; }
+.blue .ocean-zone-label { color: #5DADE2; }
+
+.ocean-zone-title {
+  font-size: 18px;
+  font-weight: 800;
+  font-family: Georgia, serif;
+  margin-bottom: 10px;
+}
+
+.ocean-zone-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.player-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.player-tag {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="ocean-bg"></div>
+<div class="wave-line"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-eyebrow">Blue Ocean Strategy Framework</div>
+    <div class="header-title">Stop competing.<br><em>Create</em> the market.</div>
+    <div class="header-sub">A complete strategic canvas for language learning platforms — identifying uncontested space, removing friction, and building a feature competitors can't copy.</div>
+    <div class="header-meta">
+      <span class="meta-pill active">Blue Ocean Strategy</span>
+      <span class="meta-pill">ERRC Framework</span>
+      <span class="meta-pill">Onboarding Design</span>
+      <span class="meta-pill">Feature Innovation</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: MARKET MAP -->
+  <div class="section">
+    <div class="section-eyebrow">Situational Awareness</div>
+    <div class="section-title">Where the market is — and where it isn't</div>
+    <div class="section-desc">Every major language platform competes on the same axes: gamification, daily streaks, vocabulary drills, and subscription price. The red ocean is crowded. The blue ocean is the space none of them occupy.</div>
+
+    <div class="market-map">
+      <div class="ocean-zone red">
+        <div class="ocean-zone-label">🔴 Red Ocean</div>
+        <div class="ocean-zone-title">The Bloody Middle</div>
+        <div class="ocean-zone-desc">All major platforms fighting for the same casual learner, competing on the same features, racing to the same $6–$15/mo price floor. Differentiation is cosmetic. Switching cost is zero.</div>
+        <div class="player-list">
+          <span class="player-tag">Duolingo</span>
+          <span class="player-tag">Babbel</span>
+          <span class="player-tag">Rosetta Stone</span>
+          <span class="player-tag">Pimsleur</span>
+          <span class="player-tag">Busuu</span>
+          <span class="player-tag">Lingoda</span>
+        </div>
+      </div>
+      <div class="ocean-zone blue">
+        <div class="ocean-zone-label">🔵 Blue Ocean</div>
+        <div class="ocean-zone-title">Uncontested Space</div>
+        <div class="ocean-zone-desc">High-stakes learners who need the language for real outcomes: immigration, career advancement, romance, medical communication, remote work. They have money, urgency, and zero good options.</div>
+        <div class="player-list">
+          <span class="player-tag">Nobody owns this yet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: ERRC -->
+  <div class="section">
+    <div class="section-eyebrow">ERRC Framework</div>
+    <div class="section-title">Eliminate · Reduce · Raise · Create</div>
+    <div class="section-desc">The four actions that separate a blue ocean move from a feature update. Each quadrant forces a real trade-off — if you're not eliminating something industry-standard, you're not creating new value, you're just iterating.</div>
+
+    <div class="errc-grid">
+      <!-- ELIMINATE -->
+      <div class="errc-card eliminate">
+        <div class="errc-verb">Eliminate</div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Streak anxiety mechanics</div>
+            <div class="errc-item-desc">Duolingo's streak system creates guilt-based retention, not motivation. It teaches people to fear losing progress, not to love learning. Cut it entirely.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Decontextualized vocabulary drills</div>
+            <div class="errc-item-desc">"The apple is red" teaches nothing a real conversation requires. Isolated word memorization is the industry's oldest and most broken assumption.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">One-size-fits-all curriculum</div>
+            <div class="errc-item-desc">The same Spanish course for a retiree going to Cancún and a nurse communicating with patients is a product failure disguised as a feature.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Level-based gatekeeping</div>
+            <div class="errc-item-desc">Forcing users through A1→B2→C1 when they only need 200 specific phrases for their job interview next month is false structure.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REDUCE -->
+      <div class="errc-card reduce">
+        <div class="errc-verb">Reduce</div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Time-to-first-real-conversation</div>
+            <div class="errc-item-desc">Most platforms take 30+ hours before a learner can hold a real exchange. Compress this to the first session through contextual immersion from day one.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Onboarding form length</div>
+            <div class="errc-item-desc">Competitors ask 8–12 questions before showing any value. Three questions maximum: What language. Why you need it. When you need it by.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Price anchoring to hobbyists</div>
+            <div class="errc-item-desc">$12/mo positions the product as a casual app. High-stakes learners will pay $79–$199/mo for a tool they believe will change their life outcome.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Passive lesson consumption</div>
+            <div class="errc-item-desc">Watching videos and tapping multiple choice builds the feeling of progress without the skill. Reduce passive modes in favor of output-first exercises.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAISE -->
+      <div class="errc-card raise">
+        <div class="errc-verb">Raise</div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Outcome specificity</div>
+            <div class="errc-item-desc">Don't teach "Spanish." Teach "the 340 phrases you need to pass your citizenship interview" or "medical Spanish for patient intake." Specificity is the product.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Real-world scenario density</div>
+            <div class="errc-item-desc">Every lesson simulates a situation the learner will actually face — a job interview, a doctor's visit, a lease signing, a family dinner. Context is comprehension.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Speaking confidence, not reading accuracy</div>
+            <div class="errc-item-desc">The measure of success is whether the learner can speak under pressure — not whether they scored 94% on a written test. Raise the bar on oral fluency metrics.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Progress accountability</div>
+            <div class="errc-item-desc">Weekly human check-ins — not AI push notifications — from a fluency coach who reviews recorded practice sessions and gives specific feedback.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREATE -->
+      <div class="errc-card create">
+        <div class="errc-verb">Create</div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Outcome-staked learning contracts</div>
+            <div class="errc-item-desc">Learner declares a real deadline (interview date, immigration appointment, move date). Platform guarantees milestone fluency or refunds. Stakes make learning real.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Live situation simulation rooms</div>
+            <div class="errc-item-desc">AI-powered roleplay environments that simulate the exact scenario the learner is preparing for — hospital ward, job interview, courthouse, family gathering.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Cross-cultural stakes coaching</div>
+            <div class="errc-item-desc">Language is 40% words, 60% cultural context. Teach what to say and what it means when you say it — the silence, the gesture, the register shift.</div>
+          </div>
+        </div>
+        <div class="errc-item">
+          <div class="errc-dot"></div>
+          <div>
+            <div class="errc-item-title">Fluency as a verifiable credential</div>
+            <div class="errc-item-desc">Issue a blockchain-verified fluency certificate tied to a specific use-case (Medical Spanish Level 2, Immigration French Oral B1). Employers and institutions can verify it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: OVERLOOKED USE CASES -->
+  <div class="section">
+    <div class="section-eyebrow">Non-Customer Analysis</div>
+    <div class="section-title">The users no platform is building for</div>
+    <div class="section-desc">Blue Ocean strategy finds growth in non-customers — people who need the outcome but reject every current solution. These six segments are massive, underserved, and willing to pay premium prices.</div>
+
+    <div class="usecase-grid">
+      <div class="usecase-card overlooked">
+        <div class="usecase-icon">🏥</div>
+        <span class="usecase-tag tag-overlooked">Overlooked</span>
+        <div class="usecase-title">Healthcare Workers</div>
+        <div class="usecase-desc">Nurses, doctors, and medical staff who need functional Spanish, Mandarin, or Arabic to communicate with patients. Current apps teach "café vocabulary." These workers need "chest pain vocabulary" in weeks.</div>
+        <div class="usecase-size">↑ 4.8M healthcare workers in language-gap roles in the US alone</div>
+      </div>
+
+      <div class="usecase-card overlooked">
+        <div class="usecase-icon">🛂</div>
+        <span class="usecase-tag tag-overlooked">Overlooked</span>
+        <div class="usecase-title">Immigration Applicants</div>
+        <div class="usecase-desc">People preparing for citizenship interviews, green card hearings, or asylum proceedings who need high-stakes functional fluency in 90 days or fewer. They have an immovable deadline and everything to lose.</div>
+        <div class="usecase-size">↑ 900K+ naturalization applicants annually in the US</div>
+      </div>
+
+      <div class="usecase-card overlooked">
+        <div class="usecase-icon">💼</div>
+        <span class="usecase-tag tag-overlooked">Overlooked</span>
+        <div class="usecase-title">Remote Workers Expanding Markets</div>
+        <div class="usecase-desc">Freelancers and contractors landing clients in new markets who need business-register fluency fast — not tourist phrases. A developer landing a German client needs "meeting German," not "restaurant German."</div>
+        <div class="usecase-size">↑ $1.27T global freelance market, growing 15% YoY</div>
+      </div>
+
+      <div class="usecase-card overlooked">
+        <div class="usecase-icon">💛</div>
+        <span class="usecase-tag tag-overlooked">Overlooked</span>
+        <div class="usecase-title">Cross-Cultural Couples & Families</div>
+        <div class="usecase-desc">People learning a partner's or in-laws' language for relationship reasons — not career advancement. The motivation is intensely personal. No platform speaks to this context at all.</div>
+        <div class="usecase-size">↑ 18% of US marriages are intercultural</div>
+      </div>
+
+      <div class="usecase-card">
+        <div class="usecase-icon">👴</div>
+        <span class="usecase-tag tag-existing">Underserved Existing</span>
+        <div class="usecase-title">Adults 55+ Reconnecting with Heritage</div>
+        <div class="usecase-desc">Second and third-generation immigrants who lost their heritage language and want it back — for family, for identity, for travel. Gamified apps feel infantilizing. They need a dignified learning experience.</div>
+        <div class="usecase-size">↑ 45M heritage language speakers in the US</div>
+      </div>
+
+      <div class="usecase-card">
+        <div class="usecase-icon">⚖️</div>
+        <span class="usecase-tag tag-existing">Underserved Existing</span>
+        <div class="usecase-title">Legal & Social Service Workers</div>
+        <div class="usecase-desc">Public defenders, social workers, and court interpreters who need precise legal register in a second language. A mistranslated phrase in a courtroom is a civil rights issue. No platform treats this with appropriate seriousness.</div>
+        <div class="usecase-size">↑ Growing with immigration court backlogs nationwide</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: ONBOARDING FRICTION -->
+  <div class="section">
+    <div class="section-eyebrow">Onboarding Audit</div>
+    <div class="section-title">Where users leave before they start</div>
+    <div class="section-desc">Every onboarding step is a potential exit. Mapping friction against intent reveals which steps are load-bearing and which are just platform anxiety being transferred to the user.</div>
+
+    <div class="friction-flow">
+      <div class="friction-step">
+        <div class="friction-card high-friction">
+          <div class="friction-step-num">Step 1</div>
+          <div class="friction-step-title">Account Creation</div>
+          <span class="friction-level">High Friction</span>
+          <div class="friction-issue">Email + password + confirm email + verify email + phone number. User has seen zero value. Abandonment: ~45%.</div>
+          <div class="friction-fix">→ Magic link only. No password. No phone. Email one field, one click.</div>
+        </div>
+      </div>
+
+      <div class="friction-step">
+        <div class="friction-card high-friction">
+          <div class="friction-step-num">Step 2</div>
+          <div class="friction-step-title">Proficiency Assessment</div>
+          <span class="friction-level">High Friction</span>
+          <div class="friction-issue">30-question placement test before users understand why it matters. Feels like a school exam. Abandonment: ~30% of remaining.</div>
+          <div class="friction-fix">→ Three questions: Why are you learning? When do you need it? What's your honest level? That's the placement test.</div>
+        </div>
+      </div>
+
+      <div class="friction-step">
+        <div class="friction-card med-friction">
+          <div class="friction-step-num">Step 3</div>
+          <div class="friction-step-title">Goal Setting</div>
+          <span class="friction-level">Med Friction</span>
+          <div class="friction-issue">Vague options: "Casual," "Intermediate," "Fluent." None map to the learner's actual life situation. Creates false expectations.</div>
+          <div class="friction-fix">→ Show real scenarios: "I need to pass my citizenship interview in 60 days." Let them pick their life situation, not an abstraction.</div>
+        </div>
+      </div>
+
+      <div class="friction-step">
+        <div class="friction-card med-friction">
+          <div class="friction-step-num">Step 4</div>
+          <div class="friction-step-title">Schedule Setup</div>
+          <span class="friction-level">Med Friction</span>
+          <div class="friction-issue">"How many minutes per day?" with no context about what's needed to reach their goal. Arbitrary choice. Most pick 10 min (too low to matter).</div>
+          <div class="friction-fix">→ Show the math: "Your interview is in 60 days. 20 min/day gets you to 240 phrases — enough. Want to start now?"</div>
+        </div>
+      </div>
+
+      <div class="friction-step">
+        <div class="friction-card low-friction">
+          <div class="friction-step-num">Step 5</div>
+          <div class="friction-step-title">First Lesson</div>
+          <span class="friction-level">Low Friction</span>
+          <div class="friction-issue">If they've made it here, intent is high. But most platforms start with alphabet or basic greetings — slow and demoralizing for urgent learners.</div>
+          <div class="friction-fix">→ Start with Lesson 1 being a simulation of the exact scenario they said they need. Make them feel capable immediately.</div>
+        </div>
+      </div>
+
+      <div class="friction-step">
+        <div class="friction-card low-friction">
+          <div class="friction-step-num">Step 6</div>
+          <div class="friction-step-title">Paywall</div>
+          <span class="friction-level">Low Friction</span>
+          <div class="friction-issue">Platforms hit the paywall after 1–3 lessons with no emotional investment built yet. The timing is wrong.</div>
+          <div class="friction-fix">→ Gate at the first real milestone: "You just learned your first 20 citizenship phrases. Unlock the next 220 →" Convert after proof of value.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: SIGNATURE FEATURE -->
+  <div class="section">
+    <div class="section-eyebrow">The Unique Feature</div>
+    <div class="section-title">The one thing no one else has</div>
+    <div class="section-desc">A single feature that creates an entirely new value curve — not an improvement on what competitors do, but a capability that makes their entire product category feel inadequate by comparison.</div>
+
+    <div class="feature-hero">
+      <div class="feature-badge">
+        <span>⭐</span> Signature Feature
+      </div>
+      <div class="feature-title">
+        The <span>Fluency Stakes Engine</span>
+      </div>
+      <div class="feature-desc">
+        Learners declare a real-world deadline and outcome. The platform reverse-engineers a precision curriculum from that deadline, locks in a money-back guarantee if milestones are missed, and issues a verified credential when the goal is reached. Language learning finally has a contract — with consequences on both sides.
+      </div>
+
+      <div class="feature-pillars">
+        <div class="pillar">
+          <div class="pillar-icon">📅</div>
+          <div class="pillar-title">Deadline Declaration</div>
+          <div class="pillar-desc">Learner inputs their real-world deadline: interview date, move date, wedding date. The platform builds backward from that date to today, assigning exactly the sessions needed.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🎯</div>
+          <div class="pillar-title">Precision Curriculum</div>
+          <div class="pillar-desc">No generic course. AI generates a bespoke session sequence built around the specific scenario — 340 phrases for citizenship, 180 for medical intake, 95 for a business pitch.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🔒</div>
+          <div class="pillar-title">Platform Guarantee</div>
+          <div class="pillar-desc">If the learner completes 80% of sessions and doesn't reach the milestone, they get a full refund. Puts skin in the game on both sides. No competitor offers this.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🏆</div>
+          <div class="pillar-title">Verified Credential</div>
+          <div class="pillar-desc">Completion issues a scenario-specific fluency certificate — verifiable by employers, courts, hospitals, or immigration authorities. Transforms the product from a course into a qualification.</div>
+        </div>
+      </div>
+
+      <div class="feature-moat">
+        <div class="moat-title">Why this can't be copied in 6 months</div>
+        <div class="moat-grid">
+          <div class="moat-item"><span class="moat-check">✦</span> The guarantee requires completion data and actuarial modeling — that takes 12–18 months of real user data to calibrate safely</div>
+          <div class="moat-item"><span class="moat-check">✦</span> The credential requires institutional partnerships (employers, courts, hospitals) that take relationship-building, not just engineering</div>
+          <div class="moat-item"><span class="moat-check">✦</span> The precision curriculum requires domain-specific phrase libraries (medical, legal, immigration) that can't be scraped or auto-generated reliably</div>
+          <div class="moat-item"><span class="moat-check">✦</span> The brand trust required to offer a money-back guarantee takes time — Duolingo can't add a guarantee to a product built on casual habit loops</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: AI STRATEGY GENERATOR -->
+  <div class="section">
+    <div class="section-eyebrow">AI Blue Ocean Generator</div>
+    <div class="section-title">Apply this framework to any product</div>
+    <div class="section-desc">Enter any product or industry and generate a custom Blue Ocean ERRC analysis, overlooked use cases, and a signature feature concept — powered by Claude.</div>
+
+    <div class="ai-panel">
+      <div class="ai-input-row">
+        <input
+          class="ai-input"
+          id="productInput"
+          placeholder="e.g. fitness app, legal research tool, property management software..."
+          type="text"
+        />
+        <select class="ai-select" id="focusSelect">
+          <option value="general">General Blue Ocean</option>
+          <option value="b2b">B2B Focus</option>
+          <option value="gen-z">Gen Z Market</option>
+          <option value="high-stakes">High-Stakes Users</option>
+          <option value="underserved">Underserved Communities</option>
+        </select>
+        <button class="gen-btn" id="genBtn" onclick="generateBlueOcean()">
+          <div class="spinner" id="genSpinner"></div>
+          <span id="genLabel">✦ Generate Strategy</span>
+        </button>
+      </div>
+
+      <div class="ai-output" id="aiOutput">
+        <div class="ai-placeholder">
+          <div class="ai-placeholder-icon">🌊</div>
+          <div>Enter a product above to generate a Blue Ocean strategy analysis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+async function generateBlueOcean() {
+  const product = document.getElementById('productInput').value.trim();
+  const focus   = document.getElementById('focusSelect').value;
+  const btn     = document.getElementById('genBtn');
+  const spinner = document.getElementById('genSpinner');
+  const label   = document.getElementById('genLabel');
+  const output  = document.getElementById('aiOutput');
+
+  if (!product) {
+    document.getElementById('productInput').focus();
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  label.textContent = 'Thinking...';
+  output.innerHTML = '<div class="ai-placeholder"><div class="ai-placeholder-icon">🌊</div><div>Mapping the competitive landscape...</div></div>';
+
+  const focusMap = {
+    'general':      'broad market with multiple user segments',
+    'b2b':          'business-to-business with enterprise and SMB segments',
+    'gen-z':        'Gen Z users aged 18-26 with digital-native expectations',
+    'high-stakes':  'users with high-stakes outcomes like career, legal, or medical needs',
+    'underserved':  'underserved or overlooked communities with unmet needs'
+  };
+
+  const prompt = `You are a Blue Ocean Strategy consultant. Analyze this product and generate a sharp, specific Blue Ocean strategy.
+
+Product: ${product}
+Market focus: ${focusMap[focus]}
+
+Return ONLY a valid JSON object with this exact structure:
+{
+  "eliminate": ["specific thing 1 the industry takes for granted but should cut", "specific thing 2", "specific thing 3"],
+  "reduce": ["specific factor 1 that should be reduced well below industry standard", "specific factor 2", "specific factor 3"],
+  "raise": ["specific factor 1 to raise well above industry standard", "specific factor 2", "specific factor 3"],
+  "create": ["new factor 1 the industry has never offered", "new factor 2", "new factor 3"],
+  "overlooked_segment": "One highly specific overlooked user segment with a concrete reason they're underserved",
+  "signature_feature": "One unique feature concept (2-3 sentences) that creates an uncontested market position — specific, defensible, and not just an incremental improvement"
+}
+
+Be specific and sharp. Avoid generic strategy advice. Each item should be concrete enough to build a product roadmap from.
+Return ONLY the JSON, no preamble, no markdown fences.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    const s = JSON.parse(raw);
+
+    const colors = {
+      eliminate: { cls:'elim', label:'Eliminate', icon:'✕' },
+      reduce:    { cls:'red',  label:'Reduce',    icon:'↓' },
+      raise:     { cls:'rais', label:'Raise',     icon:'↑' },
+      create:    { cls:'cre',  label:'Create',    icon:'✦' }
+    };
+
+    let html = '';
+
+    for (const [key, meta] of Object.entries(colors)) {
+      html += `
+        <div class="result-section" style="margin-bottom:12px;">
+          <div class="result-header ${meta.cls}">${meta.icon} ${meta.label}</div>
+          <div class="result-body">
+            ${s[key].map(item => `
+              <div class="result-item">
+                <span class="result-bullet" style="color:${meta.cls==='elim'?'var(--coral)':meta.cls==='red'?'var(--gold)':meta.cls==='rais'?'#5DADE2':'var(--seafoam)'}">—</span>
+                <span>${item}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }
+
+    html += `
+      <div class="result-section" style="margin-bottom:12px;">
+        <div class="result-header red">👥 Overlooked Segment</div>
+        <div class="result-feature">${s.overlooked_segment}</div>
+      </div>
+      <div class="result-section">
+        <div class="result-header feat">⭐ Signature Feature</div>
+        <div class="result-feature">${s.signature_feature}</div>
+      </div>`;
+
+    output.innerHTML = html;
+
+  } catch(e) {
+    output.innerHTML = '<div class="ai-placeholder"><div class="ai-placeholder-icon">⚠️</div><div style="color:var(--coral)">Generation failed — check your connection and try again.</div></div>';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    label.textContent = '✦ Generate Strategy';
+  }
+}
+
+document.getElementById('productInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generateBlueOcean();
+});
+</script>
+</body>
+</html>
