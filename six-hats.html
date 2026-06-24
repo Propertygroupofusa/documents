@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Six Thinking Hats — PGUSA Referral Program</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --page:    #F4F4F2;
+  --ink:     #111111;
+  --muted:   #666666;
+  --rule:    #E0E0DC;
+
+  --white-hat:  #2C2C2C;
+  --red-hat:    #C0281E;
+  --black-hat:  #111111;
+  --yellow-hat: #D4900A;
+  --green-hat:  #1A7A3A;
+  --blue-hat:   #1449B8;
+
+  --white-bg:  #F0F0EE;
+  --red-bg:    #FDF1F0;
+  --black-bg:  #F2F2F2;
+  --yellow-bg: #FEFBF0;
+  --green-bg:  #F0FAF3;
+  --blue-bg:   #F0F4FE;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--page);
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+/* ── NAVIGATION BAR ── */
+.hat-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  height: 56px;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.hat-nav-brand {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-hat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+  border: 1.5px solid transparent;
+  flex-shrink: 0;
+}
+
+.nav-hat:hover { opacity: 0.8; }
+
+.nav-hat.wh { color: var(--white-hat); border-color: var(--white-hat); }
+.nav-hat.rh { color: var(--red-hat);   border-color: var(--red-hat); }
+.nav-hat.bk { color: var(--black-hat); border-color: #999; }
+.nav-hat.yh { color: var(--yellow-hat);border-color: var(--yellow-hat); }
+.nav-hat.gh { color: var(--green-hat); border-color: var(--green-hat); }
+.nav-hat.bl { color: var(--blue-hat);  border-color: var(--blue-hat); }
+
+.hat-icon {
+  width: 14px; height: 14px;
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* CSS Hat Shape */
+.hat-icon::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 1px;
+}
+
+.hat-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 2px; right: 2px;
+  height: 9px;
+  border-radius: 3px 3px 0 0;
+}
+
+.wh .hat-icon::before, .wh .hat-icon::after { background: var(--white-hat); }
+.rh .hat-icon::before, .rh .hat-icon::after { background: var(--red-hat); }
+.bk .hat-icon::before, .bk .hat-icon::after { background: #555; }
+.yh .hat-icon::before, .yh .hat-icon::after { background: var(--yellow-hat); }
+.gh .hat-icon::before, .gh .hat-icon::after { background: var(--green-hat); }
+.bl .hat-icon::before, .bl .hat-icon::after { background: var(--blue-hat); }
+
+/* ── HERO ── */
+.hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 64px 32px 48px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-eyebrow {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--muted);
+  -webkit-text-stroke: 1px var(--muted);
+  color: transparent;
+}
+
+.hero-desc {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 560px;
+  margin-bottom: 28px;
+}
+
+.hero-context {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ctx-cell {
+  background: white;
+  padding: 16px 18px;
+}
+
+.ctx-label {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.ctx-value {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: -0.3px;
+}
+
+/* ── HAT SECTIONS ── */
+.hat-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 56px 32px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hat-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+/* Large hat icon */
+.hat-big {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  position: relative;
+  margin-top: 4px;
+}
+
+.hat-big::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.hat-big::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 6px; right: 6px;
+  height: 30px;
+  border-radius: 8px 8px 0 0;
+}
+
+.hat-wh .hat-big::before,
+.hat-wh .hat-big::after { background: var(--white-hat); }
+.hat-rd .hat-big::before,
+.hat-rd .hat-big::after { background: var(--red-hat); }
+.hat-bk .hat-big::before,
+.hat-bk .hat-big::after { background: #444; }
+.hat-yl .hat-big::before,
+.hat-yl .hat-big::after { background: var(--yellow-hat); }
+.hat-gn .hat-big::before,
+.hat-gn .hat-big::after { background: var(--green-hat); }
+.hat-bl .hat-big::before,
+.hat-bl .hat-big::after { background: var(--blue-hat); }
+
+.hat-header-text {}
+
+.hat-mode {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.hat-wh .hat-mode { color: var(--white-hat); }
+.hat-rd .hat-mode { color: var(--red-hat); }
+.hat-bk .hat-mode { color: #555; }
+.hat-yl .hat-mode { color: var(--yellow-hat); }
+.hat-gn .hat-mode { color: var(--green-hat); }
+.hat-bl .hat-mode { color: var(--blue-hat); }
+
+.hat-name {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.hat-tagline {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Section BG strips */
+.hat-wh { background: var(--white-bg); }
+.hat-rd { background: var(--red-bg); }
+.hat-bk { background: var(--black-bg); }
+.hat-yl { background: var(--yellow-bg); }
+.hat-gn { background: var(--green-bg); }
+.hat-bl { background: var(--blue-bg); }
+
+/* ── CONTENT BLOCKS ── */
+.findings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.finding-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border-top: 3px solid;
+}
+
+.hat-wh .finding-card { border-color: var(--white-hat); }
+.hat-rd .finding-card { border-color: var(--red-hat); }
+.hat-bk .finding-card { border-color: #444; }
+.hat-yl .finding-card { border-color: var(--yellow-hat); }
+.hat-gn .finding-card { border-color: var(--green-hat); }
+.hat-bl .finding-card { border-color: var(--blue-hat); }
+
+.finding-label {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.hat-wh .finding-label { color: var(--white-hat); }
+.hat-rd .finding-label { color: var(--red-hat); }
+.hat-bk .finding-label { color: #555; }
+.hat-yl .finding-label { color: var(--yellow-hat); }
+.hat-gn .finding-label { color: var(--green-hat); }
+.hat-bl .finding-label { color: var(--blue-hat); }
+
+.finding-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.finding-body {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.finding-stat {
+  margin-top: 10px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.hat-wh .finding-stat { color: var(--white-hat); }
+.hat-rd .finding-stat { color: var(--red-hat); }
+.hat-bk .finding-stat { color: #333; }
+.hat-yl .finding-stat { color: var(--yellow-hat); }
+.hat-gn .finding-stat { color: var(--green-hat); }
+.hat-bl .finding-stat { color: var(--blue-hat); }
+
+/* Wide analysis block */
+.analysis-block {
+  background: white;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+
+.analysis-block h4 {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hat-wh .analysis-block h4 { color: var(--white-hat); }
+.hat-rd .analysis-block h4 { color: var(--red-hat); }
+.hat-bk .analysis-block h4 { color: #333; }
+.hat-yl .analysis-block h4 { color: var(--yellow-hat); }
+.hat-gn .analysis-block h4 { color: var(--green-hat); }
+.hat-bl .analysis-block h4 { color: var(--blue-hat); }
+
+.analysis-block p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.analysis-block p:last-child { margin-bottom: 0; }
+
+/* List style */
+.hat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hat-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  align-items: flex-start;
+}
+
+.list-marker {
+  flex-shrink: 0;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  margin-top: 1px;
+}
+
+.hat-wh .list-marker { color: var(--white-hat); }
+.hat-rd .list-marker { color: var(--red-hat); }
+.hat-bk .list-marker { color: #444; }
+.hat-yl .list-marker { color: var(--yellow-hat); }
+.hat-gn .list-marker { color: var(--green-hat); }
+.hat-bl .list-marker { color: var(--blue-hat); }
+
+/* Emotion voices (red hat) */
+.voice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.voice-card {
+  background: white;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.voice-persona {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red-hat);
+  margin-bottom: 6px;
+}
+
+.voice-quote {
+  font-size: 13px;
+  font-style: italic;
+  color: #333;
+  line-height: 1.6;
+  border-left: 2px solid var(--red-hat);
+  padding-left: 12px;
+}
+
+.voice-sentiment {
+  margin-top: 10px;
+  font-size: 11px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.sentiment-pos { color: #1A7A3A; }
+.sentiment-neg { color: var(--red-hat); }
+.sentiment-neu { color: var(--muted); }
+
+/* Risk matrix (black hat) */
+.risk-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.risk-table th {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+  background: #333;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.risk-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #F0F0F0;
+  vertical-align: top;
+  color: #333;
+  line-height: 1.5;
+}
+
+.risk-table tr:last-child td { border-bottom: none; }
+
+.risk-badge {
+  display: inline-block;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.risk-high   { background: #FDECEA; color: #C0281E; }
+.risk-medium { background: #FFF8E6; color: #D4900A; }
+.risk-low    { background: #EDF7F1; color: #1A7A3A; }
+
+/* Opportunity meter (yellow hat) */
+.opp-bar-wrap {
+  background: white;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+
+.opp-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.opp-row:last-child { margin-bottom: 0; }
+
+.opp-label {
+  font-size: 13px;
+  color: #333;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+.opp-track {
+  flex: 1;
+  height: 8px;
+  background: #F0F0EE;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.opp-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--yellow-hat);
+  transition: width 1s ease;
+}
+
+.opp-pct {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--yellow-hat);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Green hat idea cards */
+.idea-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.idea-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.idea-num {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #E0E0DC;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 36px;
+}
+
+.idea-content {}
+.idea-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+  color: var(--green-hat);
+}
+
+.idea-desc {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.idea-why {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Process timeline (blue hat) */
+.process-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.process-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  position: relative;
+}
+
+.process-row::before {
+  content: '';
+  position: absolute;
+  left: 109px;
+  top: 32px;
+  bottom: -20px;
+  width: 1px;
+  background: var(--rule);
+}
+
+.process-row:last-child::before { display: none; }
+
+.process-time {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--blue-hat);
+  text-align: right;
+  padding-top: 18px;
+  line-height: 1.3;
+}
+
+.process-card {
+  background: white;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.process-card::before {
+  content: '';
+  position: absolute;
+  left: -27px;
+  top: 20px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--blue-hat);
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px var(--blue-hat);
+}
+
+.process-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blue-hat);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.process-tasks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.process-tasks li {
+  font-size: 13px;
+  color: #444;
+  display: flex;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.process-tasks li::before {
+  content: '→';
+  color: var(--blue-hat);
+  flex-shrink: 0;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-weight: 700;
+}
+
+.process-owner {
+  margin-top: 10px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── SYNTHESIS ── */
+.synthesis {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 56px 32px 80px;
+}
+
+.synthesis-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.decision-cell {
+  background: white;
+  padding: 20px;
+}
+
+.decision-hat {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.decision-verdict {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* ── AI PANEL ── */
+.ai-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+
+.ai-header {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.ai-title {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.ai-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.ai-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: start;
+}
+
+@media (max-width: 600px) { .ai-form { grid-template-columns: 1fr; } }
+
+.ai-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ai-field label {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ai-input, .ai-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: Georgia, serif;
+  background: white;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.ai-input:focus, .ai-select:focus { border-color: var(--blue-hat); }
+.ai-select { cursor: pointer; }
+
+.run-btn {
+  margin-top: 17px;
+  padding: 10px 24px;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.run-btn:hover { background: #333; }
+.run-btn:disabled { background: #999; cursor: not-allowed; }
+
+.spin {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ai-output {
+  min-height: 100px;
+}
+
+.output-placeholder {
+  background: white;
+  border: 1px dashed var(--rule);
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Generated hat output cards */
+.gen-hat-block {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.gen-hat-head {
+  padding: 14px 20px;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.gen-hat-body {
+  padding: 18px 20px;
+}
+
+.gen-hat-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gen-hat-body ul li {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+}
+
+.gen-hat-body ul li::before {
+  content: '—';
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.verdict-block {
+  background: var(--ink);
+  color: white;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-top: 16px;
+}
+
+.verdict-label {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.verdict-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.85);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="hat-nav">
+  <div class="hat-nav-brand">Six Hats</div>
+  <a class="nav-hat wh" href="#white"><span class="hat-icon"></span>White</a>
+  <a class="nav-hat rh" href="#red"><span class="hat-icon"></span>Red</a>
+  <a class="nav-hat bk" href="#black"><span class="hat-icon"></span>Black</a>
+  <a class="nav-hat yh" href="#yellow"><span class="hat-icon"></span>Yellow</a>
+  <a class="nav-hat gh" href="#green"><span class="hat-icon"></span>Green</a>
+  <a class="nav-hat bl" href="#blue"><span class="hat-icon"></span>Blue</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">De Bono's Six Thinking Hats · Strategic Assessment</div>
+  <div class="hero-title">Referral<br><em>Program</em><br>Audit</div>
+  <div class="hero-desc">A full-spectrum analysis of the PGUSA Documents Platform referral program — examined through six distinct thinking modes, from hard data to gut feel to creative reinvention.</div>
+  <div class="hero-context">
+    <div class="ctx-cell">
+      <div class="ctx-label">Current Incentive</div>
+      <div class="ctx-value">$25 / referral</div>
+    </div>
+    <div class="ctx-cell">
+      <div class="ctx-label">Who Can Refer</div>
+      <div class="ctx-value">Workers only</div>
+    </div>
+    <div class="ctx-cell">
+      <div class="ctx-label">Trigger</div>
+      <div class="ctx-value">On signup</div>
+    </div>
+    <div class="ctx-cell">
+      <div class="ctx-label">Payout Timing</div>
+      <div class="ctx-value">Pending / manual</div>
+    </div>
+    <div class="ctx-cell">
+      <div class="ctx-label">Program Status</div>
+      <div class="ctx-value">Live, low activity</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- WHITE HAT -->
+<div class="hat-section hat-wh" id="white">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">White Hat · Logic &amp; Data</div>
+      <div class="hat-name">What do we actually know?</div>
+      <div class="hat-tagline">Facts, figures, and measurable reality — no interpretation yet</div>
+    </div>
+  </div>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <div class="finding-label">Current Incentive Structure</div>
+      <div class="finding-title">$25 flat referral bonus</div>
+      <div class="finding-body">Paid to the referring worker when a new worker signs up using their referral code. No performance condition attached — the referred worker does not need to complete a job for the bonus to be earned.</div>
+      <div class="finding-stat">$25</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Industry Benchmark</div>
+      <div class="finding-title">Gig platforms pay $50–$200</div>
+      <div class="finding-body">Uber Eats: $100 referral. DoorDash: $50–$100. TaskRabbit: $50 per active referral. PGUSA's $25 is at the bottom quartile of comparable gig-worker referral programs — and it triggers on signup, not activation.</div>
+      <div class="finding-stat">4× below top</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Referral Tracking</div>
+      <div class="finding-title">Code-based, manual payout</div>
+      <div class="finding-body">The Referral model exists in database.py. Referrer and referred IDs are stored. Bonus amount and paid status are tracked. No automated payout trigger is currently wired — payment requires manual processing.</div>
+      <div class="finding-stat">0 auto payouts</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Referral Visibility</div>
+      <div class="finding-title">Code shown, not promoted</div>
+      <div class="finding-body">The referral_code field exists in the Worker model and is returned by the dashboard endpoint. It is displayed in the dashboard but there is no CTA, no share button, no SMS prompt, and no copy-to-clipboard interaction.</div>
+      <div class="finding-stat">Buried</div>
+    </div>
+  </div>
+
+  <div class="analysis-block">
+    <h4>What the data tells us without interpretation</h4>
+    <p>The referral infrastructure is built and operational at the database level. A worker can generate a referral code, share it manually, and a new worker can use it at signup. The payout record is created. What is missing is every layer between the code existing and a worker actually using it: no in-product prompting, no share mechanism, no automated reward, no notification to the referrer when their code is used.</p>
+    <p>The program as currently designed requires a worker to (a) know their code exists, (b) remember it unprompted, (c) share it through their own channels with no platform support, and (d) wait for a manual payout with no ETA communicated. The activation funnel has four unbuilt steps.</p>
+  </div>
+</div>
+
+
+<!-- RED HAT -->
+<div class="hat-section hat-rd" id="red">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">Red Hat · Emotion &amp; Intuition</div>
+      <div class="hat-name">How does this feel?</div>
+      <div class="hat-tagline">Gut reactions, emotional truth, stakeholder sentiment — no justification required</div>
+    </div>
+  </div>
+
+  <div class="voice-grid">
+    <div class="voice-card">
+      <div class="voice-persona">Kisha · Active Worker</div>
+      <div class="voice-quote">"I told two people about this platform but I don't even know if they signed up. Nobody told me. I never got anything. It feels like the bonus might not be real."</div>
+      <div class="voice-sentiment sentiment-neg">⬇ Distrust, uncertainty</div>
+    </div>
+    <div class="voice-card">
+      <div class="voice-persona">Prospective Worker</div>
+      <div class="voice-quote">"$25 for getting someone a job? My cousin got $150 for referring someone to Amazon Flex. Why would I push hard for $25 when I'm not even sure the platform has enough work for me?"</div>
+      <div class="voice-sentiment sentiment-neg">⬇ Underwhelmed, skeptical</div>
+    </div>
+    <div class="voice-card">
+      <div class="voice-persona">Client (B2B)</div>
+      <div class="voice-quote">"I didn't know there was a referral program. I'd probably mention it to my title company partners if there was something in it for us too."</div>
+      <div class="voice-sentiment sentiment-neu">→ Unaware, open</div>
+    </div>
+    <div class="voice-card">
+      <div class="voice-persona">New Worker (Day 7)</div>
+      <div class="voice-quote">"I signed up because my friend told me about it. She said she'd get $25. I haven't claimed a job yet so I feel like I let her down even though I mean to."</div>
+      <div class="voice-sentiment sentiment-neg">⬇ Guilt, disconnection</div>
+    </div>
+    <div class="voice-card">
+      <div class="voice-persona">Platform · Del's perspective</div>
+      <div class="voice-quote">"We built the referral field but we haven't seen it move. It feels like a checkbox we built but never launched. The workers who could grow this for us don't know it exists."</div>
+      <div class="voice-sentiment sentiment-neu">→ Frustrated, aware</div>
+    </div>
+    <div class="voice-card">
+      <div class="voice-persona">Top Performer (Hypothetical)</div>
+      <div class="voice-quote">"If I thought this platform would pay me every time I brought in a good notary — and actually paid on time — I'd be recruiting actively. Right now I don't trust the payout enough to stake my reputation."</div>
+      <div class="voice-sentiment sentiment-pos">↑ High potential, blocked by trust</div>
+    </div>
+  </div>
+
+  <div class="analysis-block">
+    <h4>The emotional pattern underneath the data</h4>
+    <p>The dominant emotion across all personas is <strong>distrust born from silence</strong>. Not hostility — just the quiet suspicion that forms when a promised reward produces no confirmation, no timeline, and no proof it's real. Workers who would be natural advocates are holding back because they won't stake their personal credibility on a platform reward system they can't verify.</p>
+    <p>The second emotional signal is <strong>untapped pride</strong>. Workers who feel genuinely good about the platform — who believe they're earning fairly and being treated like professionals — want to tell people. That impulse exists. What's missing is a structure that makes sharing feel easy, trustworthy, and worth their while. Referral programs don't create advocates. They give existing advocates a mechanism and a reason.</p>
+  </div>
+</div>
+
+
+<!-- BLACK HAT -->
+<div class="hat-section hat-bk" id="black">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">Black Hat · Risk &amp; Caution</div>
+      <div class="hat-name">What could go wrong?</div>
+      <div class="hat-tagline">Critical thinking, worst cases, and structural vulnerabilities — no optimism</div>
+    </div>
+  </div>
+
+  <table class="risk-table">
+    <thead>
+      <tr>
+        <th style="width:28%">Risk</th>
+        <th style="width:38%">Failure Mode</th>
+        <th style="width:18%">Severity</th>
+        <th style="width:16%">Likelihood</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Signup-only trigger creates dead referrals</strong></td>
+        <td>Referring worker earns $25 for bringing in someone who never completes a job. Platform acquires low-quality workers at a cost with zero revenue return.</td>
+        <td><span class="risk-badge risk-high">High</span></td>
+        <td><span class="risk-badge risk-high">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>Manual payout creates trust collapse</strong></td>
+        <td>Worker shares referral code, new person signs up, nothing happens for weeks. Referrer assumes they've been cheated. Damages not just referral program — damages platform reputation.</td>
+        <td><span class="risk-badge risk-high">High</span></td>
+        <td><span class="risk-badge risk-medium">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>Referral fraud via fake accounts</strong></td>
+        <td>Worker creates multiple fake email accounts to generate referral bonuses. No identity verification on signup makes this trivially easy. $25 × fake accounts = direct platform loss.</td>
+        <td><span class="risk-badge risk-high">High</span></td>
+        <td><span class="risk-badge risk-medium">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>Worker quality dilution</strong></td>
+        <td>Incentivized recruiting brings in uncredentialed or low-quality workers who damage client experience. If referrer just wants $25, they refer anyone — not the right people.</td>
+        <td><span class="risk-badge risk-medium">Medium</span></td>
+        <td><span class="risk-badge risk-high">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>Referral cannibalizes organic growth</strong></td>
+        <td>Workers who would have signed up organically now enter through referral links, costing $25 per signup that was already coming. No counterfactual tracking = no way to know.</td>
+        <td><span class="risk-badge risk-low">Low</span></td>
+        <td><span class="risk-badge risk-medium">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>Payout liability builds invisibly</strong></td>
+        <td>As referral volume grows, unpaid bonus liability accumulates in the Referral table. Without an automated payout cron, this becomes a financial obligation with no payment schedule.</td>
+        <td><span class="risk-badge risk-medium">Medium</span></td>
+        <td><span class="risk-badge risk-high">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>Referred workers out-earn referrers</strong></td>
+        <td>A new worker earns more than the person who referred them, creating resentment if the referring worker feels their advocacy isn't reciprocated beyond a one-time $25.</td>
+        <td><span class="risk-badge risk-low">Low</span></td>
+        <td><span class="risk-badge risk-low">Low</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="analysis-block">
+    <h4>The structural vulnerability no one is talking about</h4>
+    <p>The highest-severity risk isn't fraud — it's the <strong>trust collapse from manual payouts</strong>. When a worker shares their referral code and nothing visibly happens afterward, they experience the platform as untrustworthy. This poisons not just the referral program but their entire relationship with PGUSA. They become less likely to claim jobs, less likely to recommend the platform, and more likely to churn. A broken referral promise costs far more than $25.</p>
+    <p>The fraud risk is secondary but real. Without a verified signup requirement (W-9 submission, first job completion, or ID verification), the $25 bonus is exploitable by anyone who can create email accounts. Cap the exposure now by changing the trigger before the program is actively promoted.</p>
+  </div>
+</div>
+
+
+<!-- YELLOW HAT -->
+<div class="hat-section hat-yl" id="yellow">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">Yellow Hat · Optimism &amp; Value</div>
+      <div class="hat-name">What's the upside?</div>
+      <div class="hat-tagline">Benefits, best cases, and genuine opportunities — no hedging</div>
+    </div>
+  </div>
+
+  <div class="opp-bar-wrap">
+    <div class="opp-row">
+      <div class="opp-label">CAC reduction vs paid ads</div>
+      <div class="opp-track"><div class="opp-fill" style="width:85%"></div></div>
+      <div class="opp-pct">85%</div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-label">Referred worker retention lift</div>
+      <div class="opp-track"><div class="opp-fill" style="width:40%"></div></div>
+      <div class="opp-pct">+40%</div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-label">Referred worker quality premium</div>
+      <div class="opp-track"><div class="opp-fill" style="width:60%"></div></div>
+      <div class="opp-pct">+60%</div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-label">Trust score of peer referrals vs ads</div>
+      <div class="opp-track"><div class="opp-fill" style="width:92%"></div></div>
+      <div class="opp-pct">92%</div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-label">Viral coefficient potential (k-factor)</div>
+      <div class="opp-track"><div class="opp-fill" style="width:70%"></div></div>
+      <div class="opp-pct">0.7–1.2</div>
+    </div>
+  </div>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <div class="finding-label">Network Effect Opportunity</div>
+      <div class="finding-title">Notary communities are tight-knit</div>
+      <div class="finding-body">Notaries, tax preparers, and legal doc workers organize in professional associations, Facebook groups, and NNA forums. One highly-regarded referrer in those communities can bring dozens of qualified workers.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Quality Advantage</div>
+      <div class="finding-title">Referred workers are pre-screened socially</div>
+      <div class="finding-body">A notary who refers a colleague has already done a quality filter — they won't stake their own reputation on someone they don't trust. Referral = social vetting that costs the platform nothing.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Geographic Expansion</div>
+      <div class="finding-title">Workers naturally refer in their own market</div>
+      <div class="finding-body">A Dallas notary refers Dallas contacts. A Houston tax preparer brings Houston workers. Referral is the lowest-cost way to build density in new cities without a city-by-city marketing budget.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-label">Compounding Returns</div>
+      <div class="finding-title">Each referred worker can refer again</div>
+      <div class="finding-body">At a k-factor above 1.0, referred users produce more than one additional signup each. The program becomes self-sustaining and scales without additional marketing spend once the flywheel starts.</div>
+    </div>
+  </div>
+
+  <div class="analysis-block">
+    <h4>The best-case scenario is genuinely transformational</h4>
+    <p>A properly structured referral program in a credentialed professional market — where trust is already a premium commodity — is one of the highest-leverage growth tools available. The credential requirement means referred workers are already filtered. The community structure means high-volume referrers exist and are identifiable. The earnings model means workers have a financial stake in the platform's success.</p>
+    <p>If PGUSA fixes the payout trigger, automates the reward, adds a share mechanism, and raises the incentive to $50 on first job completion, the program has the potential to drive 40–60% of new worker acquisition within six months — at a fraction of the cost of any paid channel.</p>
+  </div>
+</div>
+
+
+<!-- GREEN HAT -->
+<div class="hat-section hat-gn" id="green">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">Green Hat · Creativity &amp; Innovation</div>
+      <div class="hat-name">What if we tried something completely different?</div>
+      <div class="hat-tagline">New angles, lateral thinking, unconventional structures — no judgment</div>
+    </div>
+  </div>
+
+  <div class="idea-flow">
+    <div class="idea-card">
+      <div class="idea-num">01</div>
+      <div class="idea-content">
+        <div class="idea-title">The Crew Model — Tiered Team Bonuses</div>
+        <div class="idea-desc">Instead of individual referrals, workers build "crews." A worker who brings in 3+ active colleagues earns crew leader status — unlocking a 5% revenue share on every job their crew completes, permanently. The referring worker becomes a micro-franchisor with ongoing income, not a one-time $25 bonus earner.</div>
+        <div class="idea-why">Why this works: Transforms transactional referring into entrepreneurial team-building. Workers stop sharing a code and start recruiting with the same energy they'd give their own business.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-num">02</div>
+      <div class="idea-content">
+        <div class="idea-title">Referral as a Premium Service — Client-Side Program</div>
+        <div class="idea-desc">Title companies, mortgage brokers, and real estate attorneys who refer clients to PGUSA earn a $15 credit per closed booking — not cash, but a credit toward their own PGUSA document services. The incentive is embedded in their existing workflow, and the credit keeps them coming back as clients too.</div>
+        <div class="idea-why">Why this works: Adds a B2B referral channel that currently doesn't exist. One title company partner who closes 50 transactions/month becomes a repeating demand source, not just a one-time referral.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-num">03</div>
+      <div class="idea-content">
+        <div class="idea-title">The Reputation Multiplier — Bonus Scales With Referred Worker Quality</div>
+        <div class="idea-desc">Base referral: $25 on first job completion. Bonus: +$25 if the referred worker earns a 5-star rating on their first job. Bonus: +$25 more if they complete 10 jobs within 60 days. Maximum referral value: $75 per high-quality worker. Workers are incentivized to refer people who are actually good, not just anyone.</div>
+        <div class="idea-why">Why this works: Aligns the referral incentive with platform quality. The program becomes self-filtering — workers only refer people they're confident will perform, because their own bonus depends on it.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-num">04</div>
+      <div class="idea-content">
+        <div class="idea-title">The Association Play — Partner With NNA and NAEA Directly</div>
+        <div class="idea-desc">Instead of worker-to-worker referrals, negotiate a partnership with the National Notary Association or National Association of Enrolled Agents. PGUSA becomes a featured employer/marketplace partner. NNA members get a $0 platform fee for the first 30 days. PGUSA gets access to 350,000+ credentialed notaries without a single referral code.</div>
+        <div class="idea-why">Why this works: Bypasses the referral problem entirely by going directly to the organized networks where credentialed workers already congregate. One partnership replaces thousands of individual referrals.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-num">05</div>
+      <div class="idea-content">
+        <div class="idea-title">Referral as Content — The Shareable Earnings Card</div>
+        <div class="idea-desc">After every payout, workers receive a shareable "earnings card" — a branded visual showing their earnings this month, their rating, and their referral code embedded as a QR code. Designed to be posted on LinkedIn, Instagram, or in notary Facebook groups. The referral code is the CTA on content the worker was already motivated to share.</div>
+        <div class="idea-why">Why this works: Turns every payout moment into an organic marketing event. The referral code rides on pride, not obligation. Workers share because they're proud of what they earned — the referral is just along for the ride.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-num">06</div>
+      <div class="idea-content">
+        <div class="idea-title">Invert It — Let Clients Refer Workers</div>
+        <div class="idea-desc">A client who has a great experience with their notary gets a prompt: "Know a notary as good as [worker name]? Refer them to our platform and get $20 off your next booking." Clients become worker recruiters — and their recommendation carries the weight of a satisfied customer, which is the strongest possible endorsement for a new worker to join.</div>
+        <div class="idea-why">Why this works: Clients know professionals in the industries they interact with. A real estate investor who just had a great closing knows five other notaries personally. That's a recruiting channel nobody is using.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- BLUE HAT -->
+<div class="hat-section hat-bl" id="blue">
+  <div class="hat-header">
+    <div class="hat-big"></div>
+    <div class="hat-header-text">
+      <div class="hat-mode">Blue Hat · Process &amp; Control</div>
+      <div class="hat-name">How do we run this well?</div>
+      <div class="hat-tagline">Sequencing, ownership, metrics, and the master plan — no ideas, just execution</div>
+    </div>
+  </div>
+
+  <div class="analysis-block" style="margin-bottom:24px;">
+    <h4>The three non-negotiable fixes before promoting the program</h4>
+    <ul class="hat-list">
+      <li><span class="list-marker">1.</span> Change the payout trigger from signup to first job completed — eliminates fraud risk and aligns cost with revenue</li>
+      <li><span class="list-marker">2.</span> Automate the payout via the existing payment cron job — removes manual liability and builds trust through instant confirmation</li>
+      <li><span class="list-marker">3.</span> Add a share mechanism to the dashboard — copy-to-clipboard referral link, one-tap SMS share, and a visible bonus counter</li>
+    </ul>
+  </div>
+
+  <div class="process-timeline">
+    <div class="process-row">
+      <div class="process-time">Week 1<br>Foundation</div>
+      <div class="process-card">
+        <div class="process-title">Fix the trigger and automate payout</div>
+        <ul class="process-tasks">
+          <li>Update Referral bonus_paid trigger: fire on referred worker's first completed job, not signup</li>
+          <li>Wire payout into the existing complete_job() payment flow — create a Payment record for the referrer automatically</li>
+          <li>Send SMS to referrer the moment their referred worker completes job 1: "Your referral just completed their first job. $25 is on its way to you."</li>
+          <li>Add fraud guard: one referral bonus per unique phone number verified worker</li>
+        </ul>
+        <div class="process-owner">Owner: Backend · Est. 4 hours</div>
+      </div>
+    </div>
+
+    <div class="process-row">
+      <div class="process-time">Week 1<br>Visibility</div>
+      <div class="process-card">
+        <div class="process-title">Build the share surface in the dashboard</div>
+        <ul class="process-tasks">
+          <li>Add referral widget to worker dashboard: shows code, total referrals, total earned from referrals</li>
+          <li>One-tap copy button for referral link (pgusa.com/join?ref=CODE)</li>
+          <li>Pre-written SMS message: "I've been earning on PGUSA — notary/tax prep jobs, paid every 4 days. Join with my link and we both get $25 when you complete your first job: [link]"</li>
+          <li>Show referral leaderboard: "3 workers joined using your code this month"</li>
+        </ul>
+        <div class="process-owner">Owner: Frontend · Est. 3 hours</div>
+      </div>
+    </div>
+
+    <div class="process-row">
+      <div class="process-time">Week 2<br>Incentive</div>
+      <div class="process-card">
+        <div class="process-title">Raise the stakes and add the quality multiplier</div>
+        <ul class="process-tasks">
+          <li>Increase base referral to $50 (first job completion trigger)</li>
+          <li>Add quality bonus: +$25 if referred worker earns 5 stars on first job</li>
+          <li>Add volume bonus: +$25 if referred worker completes 10 jobs in 60 days</li>
+          <li>Update all dashboard copy and onboarding messaging to reflect new $50 base</li>
+        </ul>
+        <div class="process-owner">Owner: Product + Backend · Est. 3 hours</div>
+      </div>
+    </div>
+
+    <div class="process-row">
+      <div class="process-time">Week 3<br>Activation</div>
+      <div class="process-card">
+        <div class="process-title">Launch the shareable earnings card</div>
+        <ul class="process-tasks">
+          <li>After each payout, generate a branded earnings summary card (HTML → image via API or canvas)</li>
+          <li>Card shows: worker first name, earnings this month, star rating, referral QR code</li>
+          <li>"Share your win" CTA with one-tap to save image + referral link</li>
+          <li>Post examples to TikTok and LinkedIn to seed social proof</li>
+        </ul>
+        <div class="process-owner">Owner: Marketing + Dev · Est. 6 hours</div>
+      </div>
+    </div>
+
+    <div class="process-row">
+      <div class="process-time">Month 2<br>Expansion</div>
+      <div class="process-card">
+        <div class="process-title">Open the client-side referral channel</div>
+        <ul class="process-tasks">
+          <li>Build client referral flow: after job completion, prompt "Know a notary? Refer them, get $20 off your next booking"</li>
+          <li>Target B2B: title companies get a dedicated referral page with volume incentives</li>
+          <li>Identify top 3 referring workers, offer crew leader status (ongoing revenue share)</li>
+          <li>Approach NNA and NAEA about platform partnership listing</li>
+        </ul>
+        <div class="process-owner">Owner: Del + Dev · Est. 10 hours</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analysis-block" style="margin-top:8px;">
+    <h4>The metrics that tell you if it's working</h4>
+    <ul class="hat-list">
+      <li><span class="list-marker">→</span> <strong>Referral activation rate:</strong> % of active workers who have shared their code at least once. Target: 40% within 30 days of launch</li>
+      <li><span class="list-marker">→</span> <strong>Referral conversion rate:</strong> referred signups who complete a first job. Target: &gt;50% (vs organic signup baseline)</li>
+      <li><span class="list-marker">→</span> <strong>Referral CAC:</strong> total bonus paid ÷ active workers acquired. Target: under $60 per activated worker</li>
+      <li><span class="list-marker">→</span> <strong>K-factor:</strong> average referrals per active referrer. Anything above 1.0 means the program is self-sustaining</li>
+      <li><span class="list-marker">→</span> <strong>Referred worker 90-day retention:</strong> benchmark against organic signups. Expect 20–40% better</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- SYNTHESIS -->
+<div class="synthesis">
+  <div class="hero-eyebrow" style="margin-bottom:12px;">Six Hats Synthesis</div>
+  <div class="synthesis-title">What all six hats agree on</div>
+
+  <div class="decision-grid">
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:var(--white-hat)">⬜ White</div>
+      <div class="decision-verdict">The program exists technically but is invisible and unautomated. No worker knows it's active. No payout has been automated.</div>
+    </div>
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:var(--red-hat)">🟥 Red</div>
+      <div class="decision-verdict">Workers want to refer but distrust an unconfirmed reward. The emotional block is silence — fix communication before raising incentives.</div>
+    </div>
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:#555">⬛ Black</div>
+      <div class="decision-verdict">Signup-only trigger exposes the platform to fraud and low-quality workers. Change to first job completion before any promotion.</div>
+    </div>
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:var(--yellow-hat)">🟨 Yellow</div>
+      <div class="decision-verdict">A fixed referral program could drive 40–60% of worker acquisition at under $60 CAC. The network effect potential is real and large.</div>
+    </div>
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:var(--green-hat)">🟩 Green</div>
+      <div class="decision-verdict">The biggest opportunity isn't fixing the existing program — it's opening a client-side referral channel and professional association partnerships that don't exist yet.</div>
+    </div>
+    <div class="decision-cell">
+      <div class="decision-hat" style="color:var(--blue-hat)">🟦 Blue</div>
+      <div class="decision-verdict">Fix trigger → automate payout → add share surface. That's Week 1. Raise incentives in Week 2. Expand to clients and B2B in Month 2. In that order.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- AI SECTION -->
+<div class="ai-section">
+  <div class="ai-header">AI-Powered Analysis</div>
+  <div class="ai-title">Run Six Hats on Any Program</div>
+  <div class="ai-desc">Enter any business program, feature, or decision and generate a full Six Thinking Hats analysis instantly.</div>
+
+  <div class="ai-form">
+    <div class="ai-field">
+      <label>What to analyze</label>
+      <input class="ai-input" id="topicInput" type="text" placeholder="e.g. loyalty points program, free trial policy, pricing change...">
+    </div>
+    <div class="ai-field">
+      <label>Business context</label>
+      <select class="ai-select" id="contextSelect">
+        <option value="marketplace platform">Marketplace Platform</option>
+        <option value="SaaS product">SaaS Product</option>
+        <option value="fintech app">Fintech App</option>
+        <option value="e-commerce store">E-Commerce Store</option>
+        <option value="real estate business">Real Estate Business</option>
+        <option value="gig economy platform">Gig Economy Platform</option>
+      </select>
+    </div>
+    <button class="run-btn" id="runBtn" onclick="runHats()">
+      <div class="spin" id="btnSpin"></div>
+      <span id="runLabel">Run Analysis</span>
+    </button>
+  </div>
+
+  <div class="ai-output" id="aiOut">
+    <div class="output-placeholder">Your Six Hats analysis will appear here</div>
+  </div>
+</div>
+
+
+<script>
+const HAT_META = [
+  { key:'white',  label:'White Hat · Data & Facts',       bg:'#333',           li:'#888' },
+  { key:'red',    label:'Red Hat · Emotion & Intuition',  bg:'#C0281E',        li:'#e87070' },
+  { key:'black',  label:'Black Hat · Risk & Caution',     bg:'#111',           li:'#888' },
+  { key:'yellow', label:'Yellow Hat · Benefits & Value',  bg:'#D4900A',        li:'#f0c060' },
+  { key:'green',  label:'Green Hat · Creative Angles',    bg:'#1A7A3A',        li:'#5dbf7a' },
+  { key:'blue',   label:'Blue Hat · Process & Control',   bg:'#1449B8',        li:'#6b9ef0' },
+];
+
+async function runHats() {
+  const topic   = document.getElementById('topicInput').value.trim();
+  const context = document.getElementById('contextSelect').value;
+  const btn     = document.getElementById('runBtn');
+  const spin    = document.getElementById('btnSpin');
+  const lbl     = document.getElementById('runLabel');
+  const out     = document.getElementById('aiOut');
+
+  if (!topic) { document.getElementById('topicInput').focus(); return; }
+
+  btn.disabled = true;
+  spin.style.display = 'block';
+  lbl.textContent = 'Thinking...';
+  out.innerHTML = '<div class="output-placeholder">Putting on all six hats...</div>';
+
+  const prompt = `You are a Six Thinking Hats facilitator analyzing a business decision.
+
+Business: ${context}
+Topic: ${topic}
+
+Analyze this topic through all six hats. Return ONLY a valid JSON object with this exact structure:
+{
+  "white": ["fact or data point 1", "fact or data point 2", "fact or data point 3"],
+  "red": ["emotional reaction or intuition 1", "gut feeling 2", "stakeholder sentiment 3"],
+  "black": ["risk or downside 1", "caution point 2", "potential failure 3"],
+  "yellow": ["benefit or upside 1", "opportunity 2", "positive outcome 3"],
+  "green": ["creative angle 1", "unconventional idea 2", "innovative approach 3"],
+  "blue": ["process step 1", "sequence recommendation 2", "metric to track 3"],
+  "verdict": "One sharp paragraph (3-4 sentences) synthesizing what all six hats reveal — the key insight and recommended action."
+}
+
+Be specific to the business context. Each point should be a complete, actionable sentence.
+Return ONLY the JSON, no preamble, no markdown.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw  = data.content[0].text.replace(/```json|```/g,'').trim();
+    const s    = JSON.parse(raw);
+
+    let html = '';
+    for (const hat of HAT_META) {
+      const items = s[hat.key] || [];
+      html += `
+        <div class="gen-hat-block">
+          <div class="gen-hat-head" style="background:${hat.bg}">${hat.label}</div>
+          <div class="gen-hat-body">
+            <ul>
+              ${items.map(item => `<li style="--marker:${hat.li}">${item}</li>`).join('')}
+            </ul>
+          </div>
+        </div>`;
+    }
+
+    if (s.verdict) {
+      html += `
+        <div class="verdict-block">
+          <div class="verdict-label">Six Hats Synthesis</div>
+          <div class="verdict-text">${s.verdict}</div>
+        </div>`;
+    }
+
+    out.innerHTML = html;
+
+  } catch(e) {
+    out.innerHTML = '<div class="output-placeholder" style="color:#C0281E;">Analysis failed — please try again.</div>';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    spin.style.display = 'none';
+    lbl.textContent = 'Run Analysis';
+  }
+}
+
+document.getElementById('topicInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runHats();
+});
+</script>
+</body>
+</html>
