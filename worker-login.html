@@ -272,12 +272,20 @@ input::placeholder { color: var(--gray); }
         <span>🏅 Submit Credentials</span>
         <span id="credStatus" style="font-size:11px;color:#B45309">Required →</span>
       </a>
-      <a href="https://pgusa-platform-production.up.railway.app/docs" target="_blank" class="dash-action">
-        <span>💼 Available Jobs</span>
-        <span>→</span>
+      <a href="#" onclick="showPayPreview()" class="dash-action">
+        <span>👁️ Review Today's Pay</span>
+        <span id="payPreviewAmt" style="font-size:11px;color:var(--green)">Loading...</span>
       </a>
-      <a href="https://pgusa-platform-production.up.railway.app/docs" target="_blank" class="dash-action">
-        <span>💰 Earnings History</span>
+      <a href="#" onclick="showPaySchedule()" class="dash-action">
+        <span>📅 Payout Schedule</span>
+        <span style="font-size:11px;color:var(--gray)">Daily 6PM CT →</span>
+      </a>
+      <a href="#" onclick="show1099()" class="dash-action">
+        <span>📄 Tax Documents / 1099</span>
+        <span style="font-size:11px;color:var(--gray)">Self-service →</span>
+      </a>
+      <a href="#" onclick="showEarningsBreakdown()" class="dash-action">
+        <span>💼 Earnings by Service</span>
         <span>→</span>
       </a>
     </div>
@@ -567,6 +575,243 @@ function signOut() {
   document.getElementById('credForm').classList.remove('show');
   clearMessages();
   switchTab('login');
+}
+
+
+// ── PAY PREVIEW (Beti-style) ──────────────────────────────────
+async function showPayPreview() {
+  clearMessages();
+  document.getElementById('dashboard').classList.remove('show');
+
+  try {
+    const res = await fetch(`${API}/workers/payroll/preview`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Could not load pay preview');
+
+    // Build preview HTML
+    let itemsHTML = data.items.length > 0 ? data.items.map(item => `
+      <div style="background:var(--off);border:1px solid var(--light);border-radius:8px;padding:14px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;color:var(--navy)">${item.service_type.replace(/_/g,' ').toUpperCase()}</span>
+          <span style="font-size:14px;font-weight:800;color:var(--green)">$${item.net_amount.toFixed(2)}</span>
+        </div>
+        <div style="font-size:11px;color:var(--gray)">
+          Gross: $${item.gross_amount.toFixed(2)} · Platform fee: $${item.platform_fee.toFixed(2)} · Your rate: ${item.pay_rate_pct}%
+        </div>
+      </div>
+    `).join('') : '<div style="font-size:13px;color:var(--gray);text-align:center;padding:20px;">No completed jobs pending payout today.</div>';
+
+    const screen = document.createElement('div');
+    screen.id = 'payPreviewScreen';
+    screen.innerHTML = `
+      <button class="back-btn" onclick="document.getElementById('payPreviewScreen').remove();showDashboard()">← Back</button>
+      <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Today's Pay Preview</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">Payout: ${data.payout_date}</div>
+      ${itemsHTML}
+      ${data.items.length > 0 ? `
+      <div style="background:rgba(0,197,122,0.08);border:1px solid rgba(0,197,122,0.2);border-radius:10px;padding:16px;margin:16px 0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;color:var(--navy)">Total Net Payout</span>
+          <span style="font-size:20px;font-weight:800;color:var(--green)">$${data.total_net.toFixed(2)}</span>
+        </div>
+        <div style="font-size:11px;color:var(--gray)">Gross: $${data.total_gross.toFixed(2)} · Fees: $${data.total_fees.toFixed(2)}</div>
+      </div>
+      <button class="btn" onclick="confirmPayPreview()">✓ Confirm — Looks Correct</button>
+      <button onclick="flagPayIssue()" style="width:100%;padding:10px;background:transparent;border:1px solid #EF4444;border-radius:8px;color:#EF4444;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;">Flag an Issue</button>
+      ` : ''}
+    `;
+    document.querySelector('.card').appendChild(screen);
+
+    // Update dashboard preview amount
+    document.getElementById('payPreviewAmt').textContent = `$${data.total_net.toFixed(2)} today`;
+  } catch(e) {
+    showError(e.message);
+    showDashboard();
+  }
+}
+
+async function confirmPayPreview() {
+  const res = await fetch(`${API}/workers/payroll/preview/confirm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+    body: JSON.stringify({ confirm: true })
+  });
+  const data = await res.json();
+  document.getElementById('payPreviewScreen').remove();
+  showSuccess(data.message);
+  showDashboard();
+}
+
+async function flagPayIssue() {
+  const issue = prompt('What issue did you notice with your pay?');
+  if (!issue) return;
+  const res = await fetch(`${API}/workers/payroll/preview/confirm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+    body: JSON.stringify({ confirm: false, any_issues: issue })
+  });
+  const data = await res.json();
+  document.getElementById('payPreviewScreen').remove();
+  showSuccess(data.message);
+  showDashboard();
+}
+
+// ── PAYOUT SCHEDULE (Everyday-style) ─────────────────────────
+async function showPaySchedule() {
+  clearMessages();
+  document.getElementById('dashboard').classList.remove('show');
+
+  try {
+    const res = await fetch(`${API}/workers/payroll/schedule`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Could not load schedule');
+
+    let historyHTML = data.last_30_days.length > 0 ? data.last_30_days.map(d => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--light);">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">${d.display_date}</div>
+          <div style="font-size:11px;color:var(--gray)">${d.jobs_completed} job(s) · ${d.payout_time}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:15px;font-weight:800;color:var(--green)">$${d.you_earned.toFixed(2)}</div>
+          <div style="font-size:10px;color:${d.status === 'paid' ? '#007A4D' : '#B45309'};font-weight:600;">${d.status.toUpperCase()}</div>
+        </div>
+      </div>
+    `).join('') : '<div style="font-size:13px;color:var(--gray);padding:20px;text-align:center;">No payout history yet.</div>';
+
+    const screen = document.createElement('div');
+    screen.id = 'scheduleScreen';
+    screen.innerHTML = `
+      <button class="back-btn" onclick="document.getElementById('scheduleScreen').remove();showDashboard()">← Back</button>
+      <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Payout Schedule</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">${data.payout_cadence}</div>
+      <div style="background:rgba(0,197,122,0.08);border:1px solid rgba(0,197,122,0.2);border-radius:10px;padding:16px;margin-bottom:20px;">
+        <div style="font-size:12px;color:var(--gray);margin-bottom:4px;">Today's Earnings</div>
+        <div style="font-size:28px;font-weight:800;color:var(--green)">$${data.today_earnings.toFixed(2)}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:4px;">${data.next_payout}</div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Last 30 Days · $${data.total_30_days.toFixed(2)}</div>
+      <div style="background:var(--white);border:1px solid var(--light);border-radius:10px;overflow:hidden;">
+        ${historyHTML}
+      </div>
+      <div style="font-size:11px;color:var(--gray);text-align:center;margin-top:12px;">
+        Payout destination: ${data.payout_destination}
+      </div>
+    `;
+    document.querySelector('.card').appendChild(screen);
+  } catch(e) {
+    showError(e.message);
+    showDashboard();
+  }
+}
+
+// ── 1099 SELF-SERVICE ─────────────────────────────────────────
+async function show1099() {
+  clearMessages();
+  document.getElementById('dashboard').classList.remove('show');
+
+  try {
+    const year = new Date().getFullYear();
+    const res = await fetch(`${API}/workers/payroll/tax/summary?year=${year}`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Could not load tax summary');
+
+    const screen = document.createElement('div');
+    screen.id = 'taxScreen';
+    screen.innerHTML = `
+      <button class="back-btn" onclick="document.getElementById('taxScreen').remove();showDashboard()">← Back</button>
+      <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Tax Documents</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">${data.tax_year} · ${data.worker_name}</div>
+
+      <div style="background:var(--off);border:1px solid var(--light);border-radius:10px;padding:20px;margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">Total Earned ${data.tax_year}</div>
+        <div style="font-size:32px;font-weight:800;color:var(--navy)">$${data.total_earned.toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+        <div style="font-size:12px;color:var(--gray);margin-top:6px;">${data.total_jobs_completed} jobs completed</div>
+      </div>
+
+      <div style="background:${data.needs_1099_nec ? 'rgba(0,197,122,0.08)' : 'rgba(100,116,139,0.08)'};border:1px solid ${data.needs_1099_nec ? 'rgba(0,197,122,0.2)' : 'var(--light)'};border-radius:10px;padding:16px;margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;">1099-NEC Status</div>
+        <div style="font-size:12px;color:var(--gray);">${data['1099_status']}</div>
+      </div>
+
+      ${data.monthly_breakdown.length > 0 ? `
+      <div style="font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Monthly Breakdown</div>
+      <div style="background:var(--white);border:1px solid var(--light);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+        ${data.monthly_breakdown.map(m => `
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--light);">
+            <span style="font-size:13px;color:var(--text)">${m.month} · ${m.jobs} jobs</span>
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">$${m.earned.toFixed(2)}</span>
+          </div>
+        `).join('')}
+      </div>
+      ` : ''}
+
+      ${data.download_available ? `
+      <button class="btn" onclick="download1099(${year - 1})">⬇ Download ${year-1} 1099-NEC</button>
+      ` : `
+      <div style="font-size:12px;color:var(--gray);text-align:center;padding:12px;background:var(--off);border-radius:8px;">
+        ${year} 1099-NEC available after January 31, ${year + 1}
+      </div>
+      `}
+
+      <div style="margin-top:16px;padding:12px;background:rgba(26,108,245,0.06);border-radius:8px;font-size:11px;color:var(--gray);">
+        <strong>Payer:</strong> ${data.payer.name} · EIN: ${data.payer.ein}<br>
+        Report Box 1 on Schedule C. Questions: propertygroupofusa@gmail.com
+      </div>
+    `;
+    document.querySelector('.card').appendChild(screen);
+  } catch(e) {
+    showError(e.message);
+    showDashboard();
+  }
+}
+
+async function download1099(year) {
+  window.open(`${API}/workers/payroll/tax/1099/download?year=${year}`, '_blank');
+}
+
+// ── EARNINGS BREAKDOWN ────────────────────────────────────────
+async function showEarningsBreakdown() {
+  clearMessages();
+  document.getElementById('dashboard').classList.remove('show');
+
+  try {
+    const res = await fetch(`${API}/workers/payroll/earnings/breakdown`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail);
+
+    const screen = document.createElement('div');
+    screen.id = 'breakdownScreen';
+    screen.innerHTML = `
+      <button class="back-btn" onclick="document.getElementById('breakdownScreen').remove();showDashboard()">← Back</button>
+      <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Earnings by Service</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">Lifetime total: $${data.total_lifetime_earned.toFixed(2)}</div>
+      ${data.breakdown.map(b => `
+        <div style="background:var(--off);border:1px solid var(--light);border-radius:10px;padding:16px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">${b.service_type.replace(/_/g,' ').toUpperCase()}</span>
+            <span style="font-size:16px;font-weight:800;color:var(--green)">$${b.earned.toFixed(2)}</span>
+          </div>
+          <div style="background:var(--light);border-radius:4px;height:6px;overflow:hidden;">
+            <div style="background:var(--blue);height:100%;width:${b.pct_of_total}%;border-radius:4px;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--gray);margin-top:6px;">${b.jobs} jobs · ${b.pct_of_total}% of total</div>
+        </div>
+      `).join('')}
+    `;
+    document.querySelector('.card').appendChild(screen);
+  } catch(e) {
+    showError(e.message);
+    showDashboard();
+  }
 }
 
 // Auto-login if token exists
