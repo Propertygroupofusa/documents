@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA Worker Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0D1B2A; --blue: #1A6CF5; --green: #00C57A;
+  --white: #FFFFFF; --off: #F7F9FC; --gray: #64748B;
+  --light: #E2E8F0; --text: #334155; --red: #EF4444;
+}
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: linear-gradient(135deg, #0D1B2A 0%, #1A2E4A 100%);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background: var(--white); border-radius: 16px;
+  padding: 40px; width: 100%; max-width: 400px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+}
+
+.logo {
+  text-align: center; margin-bottom: 32px;
+}
+.logo-name { font-size: 20px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+.logo-name span { color: var(--blue); }
+.logo-sub { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+.tabs {
+  display: flex; background: var(--off); border-radius: 8px;
+  padding: 4px; margin-bottom: 28px; gap: 4px;
+}
+.tab {
+  flex: 1; padding: 8px; border: none; background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--gray);
+  border-radius: 6px; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.tab.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+.form-group { margin-bottom: 16px; }
+label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+
+input[type="text"], input[type="email"], input[type="password"], select {
+  width: 100%; padding: 11px 14px; border: 1px solid var(--light);
+  border-radius: 8px; font-size: 14px; font-family: inherit;
+  color: var(--navy); background: var(--white); outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus { border-color: var(--blue); }
+input::placeholder { color: var(--gray); }
+
+.btn {
+  width: 100%; padding: 13px; background: var(--blue); color: white;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: background 0.2s;
+  margin-top: 8px;
+}
+.btn:hover { background: #1558CC; }
+.btn:disabled { background: var(--light); color: var(--gray); cursor: not-allowed; }
+
+.divider { text-align: center; font-size: 12px; color: var(--gray); margin: 16px 0; position: relative; }
+.divider::before, .divider::after {
+  content: ''; position: absolute; top: 50%; width: calc(50% - 20px); height: 1px; background: var(--light);
+}
+.divider::before { left: 0; } .divider::after { right: 0; }
+
+.error-msg {
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+  color: var(--red); font-size: 12px; padding: 10px 14px;
+  border-radius: 6px; margin-bottom: 16px; display: none;
+}
+.error-msg.show { display: block; }
+
+.success-msg {
+  background: rgba(0,197,122,0.08); border: 1px solid rgba(0,197,122,0.2);
+  color: #007A4D; font-size: 12px; padding: 10px 14px;
+  border-radius: 6px; margin-bottom: 16px; display: none;
+}
+.success-msg.show { display: block; }
+
+.footer-note { text-align: center; font-size: 12px; color: var(--gray); margin-top: 20px; }
+.footer-note a { color: var(--blue); text-decoration: none; }
+
+.loading { display: none; }
+.loading.show { display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+/* Dashboard */
+.dashboard { display: none; }
+.dashboard.show { display: block; }
+.login-form.hide { display: none; }
+
+.dash-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.dash-greeting { font-size: 18px; font-weight: 700; color: var(--navy); }
+.dash-plan {
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 10px; background: rgba(26,108,245,0.1); color: var(--blue);
+}
+
+.dash-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.dash-stat {
+  background: var(--off); border: 1px solid var(--light);
+  border-radius: 10px; padding: 16px; text-align: center;
+}
+.dash-stat-num { font-size: 24px; font-weight: 800; color: var(--navy); letter-spacing: -1px; }
+.dash-stat-label { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+.dash-actions { display: flex; flex-direction: column; gap: 10px; }
+.dash-action {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: var(--off); border: 1px solid var(--light);
+  border-radius: 10px; text-decoration: none; color: var(--text);
+  font-size: 13px; font-weight: 500; transition: all 0.2s;
+}
+.dash-action:hover { border-color: var(--blue); color: var(--blue); }
+.dash-action-icon { font-size: 18px; }
+
+.compliance-badge {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  border-radius: 8px; font-size: 12px; font-weight: 600; margin-bottom: 16px;
+}
+.compliance-badge.incomplete {
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+  color: #B45309;
+}
+.compliance-badge.complete {
+  background: rgba(0,197,122,0.1); border: 1px solid rgba(0,197,122,0.2);
+  color: #007A4D;
+}
+
+.signout-btn {
+  width: 100%; padding: 10px; background: transparent; color: var(--gray);
+  border: 1px solid var(--light); border-radius: 8px; font-size: 13px;
+  cursor: pointer; font-family: inherit; margin-top: 16px; transition: all 0.2s;
+}
+.signout-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* W9 Form */
+.w9-form { display: none; }
+.w9-form.show { display: block; }
+.back-btn {
+  background: none; border: none; color: var(--blue); font-size: 13px;
+  font-weight: 600; cursor: pointer; font-family: inherit; padding: 0;
+  margin-bottom: 20px; display: flex; align-items: center; gap: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-name">PGUSA <span>Documents</span></div>
+    <div class="logo-sub">Worker Portal</div>
+  </div>
+
+  <!-- ERROR / SUCCESS -->
+  <div class="error-msg" id="errorMsg"></div>
+  <div class="success-msg" id="successMsg"></div>
+
+  <!-- LOGIN / REGISTER TABS -->
+  <div id="authSection">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab" onclick="switchTab('register')">Apply Now</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="doLogin()">Sign In →</button>
+      <div class="footer-note" style="margin-top:16px;">
+        Need help? <a href="mailto:propertygroupofusa@gmail.com">Contact support</a>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="regFirst" placeholder="Delfine">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="regLast" placeholder="Stennis">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="regEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="regPhone" placeholder="(210) 555-0100">
+      </div>
+      <div class="form-group">
+        <label>Specialty</label>
+        <select id="regSpecialty">
+          <option value="">Select your specialty</option>
+          <option value="notary_remote">Remote Online Notary (RON)</option>
+          <option value="notary_mobile">Mobile Notary</option>
+          <option value="loan_signing">Loan Signing Agent (LSA)</option>
+          <option value="tax_prep">Tax Preparation</option>
+          <option value="legal_docs">Legal Document Prep</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>State</label>
+        <select id="regState">
+          <option value="TX">Texas</option>
+          <option value="CA">California</option>
+          <option value="FL">Florida</option>
+          <option value="NY">New York</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPassword" placeholder="Create a password">
+      </div>
+      <button class="btn" onclick="doRegister()">Apply as a Notary →</button>
+      <div class="footer-note" style="margin-top:12px;">
+        By applying you agree to our <a href="terms.html">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (shown after login) -->
+  <div id="dashboard" class="dashboard">
+    <div class="dash-header">
+      <div class="dash-greeting" id="dashGreeting">Hello!</div>
+      <div class="dash-plan" id="dashPlan">Starter</div>
+    </div>
+
+    <div id="complianceBadge" class="compliance-badge incomplete">
+      ⚠️ Complete your W-9 and credentials to start claiming jobs
+    </div>
+
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-num" id="dashEarnings">$0</div>
+        <div class="dash-stat-label">Total Earned</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-num" id="dashJobs">0</div>
+        <div class="dash-stat-label">Jobs Completed</div>
+      </div>
+    </div>
+
+    <div class="dash-actions">
+      <a href="#" onclick="showW9Form()" class="dash-action">
+        <span>📋 Submit W-9 Tax Info</span>
+        <span id="w9Status" style="font-size:11px;color:#B45309">Required →</span>
+      </a>
+      <a href="#" onclick="showCredForm()" class="dash-action">
+        <span>🏅 Submit Credentials</span>
+        <span id="credStatus" style="font-size:11px;color:#B45309">Required →</span>
+      </a>
+      <a href="https://pgusa-platform-production.up.railway.app/docs" target="_blank" class="dash-action">
+        <span>💼 Available Jobs</span>
+        <span>→</span>
+      </a>
+      <a href="https://pgusa-platform-production.up.railway.app/docs" target="_blank" class="dash-action">
+        <span>💰 Earnings History</span>
+        <span>→</span>
+      </a>
+    </div>
+    <button class="signout-btn" onclick="signOut()">Sign Out</button>
+  </div>
+
+  <!-- W-9 FORM -->
+  <div id="w9Form" class="w9-form">
+    <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+    <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Submit W-9 Tax Info</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">Required for payouts. Information is encrypted and secure.</div>
+    <div class="form-group">
+      <label>Legal Name (as on tax return)</label>
+      <input type="text" id="w9Name" placeholder="Full legal name">
+    </div>
+    <div class="form-group">
+      <label>Tax Classification</label>
+      <select id="w9Tax">
+        <option value="individual">Individual / Sole Proprietor</option>
+        <option value="llc_single">LLC (Single Member)</option>
+        <option value="llc_multi">LLC (Multi Member)</option>
+        <option value="corporation">Corporation</option>
+        <option value="s_corp">S Corporation</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Last 4 of SSN or EIN</label>
+      <input type="text" id="w9TIN" placeholder="1234" maxlength="4">
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text" id="w9Address" placeholder="123 Main St, San Antonio, TX 78201">
+    </div>
+    <button class="btn" onclick="submitW9()">Submit W-9 →</button>
+  </div>
+
+  <!-- CREDENTIALS FORM -->
+  <div id="credForm" class="w9-form">
+    <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+    <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">Submit Notary Credentials</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:20px;">Your credentials are verified before your first job assignment.</div>
+    <div class="form-group">
+      <label>Notary Commission Number</label>
+      <input type="text" id="credCommNum" placeholder="Commission number">
+    </div>
+    <div class="form-group">
+      <label>Commission State</label>
+      <select id="credCommState">
+        <option value="TX">Texas</option>
+        <option value="CA">California</option>
+        <option value="FL">Florida</option>
+        <option value="NY">New York</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Commission Expiration Date</label>
+      <input type="text" id="credExpires" placeholder="MM/DD/YYYY">
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+      <input type="checkbox" id="credRON" style="width:auto;padding:0;">
+      <label for="credRON" style="margin:0;font-size:13px;cursor:pointer;">I am authorized for Remote Online Notarization (RON)</label>
+    </div>
+    <button class="btn" onclick="submitCreds()">Submit Credentials →</button>
+  </div>
+
+</div>
+
+<script>
+const API = 'https://pgusa-platform-production.up.railway.app';
+let authToken = localStorage.getItem('pgusa_token') || null;
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('successMsg').classList.remove('show');
+}
+
+function showSuccess(msg) {
+  const el = document.getElementById('successMsg');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('errorMsg').classList.remove('show');
+}
+
+function clearMessages() {
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('successMsg').classList.remove('show');
+}
+
+function switchTab(tab) {
+  clearMessages();
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register')));
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+}
+
+async function doLogin() {
+  clearMessages();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) { showError('Please enter your email and password.'); return; }
+
+  const btn = document.querySelector('#loginForm .btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Login failed');
+    authToken = data.access_token;
+    localStorage.setItem('pgusa_token', authToken);
+    await loadDashboard();
+  } catch(e) {
+    showError(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign In →';
+  }
+}
+
+async function doRegister() {
+  clearMessages();
+  const first = document.getElementById('regFirst').value.trim();
+  const last = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const specialty = document.getElementById('regSpecialty').value;
+  const state = document.getElementById('regState').value;
+  const password = document.getElementById('regPassword').value;
+
+  if (!first || !last || !email || !password) { showError('Please fill in all required fields.'); return; }
+  if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+
+  const btn = document.querySelector('#registerForm .btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  try {
+    const res = await fetch(`${API}/auth/register/worker`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name: first, last_name: last, email, phone, specialty, state, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Registration failed');
+    showSuccess('Application submitted! You\'ll receive an email when approved. Sign in once approved.');
+    switchTab('login');
+  } catch(e) {
+    showError(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Apply as a Notary →';
+  }
+}
+
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/workers/dashboard`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (!res.ok) { signOut(); return; }
+    const data = await res.json();
+    const w = data.worker;
+    const e = data.earnings;
+    const j = data.jobs;
+
+    document.getElementById('dashGreeting').textContent = `Hello, ${w.name.split(' ')[0]}! 👋`;
+    document.getElementById('dashPlan').textContent = w.plan.charAt(0).toUpperCase() + w.plan.slice(1);
+    document.getElementById('dashEarnings').textContent = `$${e.total_earned.toFixed(0)}`;
+    document.getElementById('dashJobs').textContent = j.total_completed;
+
+    // Check compliance
+    const compRes = await fetch(`${API}/workers/compliance/status`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const comp = await compRes.json();
+
+    const w9Done = comp.w9_submitted;
+    const credDone = comp.credentials_submitted;
+    const allDone = w9Done && credDone;
+
+    document.getElementById('w9Status').textContent = w9Done ? '✓ Submitted' : 'Required →';
+    document.getElementById('w9Status').style.color = w9Done ? '#007A4D' : '#B45309';
+    document.getElementById('credStatus').textContent = credDone ? '✓ Submitted' : 'Required →';
+    document.getElementById('credStatus').style.color = credDone ? '#007A4D' : '#B45309';
+
+    const badge = document.getElementById('complianceBadge');
+    if (allDone) {
+      badge.className = 'compliance-badge complete';
+      badge.textContent = '✓ Compliance complete — you can claim jobs';
+    } else {
+      badge.className = 'compliance-badge incomplete';
+      badge.textContent = '⚠️ Complete your W-9 and credentials to start claiming jobs';
+    }
+
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('dashboard').classList.add('show');
+    document.getElementById('w9Form').classList.remove('show');
+    document.getElementById('credForm').classList.remove('show');
+  } catch(e) {
+    showError('Could not load dashboard. Please try again.');
+  }
+}
+
+function showDashboard() {
+  document.getElementById('w9Form').classList.remove('show');
+  document.getElementById('credForm').classList.remove('show');
+  document.getElementById('dashboard').classList.add('show');
+}
+
+function showW9Form() {
+  document.getElementById('dashboard').classList.remove('show');
+  document.getElementById('w9Form').classList.add('show');
+}
+
+function showCredForm() {
+  document.getElementById('dashboard').classList.remove('show');
+  document.getElementById('credForm').classList.add('show');
+}
+
+async function submitW9() {
+  clearMessages();
+  const legal_name = document.getElementById('w9Name').value.trim();
+  const tax_classification = document.getElementById('w9Tax').value;
+  const tin_last4 = document.getElementById('w9TIN').value.trim();
+  const address = document.getElementById('w9Address').value.trim();
+
+  if (!legal_name || !tin_last4 || !address) { showError('Please fill in all fields.'); return; }
+  if (tin_last4.length !== 4 || isNaN(tin_last4)) { showError('Please enter the last 4 digits only.'); return; }
+
+  const btn = document.querySelector('#w9Form .btn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  try {
+    const res = await fetch(`${API}/workers/compliance/w9`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ legal_name, tax_classification, tin_last4, address })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Could not save W-9');
+    showSuccess('W-9 submitted successfully!');
+    setTimeout(() => { loadDashboard(); }, 1500);
+  } catch(e) {
+    showError(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit W-9 →';
+  }
+}
+
+async function submitCreds() {
+  clearMessages();
+  const notary_commission_number = document.getElementById('credCommNum').value.trim();
+  const notary_commission_state = document.getElementById('credCommState').value;
+  const notary_commission_expires = document.getElementById('credExpires').value.trim();
+  const ron_authorized = document.getElementById('credRON').checked;
+
+  if (!notary_commission_number) { showError('Please enter your commission number.'); return; }
+
+  const btn = document.querySelector('#credForm .btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  try {
+    const res = await fetch(`${API}/workers/compliance/credentials`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ notary_commission_number, notary_commission_state, notary_commission_expires, ron_authorized, ron_authorization_state: ron_authorized ? notary_commission_state : null })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Could not submit credentials');
+    showSuccess('Credentials submitted! We\'ll verify within 24 hours.');
+    setTimeout(() => { loadDashboard(); }, 1500);
+  } catch(e) {
+    showError(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit Credentials →';
+  }
+}
+
+function signOut() {
+  localStorage.removeItem('pgusa_token');
+  authToken = null;
+  document.getElementById('authSection').style.display = 'block';
+  document.getElementById('dashboard').classList.remove('show');
+  document.getElementById('w9Form').classList.remove('show');
+  document.getElementById('credForm').classList.remove('show');
+  clearMessages();
+  switchTab('login');
+}
+
+// Auto-login if token exists
+if (authToken) { loadDashboard(); }
+</script>
+</body>
+</html>
