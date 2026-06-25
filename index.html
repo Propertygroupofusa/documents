@@ -3,2302 +3,847 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Property Group USA — Documents Platform</title>
+<title>PGUSA Documents — Notarize Anything, Anywhere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&family=Courier+Prime:wght@400;700&display=swap');
-
-  :root {
-    --dark: #0A0E14;
-    --dark2: #111720;
-    --gold: #C9A84C;
-    --gold-light: #E8C96A;
-    --teal: #1A8B8B;
-    --teal-light: #22B2B2;
-    --white: #F5F2ED;
-    --gray: #8A8F9A;
-    --gray-light: #1E2530;
-    --red: #E05252;
-    --green: #2ECC71;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--dark);
-    color: var(--white);
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 40px;
-    background: rgba(10,14,20,0.97);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-  }
-
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--gold);
-  }
-
-  .nav-logo span {
-    color: var(--white);
-    font-weight: 400;
-    font-size: 12px;
-    display: block;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--gray);
-    text-decoration: none;
-    font-size: 13px;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--gold); }
-
-  .nav-cta { display: flex; gap: 10px; }
-
-  .btn-outline {
-    padding: 9px 18px;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    background: transparent;
-    border-radius: 4px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .btn-outline:hover { background: var(--gold); color: var(--dark); }
-
-  .btn-solid {
-    padding: 9px 18px;
-    background: var(--teal);
-    color: var(--white);
-    border: none;
-    border-radius: 4px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .btn-solid:hover { background: var(--teal-light); }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 120px 40px 80px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -200px; right: -200px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(26,139,139,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-content { max-width: 700px; position: relative; z-index: 1; }
-
-  .hero-eyebrow {
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--teal); }
-
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(40px, 6vw, 68px);
-    font-weight: 900;
-    line-height: 1.05;
-    margin-bottom: 24px;
-    letter-spacing: -1px;
-  }
-
-  .hero h1 em { font-style: normal; color: var(--gold); }
-
-  .hero-sub {
-    font-size: 17px;
-    color: var(--gray);
-    line-height: 1.7;
-    margin-bottom: 40px;
-    max-width: 540px;
-    font-weight: 300;
-  }
-
-  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 60px; }
-
-  .btn-hero-primary {
-    padding: 16px 36px;
-    background: var(--gold);
-    color: var(--dark);
-    border: none;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .btn-hero-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-  .btn-hero-secondary {
-    padding: 16px 36px;
-    background: transparent;
-    color: var(--white);
-    border: 1px solid rgba(245,242,237,0.2);
-    border-radius: 4px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .btn-hero-secondary:hover { border-color: var(--teal); color: var(--teal); }
-
-  .hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
-
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--gold);
-    line-height: 1;
-  }
-
-  .stat-label { font-size: 12px; color: var(--gray); letter-spacing: 0.5px; margin-top: 4px; }
-
-  /* ── TICKER ── */
-  .ticker {
-    background: var(--gray-light);
-    border-top: 1px solid rgba(201,168,76,0.15);
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-    padding: 12px 0;
-    overflow: hidden;
-    margin-top: 64px;
-  }
-
-  .ticker-inner {
-    display: flex;
-    gap: 48px;
-    animation: ticker 30s linear infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-  .ticker-item {
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
-    color: var(--gray);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .ticker-item span { color: var(--gold); }
-
-  /* ── SECTIONS ── */
-  .section { padding: 100px 40px; }
-  .dark-section { background: var(--dark2); }
-
-  .section-label {
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(30px, 4vw, 46px);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-
-  .section-sub {
-    font-size: 16px;
-    color: var(--gray);
-    max-width: 500px;
-    line-height: 1.7;
-    margin-bottom: 60px;
-    font-weight: 300;
-  }
-
-  /* ── BOOKING SYSTEM ── */
-  .booking-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 48px;
-  }
-
-  .booking-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 8px;
-    padding: 36px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .booking-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-  }
-
-  .booking-card.client::before { background: var(--gold); }
-  .booking-card.worker::before { background: var(--teal); }
-
-  .booking-tag {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 2px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    font-family: 'Courier Prime', monospace;
-  }
-
-  .booking-card.client .booking-tag { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .booking-card.worker .booking-tag { background: rgba(26,139,139,0.15); color: var(--teal); }
-
-  .booking-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
-  .booking-card p { color: var(--gray); font-size: 14px; line-height: 1.6; margin-bottom: 28px; }
-
-  /* ── SERVICE SELECTOR ── */
-  .service-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .service-option {
-    padding: 12px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    font-size: 13px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  .service-option:hover,
-  .service-option.selected {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.08);
-    color: var(--gold);
-  }
-
-  .service-option .price {
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    color: var(--teal);
-    margin-top: 4px;
-  }
-
-  /* ── CALENDAR ── */
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 20px;
-  }
-
-  .cal-header {
-    text-align: center;
-    font-size: 11px;
-    color: var(--gray);
-    padding: 6px 0;
-    font-family: 'Courier Prime', monospace;
-  }
-
-  .cal-day {
-    text-align: center;
-    padding: 8px 4px;
-    border-radius: 4px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-
-  .cal-day:hover:not(.empty):not(.past) {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  .cal-day.selected {
-    background: var(--gold);
-    color: var(--dark);
-    font-weight: 700;
-  }
-
-  .cal-day.today { color: var(--teal); border-color: var(--teal); }
-  .cal-day.past { color: rgba(138,143,154,0.3); cursor: not-allowed; }
-  .cal-day.empty { cursor: default; }
-
-  .time-slots {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .time-slot {
-    padding: 10px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 4px;
-    text-align: center;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Courier Prime', monospace;
-  }
-
-  .time-slot:hover,
-  .time-slot.selected {
-    border-color: var(--teal);
-    color: var(--teal);
-    background: rgba(26,139,139,0.08);
-  }
-
-  .time-slot.booked {
-    opacity: 0.3;
-    cursor: not-allowed;
-    text-decoration: line-through;
-  }
-
-  /* ── FORM FIELDS ── */
-  .form-group { margin-bottom: 14px; }
-
-  .form-group label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    color: var(--gray);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 11px 14px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 4px;
-    color: var(--white);
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-
-  .form-group select option { background: var(--dark2); }
-  .form-group textarea { resize: vertical; min-height: 80px; }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  .book-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-
-  .book-btn.client { background: var(--gold); color: var(--dark); }
-  .book-btn.client:hover { background: var(--gold-light); }
-  .book-btn.worker { background: var(--teal); color: var(--white); }
-  .book-btn.worker:hover { background: var(--teal-light); }
-
-  /* ── JOB BOARD ── */
-  .job-board { margin-top: 48px; }
-
-  .job-filters {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-
-  .filter-btn {
-    padding: 8px 18px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    background: transparent;
-    color: var(--gray);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
-  }
-
-  .filter-btn:hover,
-  .filter-btn.active {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201,168,76,0.08);
-  }
-
-  .job-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  .job-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 6px;
-    padding: 24px;
-    transition: border-color 0.2s;
-    position: relative;
-  }
-
-  .job-card:hover { border-color: var(--teal); }
-
-  .job-type {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 2px;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    font-family: 'Courier Prime', monospace;
-  }
-
-  .job-type.notary { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .job-type.tax { background: rgba(26,139,139,0.15); color: var(--teal); }
-  .job-type.legal { background: rgba(46,204,113,0.15); color: var(--green); }
-  .job-type.closing { background: rgba(224,82,82,0.15); color: var(--red); }
-
-  .job-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .job-card .location { font-size: 12px; color: var(--gray); margin-bottom: 10px; }
-  .job-card .pay { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); margin-bottom: 6px; }
-  .job-card .details { font-size: 12px; color: var(--gray); line-height: 1.5; margin-bottom: 16px; }
-
-  .job-urgency {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 3px 8px;
-    background: rgba(224,82,82,0.15);
-    color: var(--red);
-    font-size: 10px;
-    border-radius: 2px;
-    font-family: 'Courier Prime', monospace;
-    letter-spacing: 1px;
-  }
-
-  .claim-btn {
-    width: 100%;
-    padding: 10px;
-    background: var(--teal);
-    color: var(--white);
-    border: none;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .claim-btn:hover { background: var(--teal-light); }
-
-  /* ── SERVICES GRID ── */
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
-
-  .service-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 6px;
-    padding: 32px 28px;
-    transition: border-color 0.2s;
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(201,168,76,0.2);
-  }
-
-  .service-card:hover { border-color: var(--gold); }
-  .service-icon { font-size: 28px; margin-bottom: 16px; display: block; }
-  .service-card h4 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-  .service-card p { font-size: 14px; color: var(--gray); line-height: 1.6; font-weight: 300; }
-  .service-price { margin-top: 20px; font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--gold); }
-
-  /* ── PATHS ── */
-  .paths { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(201,168,76,0.15); border-radius: 8px; overflow: hidden; margin-bottom: 80px; }
-
-  .path-card { background: var(--dark2); padding: 48px 40px; position: relative; }
-
-  .path-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-  .path-card.client::before { background: var(--gold); }
-  .path-card.worker::before { background: var(--teal); }
-
-  .path-tag {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 2px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    font-family: 'Courier Prime', monospace;
-  }
-
-  .path-card.client .path-tag { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .path-card.worker .path-tag { background: rgba(26,139,139,0.15); color: var(--teal); }
-
-  .path-card h3 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 12px; }
-  .path-card p { color: var(--gray); font-size: 15px; line-height: 1.7; margin-bottom: 32px; font-weight: 300; }
-
-  .path-steps { list-style: none; margin-bottom: 36px; }
-  .path-steps li { display: flex; align-items: flex-start; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-  .path-steps li:last-child { border-bottom: none; }
-  .step-num { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--gray); min-width: 24px; padding-top: 2px; }
-  .path-card.client .step-num { color: var(--gold); }
-  .path-card.worker .step-num { color: var(--teal); }
-
-  .path-btn { width: 100%; padding: 14px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; border: none; }
-  .path-card.client .path-btn { background: var(--gold); color: var(--dark); }
-  .path-card.client .path-btn:hover { background: var(--gold-light); }
-  .path-card.worker .path-btn { background: var(--teal); color: var(--white); }
-  .path-card.worker .path-btn:hover { background: var(--teal-light); }
-
-  /* ── PRICING ── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
-
-  .pricing-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 36px 28px; position: relative; }
-  .pricing-card.featured { border-color: var(--gold); background: linear-gradient(135deg, var(--dark2), rgba(201,168,76,0.05)); }
-
-  .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--dark); font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 4px 16px; border-radius: 2px; text-transform: uppercase; font-family: 'Courier Prime', monospace; white-space: nowrap; }
-
-  .pricing-card h4 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-  .pricing-amount { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; color: var(--gold); line-height: 1; margin: 16px 0 4px; }
-  .pricing-amount span { font-size: 16px; color: var(--gray); font-family: 'Inter', sans-serif; font-weight: 300; }
-  .pricing-desc { font-size: 13px; color: var(--gray); margin-bottom: 24px; font-weight: 300; }
-
-  .pricing-features { list-style: none; margin-bottom: 28px; }
-  .pricing-features li { font-size: 14px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
-  .pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; font-size: 12px; }
-
-  .pricing-btn { width: 100%; padding: 13px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; border: none; }
-  .pricing-card:not(.featured) .pricing-btn { background: rgba(255,255,255,0.06); color: var(--white); border: 1px solid rgba(255,255,255,0.1); }
-  .pricing-card:not(.featured) .pricing-btn:hover { background: rgba(255,255,255,0.1); }
-  .pricing-card.featured .pricing-btn { background: var(--gold); color: var(--dark); }
-  .pricing-card.featured .pricing-btn:hover { background: var(--gold-light); }
-
-  /* ── REVENUE BAR ── */
-  .revenue-bar { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 40px; margin-top: 48px; }
-  .revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
-  .revenue-item { padding: 24px 32px; border-right: 1px solid rgba(255,255,255,0.06); text-align: center; }
-  .revenue-item:last-child { border-right: none; }
-  .revenue-pct { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 8px; }
-  .revenue-label { font-size: 13px; color: var(--gray); font-weight: 300; }
-  .revenue-sub { font-size: 12px; color: var(--teal); margin-top: 4px; font-family: 'Courier Prime', monospace; }
-
-  /* ── PRICE COMPARISON TABLE ── */
-  .compare-table { width: 100%; border-collapse: collapse; margin-top: 8px; overflow-x: auto; display: block; }
-  .compare-table th { padding: 14px 16px; text-align: left; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); font-family: 'Courier Prime', monospace; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .compare-table td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .compare-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
-  .compare-table .winner { font-weight: 700; color: var(--gold); }
-  .compare-table .loser { color: var(--gray); }
-
-  /* ── CONFERENCE SECTION ── */
-  .conference-section { background: linear-gradient(135deg, var(--dark2), rgba(201,168,76,0.05)); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 48px; margin-top: 48px; }
-
-  .conf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px; }
-
-  .conf-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(201,168,76,0.15); border-radius: 6px; padding: 28px; }
-  .conf-date { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--teal); letter-spacing: 2px; margin-bottom: 8px; }
-  .conf-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
-  .conf-location { font-size: 13px; color: var(--gray); margin-bottom: 16px; }
-  .conf-badge { display: inline-block; padding: 4px 12px; background: rgba(26,139,139,0.15); color: var(--teal); font-size: 11px; border-radius: 2px; font-family: 'Courier Prime', monospace; letter-spacing: 1px; }
-
-  /* ── QR SECTION ── */
-  .qr-section { text-align: center; padding: 40px; background: var(--dark); border: 2px solid var(--gold); border-radius: 8px; margin-top: 32px; }
-  .qr-code { width: 200px; height: 200px; margin: 20px auto; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .qr-code canvas { max-width: 100%; }
-
-  /* ── MODAL ── */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
-  .modal-overlay.active { display: flex; }
-
-  .modal { background: var(--dark2); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 48px; width: 100%; max-width: 520px; position: relative; max-height: 90vh; overflow-y: auto; }
-
-  .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: var(--gray); font-size: 22px; cursor: pointer; line-height: 1; }
-  .modal-close:hover { color: var(--white); }
-
-  .modal-tag { display: inline-block; padding: 4px 12px; border-radius: 2px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; font-family: 'Courier Prime', monospace; }
-  .modal-tag.client { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .modal-tag.worker { background: rgba(26,139,139,0.15); color: var(--teal); }
-
-  .modal h3 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  .modal p { color: var(--gray); font-size: 14px; margin-bottom: 28px; font-weight: 300; }
-
-  .modal-submit { width: 100%; padding: 14px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; margin-top: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
-  .modal-submit.client { background: var(--gold); color: var(--dark); }
-  .modal-submit.client:hover { background: var(--gold-light); }
-  .modal-submit.worker { background: var(--teal); color: var(--white); }
-  .modal-submit.worker:hover { background: var(--teal-light); }
-
-  .modal-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gray); }
-  .modal-switch a { color: var(--gold); cursor: pointer; text-decoration: none; }
-
-  .success-state { display: none; text-align: center; padding: 20px 0; }
-  .success-icon { font-size: 48px; margin-bottom: 16px; display: block; }
-  .success-state h3 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 8px; color: var(--gold); }
-  .success-state p { color: var(--gray); font-size: 15px; }
-
-  /* ── FOOTER ── */
-  footer { background: var(--dark2); border-top: 1px solid rgba(201,168,76,0.15); padding: 60px 40px 40px; }
-  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-  .footer-brand { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
-  .footer-tagline { font-size: 13px; color: var(--gray); line-height: 1.7; font-weight: 300; max-width: 260px; }
-  .footer-col h5 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 16px; font-family: 'Courier Prime', monospace; }
-  .footer-col ul { list-style: none; }
-  .footer-col ul li { margin-bottom: 10px; }
-  .footer-col ul li a { color: var(--white); text-decoration: none; font-size: 14px; transition: color 0.2s; font-weight: 300; cursor: pointer; }
-  .footer-col ul li a:hover { color: var(--gold); }
-  .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: var(--gray); }
-
-  /* ── MOBILE ── */
-  @media (max-width: 768px) {
-    nav { padding: 14px 20px; }
-    .nav-links { display: none; }
-    .hero { padding: 100px 20px 60px; }
-    .hero-stats { gap: 24px; }
-    .paths { grid-template-columns: 1fr; }
-    .booking-container { grid-template-columns: 1fr; }
-    .services-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .job-grid { grid-template-columns: 1fr; }
-    .section { padding: 64px 20px; }
-    .revenue-grid { grid-template-columns: 1fr; }
-    .revenue-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-    .modal { padding: 32px 24px; }
-    .form-row { grid-template-columns: 1fr; }
-    .conf-grid { grid-template-columns: 1fr; }
-    .service-selector { grid-template-columns: 1fr; }
-    .time-slots { grid-template-columns: repeat(2, 1fr); }
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:   #0D1B2A;
+  --blue:   #1A6CF5;
+  --blue2:  #4D8EF8;
+  --green:  #00C57A;
+  --white:  #FFFFFF;
+  --off:    #F7F9FC;
+  --gray:   #64748B;
+  --light:  #E2E8F0;
+  --dark:   #1E293B;
+  --text:   #334155;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 64px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--light);
+  transition: box-shadow 0.3s ease;
+}
+
+nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 17px; font-weight: 800; color: var(--navy);
+  text-decoration: none; letter-spacing: -0.5px;
+}
+
+.nav-logo-badge {
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--text);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--blue); }
+
+.nav-right { display: flex; align-items: center; gap: 16px; }
+
+.btn-signin {
+  font-size: 14px; font-weight: 500; color: var(--text);
+  text-decoration: none; padding: 8px 16px;
+  border-radius: 6px; transition: background 0.2s;
+}
+.btn-signin:hover { background: var(--off); }
+
+.btn-start {
+  font-size: 14px; font-weight: 600; color: var(--white);
+  background: var(--blue); padding: 9px 20px; border-radius: 6px;
+  text-decoration: none; transition: background 0.2s;
+  border: none; cursor: pointer; font-family: inherit;
+}
+.btn-start:hover { background: #1558CC; }
+
+/* ── HERO ── */
+.hero {
+  padding: 140px 40px 100px;
+  background: linear-gradient(180deg, #F0F5FF 0%, #FFFFFF 100%);
+  text-align: center; position: relative; overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 600px;
+  background: radial-gradient(ellipse, rgba(26,108,245,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,108,245,0.08); border: 1px solid rgba(26,108,245,0.2);
+  border-radius: 20px; padding: 6px 14px; margin-bottom: 24px;
+  font-size: 12px; font-weight: 600; color: var(--blue); letter-spacing: 0.5px;
+}
+
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5.5vw, 64px);
+  font-weight: 800; letter-spacing: -2px; line-height: 1.05;
+  color: var(--navy); margin-bottom: 20px; max-width: 800px;
+  margin-left: auto; margin-right: auto;
+}
+
+.hero h1 span { color: var(--blue); }
+
+.hero-sub {
+  font-size: 18px; color: var(--gray); line-height: 1.7;
+  max-width: 540px; margin: 0 auto 40px; font-weight: 400;
+}
+
+.hero-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+.btn-hero-primary {
+  padding: 14px 32px; background: var(--blue); color: var(--white);
+  font-size: 15px; font-weight: 600; border-radius: 8px;
+  text-decoration: none; transition: all 0.2s; border: none;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 14px rgba(26,108,245,0.3);
+}
+.btn-hero-primary:hover { background: #1558CC; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,108,245,0.4); }
+
+.btn-hero-ghost {
+  padding: 14px 32px; background: var(--white); color: var(--navy);
+  font-size: 15px; font-weight: 600; border-radius: 8px;
+  text-decoration: none; transition: all 0.2s;
+  border: 1px solid var(--light);
+}
+.btn-hero-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ── TRUST BAR ── */
+.trust-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 32px; flex-wrap: wrap;
+  padding: 0 40px 0;
+}
+
+.trust-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; color: var(--gray);
+}
+
+.trust-item-icon { font-size: 16px; }
+
+/* ── APP PREVIEW ── */
+.app-preview {
+  max-width: 900px; margin: 60px auto 0;
+  background: var(--white); border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid var(--light); overflow: hidden;
+}
+
+.app-bar {
+  background: var(--off); padding: 12px 20px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--light);
+}
+
+.app-dot { width: 10px; height: 10px; border-radius: 50%; }
+.app-url {
+  flex: 1; background: var(--white); border: 1px solid var(--light);
+  border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--gray);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.app-body {
+  padding: 32px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; min-height: 280px;
+}
+
+.doc-card {
+  background: var(--off); border: 1px solid var(--light);
+  border-radius: 10px; padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.doc-card-header { display: flex; align-items: center; gap: 10px; }
+.doc-icon { font-size: 22px; }
+.doc-title { font-size: 14px; font-weight: 600; color: var(--navy); }
+.doc-sub { font-size: 12px; color: var(--gray); }
+
+.doc-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; width: fit-content;
+}
+.doc-status.ready { background: rgba(0,197,122,0.1); color: #007A4D; }
+.doc-status.pending { background: rgba(26,108,245,0.1); color: var(--blue); }
+.doc-status.processing { background: rgba(245,158,11,0.1); color: #B45309; }
+
+.notary-join {
+  background: linear-gradient(135deg, var(--blue), #1558CC);
+  border-radius: 10px; padding: 20px; color: white;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+
+.notary-join-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.notary-join-sub { font-size: 12px; opacity: 0.8; margin-bottom: 16px; }
+.notary-join-btn {
+  background: rgba(255,255,255,0.2); color: white;
+  border: 1px solid rgba(255,255,255,0.3); border-radius: 6px;
+  padding: 8px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background 0.2s; font-family: inherit;
+  width: fit-content;
+}
+.notary-join-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* ── LOGOS ── */
+.logos-section {
+  padding: 48px 40px; border-top: 1px solid var(--light);
+  border-bottom: 1px solid var(--light); background: var(--off);
+  text-align: center;
+}
+
+.logos-label {
+  font-size: 12px; font-weight: 600; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 28px;
+}
+
+.logos-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 48px; flex-wrap: wrap;
+}
+
+.logo-pill {
+  font-size: 15px; font-weight: 700; color: var(--light);
+  letter-spacing: -0.5px; opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.logo-pill.active { opacity: 0.35; color: var(--gray); }
+
+/* ── HOW IT WORKS ── */
+.section { padding: 100px 40px; max-width: 1080px; margin: 0 auto; }
+.section-center { text-align: center; }
+
+.eyebrow {
+  font-size: 12px; font-weight: 700; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px;
+}
+
+.section-h2 {
+  font-size: clamp(28px, 3.5vw, 42px); font-weight: 800;
+  color: var(--navy); letter-spacing: -1px; line-height: 1.1; margin-bottom: 14px;
+}
+
+.section-sub {
+  font-size: 16px; color: var(--gray); max-width: 500px;
+  margin: 0 auto 64px; line-height: 1.7; font-weight: 400;
+}
+
+/* ── STEPS ── */
+.steps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+  position: relative;
+}
+
+.steps-grid::before {
+  content: '';
+  position: absolute; top: 28px; left: calc(16.67% + 20px); right: calc(16.67% + 20px);
+  height: 1px; background: linear-gradient(90deg, var(--blue), var(--green));
+  z-index: 0;
+}
+
+.step { position: relative; z-index: 1; }
+
+.step-num {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--blue); color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; margin: 0 auto 20px;
+  box-shadow: 0 0 0 6px rgba(26,108,245,0.1);
+}
+
+.step-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--gray); line-height: 1.65; }
+
+/* ── SERVICES ── */
+.services-section { background: var(--off); padding: 100px 40px; }
+.services-inner { max-width: 1080px; margin: 0 auto; }
+
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.service-card {
+  background: var(--white); border: 1px solid var(--light);
+  border-radius: 14px; padding: 28px 24px;
+  transition: all 0.2s; cursor: pointer; text-decoration: none;
+  display: block; color: inherit;
+}
+.service-card:hover {
+  border-color: var(--blue); transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.service-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 16px;
+}
+
+.service-price {
+  font-size: 20px; font-weight: 800; color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.service-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.service-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+.service-link { font-size: 13px; font-weight: 600; color: var(--blue); display: flex; align-items: center; gap: 4px; }
+
+/* ── WORKER SECTION ── */
+.worker-section { padding: 100px 40px; }
+.worker-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+
+.worker-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+
+.stat-box {
+  background: var(--off); border: 1px solid var(--light);
+  border-radius: 10px; padding: 20px;
+}
+
+.stat-num { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -1px; margin-bottom: 4px; }
+.stat-label { font-size: 12px; color: var(--gray); font-weight: 500; }
+
+.pay-tiers { display: flex; flex-direction: column; gap: 12px; }
+
+.pay-tier {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-radius: 10px; border: 1px solid var(--light);
+  background: var(--white);
+}
+
+.tier-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+.tier-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.tier-rate { font-size: 22px; font-weight: 800; color: var(--blue); }
+
+.tier-active {
+  border-color: var(--blue);
+  background: linear-gradient(135deg, rgba(26,108,245,0.04), rgba(26,108,245,0.02));
+}
+
+/* ── TESTIMONIALS ── */
+.testimonials-section { background: var(--navy); padding: 100px 40px; }
+.testimonials-inner { max-width: 1080px; margin: 0 auto; }
+
+.testimonials-section .eyebrow { color: var(--blue2); }
+.testimonials-section .section-h2 { color: var(--white); }
+.testimonials-section .section-sub { color: rgba(255,255,255,0.5); }
+
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.testimonial-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 24px;
+}
+
+.stars { color: #FBD60C; font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+.testimonial-text { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 16px; }
+.testimonial-author { display: flex; align-items: center; gap: 10px; }
+.author-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: white;
+}
+.author-name { font-size: 13px; font-weight: 600; color: var(--white); }
+.author-role { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+
+/* ── CTA ── */
+.cta-section { padding: 100px 40px; text-align: center; }
+.cta-inner { max-width: 640px; margin: 0 auto; }
+.cta-section .section-h2 { margin-bottom: 16px; }
+.cta-section .section-sub { margin-bottom: 36px; }
+
+.cta-form {
+  display: flex; gap: 10px; max-width: 440px; margin: 0 auto 14px;
+}
+
+.cta-input {
+  flex: 1; padding: 13px 16px; background: var(--white);
+  border: 1px solid var(--light); border-radius: 8px;
+  color: var(--navy); font-size: 14px; font-family: inherit; outline: none;
+  transition: border-color 0.2s;
+}
+.cta-input::placeholder { color: var(--gray); }
+.cta-input:focus { border-color: var(--blue); }
+.cta-note { font-size: 12px; color: var(--gray); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy); padding: 64px 40px 32px;
+}
+
+.footer-grid {
+  max-width: 1080px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-brand-name { font-size: 17px; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+.footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 240px; }
+
+.footer-col-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.9); }
+
+.footer-bottom {
+  max-width: 1080px; margin: 0 auto;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+
+.footer-legal { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .app-body { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .steps-grid::before { display: none; }
+  .services-grid { grid-template-columns: 1fr; }
+  .worker-inner { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .cta-form { flex-direction: column; }
+  .section { padding: 64px 20px; }
+  .services-section { padding: 64px 20px; }
+  .worker-section { padding: 64px 20px; }
+  .testimonials-section { padding: 64px 20px; }
+  .cta-section { padding: 64px 20px; }
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    Property Group USA
-    <span>Documents Platform</span>
-  </div>
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    PGUSA Documents
+    <span class="nav-logo-badge">RON</span>
+  </a>
   <ul class="nav-links">
-    <li><a onclick="scrollToSection('services')">Services</a></li>
-    <li><a onclick="scrollToSection('book')">Book Now</a></li>
-    <li><a onclick="scrollToSection('jobs')">Find Work</a></li>
-    <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
-    <li><a onclick="scrollToSection('compare')">Why Us</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#workers">For Workers</a></li>
+    <li><a href="#business">For Business</a></li>
+    <li><a href="#pricing">Pricing</a></li>
   </ul>
-  <div class="nav-cta">
-    <button class="btn-outline" onclick="openModal('client')">Book a Service</button>
-    <button class="btn-outline" onclick="openModal('login')">Worker Login</button>
-    <button class="btn-solid" onclick="openModal('worker')">Join as Worker</button>
+  <div class="nav-right">
+    <a href="https://propertygroupofusa.github.io/documents" class="btn-signin">Sign In</a>
+    <a href="https://propertygroupofusa.github.io/documents" class="btn-start">Get Started</a>
   </div>
 </nav>
 
-<!-- TICKER -->
-<div class="ticker" style="margin-top:64px;">
-  <div class="ticker-inner">
-    <div class="ticker-item">First Month Pro FREE <span>$29 Value — No Card Needed</span></div>
-    <div class="ticker-item">75-85% Worker Pay <span>Highest In The Industry</span></div>
-    <div class="ticker-item">Paid Every 4 Days <span>Faster Than Weekly</span></div>
-    <div class="ticker-item">$25 Referral Bonus <span>Every Worker You Bring In</span></div>
-    <div class="ticker-item">5-Star Bonus <span>80% Pay For Top Rated Workers</span></div>
-    <div class="ticker-item">Volume Bonus <span>85% When You Hit 10+ Jobs/Month</span></div>
-    <div class="ticker-item">Remote Online Notary <span>$14.99 — Cheapest Online</span></div>
-    <div class="ticker-item">W-2 Tax Return <span>$49 — 45% Less Than H&R Block</span></div>
-    <div class="ticker-item">Real Estate Closing <span>$99 — Beats Title Companies</span></div>
-    <div class="ticker-item">Join FREE <span>No Setup Fees Ever</span></div>
-    <div class="ticker-item">First Month Pro FREE <span>$29 Value — No Card Needed</span></div>
-    <div class="ticker-item">75-85% Worker Pay <span>Highest In The Industry</span></div>
-    <div class="ticker-item">Paid Every 4 Days <span>Faster Than Weekly</span></div>
-    <div class="ticker-item">$25 Referral Bonus <span>Every Worker You Bring In</span></div>
-    <div class="ticker-item">5-Star Bonus <span>80% Pay For Top Rated Workers</span></div>
-    <div class="ticker-item">Volume Bonus <span>85% When You Hit 10+ Jobs/Month</span></div>
-    <div class="ticker-item">Remote Online Notary <span>$14.99 — Cheapest Online</span></div>
-    <div class="ticker-item">W-2 Tax Return <span>$49 — 45% Less Than H&R Block</span></div>
-    <div class="ticker-item">Real Estate Closing <span>$99 — Beats Title Companies</span></div>
-    <div class="ticker-item">Join FREE <span>No Setup Fees Ever</span></div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Notaries available 24/7 · Texas &amp; Nationwide</div>
+  <h1>Notarize anything,<br><span>anywhere, anytime.</span></h1>
+  <p class="hero-sub">The fastest way to get documents notarized. Verified professionals, remote or mobile, ready when you are.</p>
+  <div class="hero-actions">
+    <a href="https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00" class="btn-hero-primary">Get Notarized Now →</a>
+    <a href="https://propertygroupofusa.github.io/documents" class="btn-hero-ghost">For Business</a>
+  </div>
+  <div class="trust-bar">
+    <div class="trust-item"><span class="trust-item-icon">🔒</span> Bank-grade security</div>
+    <div class="trust-item"><span class="trust-item-icon">✅</span> RON compliant</div>
+    <div class="trust-item"><span class="trust-item-icon">⚡</span> Available in minutes</div>
+    <div class="trust-item"><span class="trust-item-icon">📋</span> Legally binding</div>
+    <div class="trust-item"><span class="trust-item-icon">🇺🇸</span> All 50 states</div>
+  </div>
+
+  <!-- App Preview -->
+  <div class="app-preview">
+    <div class="app-bar">
+      <div class="app-dot" style="background:#FF5F57"></div>
+      <div class="app-dot" style="background:#FFBD2E"></div>
+      <div class="app-dot" style="background:#27C93F"></div>
+      <div class="app-url">🔒 pgusa-platform-production.up.railway.app/docs</div>
+    </div>
+    <div class="app-body">
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <span class="doc-icon">📄</span>
+          <div>
+            <div class="doc-title">Real Estate Closing</div>
+            <div class="doc-sub">Loan Signing · 12 pages</div>
+          </div>
+        </div>
+        <div class="doc-status ready">✓ Notarized</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <span class="doc-icon">📝</span>
+          <div>
+            <div class="doc-title">Power of Attorney</div>
+            <div class="doc-sub">Legal Document · 4 pages</div>
+          </div>
+        </div>
+        <div class="doc-status pending">● In Session</div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-card-header">
+          <span class="doc-icon">🏠</span>
+          <div>
+            <div class="doc-title">Title Transfer</div>
+            <div class="doc-sub">Real Estate · 8 pages</div>
+          </div>
+        </div>
+        <div class="doc-status processing">◐ Processing</div>
+      </div>
+      <div class="notary-join">
+        <div>
+          <div class="notary-join-title">Earn as a Notary</div>
+          <div class="notary-join-sub">Join 50+ verified professionals. Set your own hours. Earn 75–85% per job.</div>
+        </div>
+        <button class="notary-join-btn" onclick="window.location.href='https://propertygroupofusa.github.io/documents'">Apply Now →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-section">
+  <div class="logos-label">Trusted by professionals and businesses across Texas</div>
+  <div class="logos-row">
+    <div class="logo-pill active">Title Companies</div>
+    <div class="logo-pill active">Law Firms</div>
+    <div class="logo-pill active">Mortgage Brokers</div>
+    <div class="logo-pill active">Real Estate Agents</div>
+    <div class="logo-pill active">Insurance Companies</div>
+    <div class="logo-pill active">Healthcare Providers</div>
   </div>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-eyebrow">Property Group USA — Documents</div>
-    <h1>Documents Done.<br><em>Revenue Built.</em><br>Nationwide.</h1>
-    <p class="hero-sub">
-      The platform where clients get notary, tax, and legal document work done at prices that beat every national competitor — and where skilled workers build a real income with reliable pay every 4 days.
-    </p>
-    <div class="hero-actions">
-      <button class="btn-hero-primary" onclick="scrollToSection('book')">Book a Service Now</button>
-      <button class="btn-hero-secondary" onclick="scrollToSection('jobs')">Find Work Near You →</button>
-    </div>
-    <div class="hero-stats">
-      <div>
-        <div class="stat-num">$14.99</div>
-        <div class="stat-label">Online Notary</div>
-      </div>
-      <div>
-        <div class="stat-num">$49</div>
-        <div class="stat-label">Tax Returns From</div>
-      </div>
-      <div>
-        <div class="stat-num">$50</div>
-        <div class="stat-label">Bonus After 5 Jobs</div>
-      </div>
-      <div>
-        <div class="stat-num">24h</div>
-        <div class="stat-label">Turnaround</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- HOW IT WORKS -->
-<section class="section dark-section" id="how-it-works">
-  <div class="section-label">How It Works</div>
-  <div class="section-title">Two ways in.<br>One platform.</div>
-  <p class="section-sub">Book a service in minutes or sign up to start earning. Everything is matched automatically.</p>
+<div class="section section-center">
+  <div class="eyebrow">How It Works</div>
+  <h2 class="section-h2">Notarized in three steps.</h2>
+  <p class="section-sub">No office visits. No waiting rooms. Get your documents notarized in minutes from any device.</p>
 
-  <div class="paths">
-    <div class="path-card client">
-      <div class="path-tag">For Clients</div>
-      <h3>Need Documents Done?</h3>
-      <p>Book online, get matched with a verified local worker, get it done right — same day available.</p>
-      <ul class="path-steps">
-        <li><span class="step-num">01</span> Select your service and pick a date</li>
-        <li><span class="step-num">02</span> Pay securely via Stripe</li>
-        <li><span class="step-num">03</span> Get matched with a verified worker</li>
-        <li><span class="step-num">04</span> Worker confirms your appointment</li>
-        <li><span class="step-num">05</span> Documents done — download or receive in person</li>
-      </ul>
-      <button class="path-btn" onclick="scrollToSection('book')">Book Now</button>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Upload your document</div>
+      <div class="step-desc">Upload any document that needs to be notarized. We support PDFs, Word docs, and all major formats.</div>
     </div>
-    <div class="path-card worker">
-      <div class="path-tag">For Workers</div>
-      <h3>Ready to Earn?</h3>
-      <p>Sign up free, get matched with clients in your area automatically, get paid every 4 days.</p>
-      <ul class="path-steps">
-        <li><span class="step-num">01</span> Create your free worker profile</li>
-        <li><span class="step-num">02</span> Submit your credentials and certifications</li>
-        <li><span class="step-num">03</span> Get approved in 24–48 hours</li>
-        <li><span class="step-num">04</span> Receive automatic job matches near you</li>
-        <li><span class="step-num">05</span> Complete work and get paid every 4 days</li>
-      </ul>
-      <button class="path-btn" onclick="openModal('worker')">Apply as a Worker</button>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Connect with a notary</div>
+      <div class="step-desc">Get matched with a verified, commissioned notary in minutes — available 24/7 via video or in person.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Receive your document</div>
+      <div class="step-desc">Download your legally notarized document immediately. Accepted by courts, banks, and government offices.</div>
     </div>
   </div>
-</section>
-
-<!-- BOOKING SYSTEM -->
-<section class="section" id="book">
-  <div class="section-label">Book a Service</div>
-  <div class="section-title">Schedule your appointment.<br>Get matched instantly.</div>
-  <p class="section-sub">Pick your service, choose your time, pay securely. A verified worker will confirm within 2 hours.</p>
-
-  <div class="booking-container">
-    <!-- CLIENT BOOKING -->
-    <div class="booking-card client">
-      <div class="booking-tag">Client Booking</div>
-      <h3>Book a Service</h3>
-      <p>Select what you need and schedule your appointment online.</p>
-
-      <div class="section-label" style="margin-bottom:10px;">Select Service</div>
-      <div class="service-selector" id="serviceSelector">
-        <div class="service-option" onclick="selectService(this, 'Remote Online Notary', 14.99, 'notary_remote')">
-          🌐 Remote Notary
-          <div class="price">$14.99</div>
-        </div>
-        <div class="service-option" onclick="selectService(this, 'Mobile Notary', 39, 'notary_mobile')">
-          📋 Mobile Notary
-          <div class="price">$39</div>
-        </div>
-        <div class="service-option" onclick="selectService(this, 'Tax Preparation - W2', 49, 'tax_w2')">
-          🧾 W-2 Tax Return
-          <div class="price">$49</div>
-        </div>
-        <div class="service-option" onclick="selectService(this, 'Tax - Self Employed', 99, 'tax_self')">
-          📊 Self-Employed Tax
-          <div class="price">$99</div>
-        </div>
-        <div class="service-option" onclick="selectService(this, 'Real Estate Closing', 99, 'real_estate')">
-          🏠 RE Closing
-          <div class="price">$99</div>
-        </div>
-        <div class="service-option" onclick="selectService(this, 'Legal Documents', 35, 'legal')">
-          ⚖️ Legal Docs
-          <div class="price">$35</div>
-        </div>
-      </div>
-
-      <div class="section-label" style="margin-bottom:10px;">Pick a Date — June 2026</div>
-      <div class="calendar-grid" id="calendar"></div>
-
-      <div class="section-label" style="margin-bottom:10px;">Pick a Time</div>
-      <div class="time-slots" id="timeSlots">
-        <div class="time-slot" onclick="selectTime(this, '9:00 AM')">9:00 AM</div>
-        <div class="time-slot" onclick="selectTime(this, '10:00 AM')">10:00 AM</div>
-        <div class="time-slot booked">11:00 AM</div>
-        <div class="time-slot" onclick="selectTime(this, '12:00 PM')">12:00 PM</div>
-        <div class="time-slot" onclick="selectTime(this, '1:00 PM')">1:00 PM</div>
-        <div class="time-slot booked">2:00 PM</div>
-        <div class="time-slot" onclick="selectTime(this, '3:00 PM')">3:00 PM</div>
-        <div class="time-slot" onclick="selectTime(this, '4:00 PM')">4:00 PM</div>
-        <div class="time-slot" onclick="selectTime(this, '5:00 PM')">5:00 PM</div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" id="clientFirst" placeholder="First">
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" id="clientLast" placeholder="Last">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="clientEmail" placeholder="you@email.com">
-      </div>
-      <div class="form-group">
-        <label>Phone</label>
-        <input type="tel" id="clientPhone" placeholder="(210) 555-0000">
-      </div>
-      <div class="form-group">
-        <label>State</label>
-        <select id="clientState">
-          <option value="">Select state</option>
-          <option>Texas</option><option>California</option><option>Florida</option>
-          <option>New York</option><option>Georgia</option><option>Illinois</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Notes (optional)</label>
-        <textarea id="clientNotes" placeholder="Any special requirements or questions..."></textarea>
-      </div>
-
-      <div id="bookingSummary" style="display:none;padding:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:6px;margin-bottom:16px;font-size:13px;">
-        <div style="color:var(--gold);font-weight:700;margin-bottom:6px;">Booking Summary</div>
-        <div id="summaryService"></div>
-        <div id="summaryDateTime"></div>
-        <div id="summaryPrice" style="color:var(--gold);font-weight:700;margin-top:6px;"></div>
-      </div>
-
-      <button class="book-btn client" onclick="bookAndPay()">Book & Pay Now →</button>
-    </div>
-
-    <!-- WORKER SIGNUP -->
-    <div class="booking-card worker">
-      <div class="booking-tag">Worker Signup</div>
-      <h3>Start Getting Paid</h3>
-      <p>Join free. Get matched with clients automatically. First month Pro FREE + $50 bonus after completing 5 jobs.</p>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" id="workerFirst" placeholder="First">
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" id="workerLast" placeholder="Last">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="workerEmail" placeholder="you@email.com">
-      </div>
-      <div class="form-group">
-        <label>Phone</label>
-        <input type="tel" id="workerPhone" placeholder="(210) 555-0000">
-      </div>
-      <div class="form-group">
-        <label>Your Specialty</label>
-        <select id="workerSpecialty">
-          <option value="">Select specialty</option>
-          <option>Notary Public</option>
-          <option>Loan Signing Agent</option>
-          <option>Tax Preparer (PTIN)</option>
-          <option>Legal Document Preparer</option>
-          <option>Remote Online Notary (RON)</option>
-          <option>Multiple Specialties</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>State You Work In</label>
-        <select id="workerState">
-          <option value="">Select state</option>
-          <option>Texas</option><option>California</option><option>Florida</option>
-          <option>New York</option><option>Georgia</option><option>Illinois</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Years of Experience</label>
-        <select id="workerExp">
-          <option value="">Select experience</option>
-          <option>Less than 1 year</option>
-          <option>1-3 years</option>
-          <option>3-5 years</option>
-          <option>5+ years</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Certifications (e.g. NNA, NSA, AFSP)</label>
-        <input type="text" id="workerCerts" placeholder="List your certifications">
-      </div>
-      <div class="form-group">
-        <label>Plan</label>
-        <select id="workerPlan">
-          <option value="starter">Starter — Free (up to 5 jobs/month)</option>
-          <option value="pro">Professional — $29/mo (unlimited + priority)</option>
-          <option value="elite">Elite — $79/mo (top pay + dedicated manager)</option>
-        </select>
-      </div>
-
-      <div style="padding:14px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;margin-bottom:16px;font-size:13px;">
-        <div style="color:var(--teal);font-weight:700;margin-bottom:8px;">Why Workers Choose Us Over Everyone Else</div>
-        <div style="margin-bottom:4px;">✓ <strong>$50 bonus</strong> after your first 5 completed jobs — automatic</div>
-        <div style="margin-bottom:4px;">✓ <strong>75-85%</strong> of every job (highest in the industry)</div>
-        <div style="margin-bottom:4px;">✓ <strong>Paid every 4 days</strong> — faster than weekly like Notarize, Snapdocs, H&R Block</div>
-        <div style="margin-bottom:4px;">✓ <strong>$0 to join</strong> — Notarize charges $249/year just to work</div>
-        <div style="margin-bottom:4px;">✓ <strong>$25 referral bonus</strong> for every worker you bring in</div>
-        <div style="margin-bottom:4px;">✓ <strong>5-star bonus</strong> — earn 80% automatically with great ratings</div>
-        <div>✓ <strong>Volume bonus</strong> — 10+ jobs/month = 85% payout that month</div>
-      </div>
-
-      <button class="book-btn worker" onclick="submitWorker()">Submit Application →</button>
-    </div>
-  </div>
-</section>
-
-<!-- JOB BOARD -->
-<section class="section dark-section" id="jobs">
-  <div class="section-label">Live Job Board</div>
-  <div class="section-title">Jobs available<br>in your area now.</div>
-  <p class="section-sub">These are real jobs waiting for verified workers. Claim one and get paid today.</p>
-
-  <div class="job-filters">
-    <button class="filter-btn active" onclick="filterJobs('all', this)">All Jobs</button>
-    <button class="filter-btn" onclick="filterJobs('notary', this)">Notary</button>
-    <button class="filter-btn" onclick="filterJobs('tax', this)">Tax Prep</button>
-    <button class="filter-btn" onclick="filterJobs('legal', this)">Legal</button>
-    <button class="filter-btn" onclick="filterJobs('closing', this)">RE Closing</button>
-    <button class="filter-btn" onclick="filterJobs('remote', this)">Remote</button>
-  </div>
-
-  <div class="job-grid" id="jobGrid"></div>
-</section>
+</div>
 
 <!-- SERVICES -->
-<section class="section" id="services">
-  <div class="section-label">Services</div>
-  <div class="section-title">Every document.<br>Done right.</div>
-  <p class="section-sub">From real estate closings to tax returns — verified workers, guaranteed quality, prices that beat every competitor.</p>
-
-  <div class="services-grid">
-    <div class="service-card" onclick="goStripe('notary_remote')">
-      <span class="service-icon">🌐</span>
-      <h4>Remote Online Notary</h4>
-      <p>Video-verified notarization from anywhere in the country. Same day available. Legally binding in all 50 states.</p>
-      <div class="service-price">$14.99 per session — cheapest online</div>
+<div class="services-section" id="services">
+  <div class="services-inner">
+    <div style="text-align:center; margin-bottom:56px;">
+      <div class="eyebrow">Services</div>
+      <h2 class="section-h2">Every document service you need.</h2>
+      <p class="section-sub">From remote online notarization to mobile signing, we have you covered.</p>
     </div>
-    <div class="service-card" onclick="goStripe('notary_mobile')">
-      <span class="service-icon">📋</span>
-      <h4>Mobile Notary</h4>
-      <p>We come to you. Flat rate with no hidden travel fees. Loan signings, affidavits, power of attorney, and more.</p>
-      <div class="service-price">$39 flat — competitors charge $50–$200</div>
-    </div>
-    <div class="service-card" onclick="goStripe('tax_w2')">
-      <span class="service-icon">🧾</span>
-      <h4>Tax Preparation</h4>
-      <p>W-2, self-employed, real estate investors, small business. PTIN-certified preparers. Maximum refund guaranteed.</p>
-      <div class="service-price">W-2 $49 · Self-employed $99 · Investor $149</div>
-    </div>
-    <div class="service-card" onclick="goStripe('legal')">
-      <span class="service-icon">⚖️</span>
-      <h4>Legal Documents</h4>
-      <p>Contracts, LLC formation, lease agreements, demand letters. Flat rate — no billable hours, no surprises.</p>
-      <div class="service-price">$35 flat — competitors charge $50–$200</div>
-    </div>
-    <div class="service-card" onclick="goStripe('real_estate')">
-      <span class="service-icon">🏠</span>
-      <h4>Real Estate Closings</h4>
-      <p>Full closing support for buyers, sellers, and investors. Wholesale deals, traditional sales, and refinances.</p>
-      <div class="service-price">$99 per closing — title companies charge $150–$300</div>
-    </div>
-    <div class="service-card" onclick="goStripe('tax_self')">
-      <span class="service-icon">📊</span>
-      <h4>Business Documents</h4>
-      <p>Operating agreements, corporate resolutions, EIN applications, and entity formation packages.</p>
-      <div class="service-price">From $59 per package</div>
-    </div>
-  </div>
-</section>
-
-<!-- REVENUE MODEL -->
-<section class="section dark-section" id="workers">
-  <div class="section-label">Worker Pay Structure</div>
-  <div class="section-title">Transparent splits.<br>Reliable pay. No games.</div>
-  <p class="section-sub">We pay more than every competitor — and we pay every 4 days, faster than weekly. Here's exactly how it works.</p>
-
-  <div class="revenue-bar">
-    <div class="revenue-grid">
-      <div class="revenue-item">
-        <div class="revenue-pct">75%</div>
-        <div class="revenue-label">Base Pay Per Job</div>
-        <div class="revenue-sub">Starter plan</div>
-      </div>
-      <div class="revenue-item">
-        <div class="revenue-pct">82%</div>
-        <div class="revenue-label">Elite Plan Pay</div>
-        <div class="revenue-sub">highest in the industry</div>
-      </div>
-      <div class="revenue-item">
-        <div class="revenue-pct">85%</div>
-        <div class="revenue-label">Volume Bonus Pay</div>
-        <div class="revenue-sub">10+ jobs in a month</div>
-      </div>
+    <div class="services-grid">
+      <a href="https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00" class="service-card">
+        <div class="service-icon" style="background:rgba(26,108,245,0.1)">💻</div>
+        <div class="service-price">$14.99</div>
+        <div class="service-title">Remote Online Notarization</div>
+        <div class="service-desc">Get notarized from anywhere via secure video session. Available 24/7 for any document type.</div>
+        <div class="service-link">Book now →</div>
+      </a>
+      <a href="https://buy.stripe.com/14A4gA4l85440oDfB51sQ01" class="service-card">
+        <div class="service-icon" style="background:rgba(0,197,122,0.1)">🚗</div>
+        <div class="service-price">$39</div>
+        <div class="service-title">Mobile Notary</div>
+        <div class="service-desc">A commissioned notary comes to you — home, office, hospital, or anywhere in San Antonio.</div>
+        <div class="service-link">Schedule →</div>
+      </a>
+      <a href="https://buy.stripe.com/9B64gAg3QgMMc7l3Sn1sQ02" class="service-card">
+        <div class="service-icon" style="background:rgba(245,158,11,0.1)">📊</div>
+        <div class="service-price">$49</div>
+        <div class="service-title">Tax Preparation</div>
+        <div class="service-desc">W-2 and self-employed tax prep by certified professionals. Accurate, fast, and affordable.</div>
+        <div class="service-link">File now →</div>
+      </a>
+      <a href="https://propertygroupofusa.github.io/documents" class="service-card">
+        <div class="service-icon" style="background:rgba(139,92,246,0.1)">⚖️</div>
+        <div class="service-price">$35</div>
+        <div class="service-title">Legal Document Prep</div>
+        <div class="service-desc">Affidavits, powers of attorney, consent forms, and more — prepared and notarized in one session.</div>
+        <div class="service-link">Get started →</div>
+      </a>
+      <a href="https://propertygroupofusa.github.io/documents" class="service-card">
+        <div class="service-icon" style="background:rgba(239,68,68,0.1)">🏠</div>
+        <div class="service-price">$99</div>
+        <div class="service-title">Real Estate Closing</div>
+        <div class="service-desc">Full closing coordination and loan signing by certified LSAs. We work with all major title companies.</div>
+        <div class="service-link">Book closing →</div>
+      </a>
+      <a href="https://propertygroupofusa.github.io/documents" class="service-card">
+        <div class="service-icon" style="background:rgba(26,108,245,0.1)">🏢</div>
+        <div class="service-price">Custom</div>
+        <div class="service-title">Business & Enterprise</div>
+        <div class="service-desc">High-volume notarization for title companies, law firms, and mortgage lenders. API available.</div>
+        <div class="service-link">Contact us →</div>
+      </a>
     </div>
   </div>
+</div>
 
-  <!-- BONUS CARDS -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px;">
-    <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;padding:24px;text-align:center;">
-      <div style="font-size:32px;margin-bottom:10px;">💰</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px;">Welcome Package</div>
-      <div style="font-size:13px;color:var(--gray);">First month Pro FREE ($29 value) + $50 bonus after your first 5 jobs.</div>
-    </div>
-    <div style="background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.25);border-radius:6px;padding:24px;text-align:center;">
-      <div style="font-size:32px;margin-bottom:10px;">⭐</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--teal);margin-bottom:6px;">$25 Referral</div>
-      <div style="font-size:13px;color:var(--gray);">Refer a worker who completes their first job — you get $25 instantly.</div>
-    </div>
-    <div style="background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:6px;padding:24px;text-align:center;">
-      <div style="font-size:32px;margin-bottom:10px;">🏆</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--green);margin-bottom:6px;">5-Star Bonus</div>
-      <div style="font-size:13px;color:var(--gray);">Maintain a 5-star rating and earn 80% on every job — automatic upgrade.</div>
-    </div>
-  </div>
-
-  <!-- COMPETITOR COMPARISON -->
-  <div style="margin-top:28px;padding:28px;background:var(--dark);border:1px solid rgba(255,255,255,0.06);border-radius:6px;">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:20px;color:var(--gold);">How We Compare to Every Other Platform</div>
-    <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;">
-      <thead>
-        <tr>
-          <th style="padding:10px 14px;text-align:left;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Platform</th>
-          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Worker Pay</th>
-          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Setup Fee</th>
-          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">Pay Schedule</th>
-          <th style="padding:10px 14px;text-align:center;font-size:11px;color:var(--gray);font-family:'Courier Prime',monospace;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.06);">5-Job Bonus</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="background:rgba(255,255,255,0.02);">
-          <td style="padding:10px 14px;font-size:13px;color:var(--gray);">Notarize</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">$25-35/job</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">$249/year</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">Weekly</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">None</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:var(--gray);">NotaryLive</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">$15-25/job</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">$199/year</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">Weekly</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">None</td>
-        </tr>
-        <tr style="background:rgba(255,255,255,0.02);">
-          <td style="padding:10px 14px;font-size:13px;color:var(--gray);">Snapdocs</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">$75-100 flat</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">$0</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">Weekly</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">None</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 14px;font-size:13px;color:var(--gray);">H&R Block (tax)</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">$12-20/hr</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">Employment req.</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--gray);">Bi-weekly</td>
-          <td style="padding:10px 14px;text-align:center;font-size:13px;color:var(--red);">None</td>
-        </tr>
-        <tr style="background:rgba(201,168,76,0.06);">
-          <td style="padding:10px 14px;font-size:14px;font-weight:700;color:var(--gold);">Property Group USA ✓</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--gold);">75-85% of job</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$0 FREE</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">EVERY 4 DAYS</td>
-          <td style="padding:10px 14px;text-align:center;font-size:14px;font-weight:700;color:var(--green);">$50 ✓</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="section" id="pricing">
-  <div class="section-label">Worker Plans</div>
-  <div class="section-title">Pick your plan.<br>Start earning today.</div>
-  <p class="section-sub">Free to start. No setup fees. No contracts. Upgrade anytime.</p>
-
-  <div class="pricing-grid">
-    <div class="pricing-card">
-      <h4>Starter</h4>
-      <div class="pricing-amount">$0<span>/mo</span></div>
-      <div class="pricing-desc">Get started with zero risk</div>
-      <ul class="pricing-features">
-        <li>Up to 5 jobs per month</li>
-        <li>Basic job matching</li>
-        <li>75% payout per job</li>
-        <li>First month Pro FREE ($29 value)</li>
-        <li>Paid every 4 days</li>
-      </ul>
-      <button class="pricing-btn" onclick="openModal('worker')">Start Free</button>
-    </div>
-    <div class="pricing-card featured">
-      <div class="pricing-badge">Most Popular</div>
-      <h4>Professional</h4>
-      <div class="pricing-amount">$29<span>/mo</span></div>
-      <div class="pricing-desc">For workers ready to grow</div>
-      <ul class="pricing-features">
-        <li>Unlimited jobs</li>
-        <li>Priority job matching</li>
-        <li>78% payout per job</li>
-        <li>First month Pro FREE ($29 value)</li>
-        <li>Featured profile listing</li>
-        <li>Monthly performance report</li>
-      </ul>
-      <button class="pricing-btn" onclick="goStripe('worker_pro')">Go Professional</button>
-    </div>
-    <div class="pricing-card">
-      <h4>Elite</h4>
-      <div class="pricing-amount">$79<span>/mo</span></div>
-      <div class="pricing-desc">For high-volume power workers</div>
-      <ul class="pricing-features">
-        <li>Unlimited jobs — top of queue</li>
-        <li>82% payout per job</li>
-        <li>Dedicated account manager</li>
-        <li>First access to premium jobs</li>
-        <li>Team management tools</li>
-        <li>Custom invoicing</li>
-      </ul>
-      <button class="pricing-btn" onclick="goStripe('worker_elite')">Go Elite</button>
-    </div>
-  </div>
-</section>
-
-<!-- PRICE COMPARISON -->
-<section class="section dark-section" id="compare">
-  <div class="section-label">Why Property Group USA</div>
-  <div class="section-title">We beat everyone.<br>Every time.</div>
-  <p class="section-sub">Real prices. No hidden fees. No upsells. You save up to 70% vs national competitors.</p>
-
-  <div style="overflow-x:auto;">
-  <table class="compare-table">
-    <thead>
-      <tr>
-        <th>Service</th>
-        <th>Notarize / Proof</th>
-        <th>H&R Block</th>
-        <th>TurboTax</th>
-        <th style="color:var(--gold);">Property Group USA</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Remote Online Notary</td><td class="loser">$25</td><td class="loser">N/A</td><td class="loser">N/A</td><td class="winner">$14.99 ✓</td></tr>
-      <tr><td>Mobile Notary</td><td class="loser">$50–$200</td><td class="loser">N/A</td><td class="loser">N/A</td><td class="winner">$39 flat ✓</td></tr>
-      <tr><td>Simple W-2 Tax Return</td><td class="loser">N/A</td><td class="loser">$89–$150</td><td class="loser">$39–$89</td><td class="winner">$49 ✓</td></tr>
-      <tr><td>Self-Employed Tax</td><td class="loser">N/A</td><td class="loser">$300–$500</td><td class="loser">$150</td><td class="winner">$99 ✓</td></tr>
-      <tr><td>Real Estate Investor Tax</td><td class="loser">N/A</td><td class="loser">$300–$500</td><td class="loser">$150+</td><td class="winner">$149 ✓</td></tr>
-      <tr><td>Real Estate Closing</td><td class="loser">$150+</td><td class="loser">N/A</td><td class="loser">N/A</td><td class="winner">$99 ✓</td></tr>
-      <tr><td>Worker Setup Fee</td><td class="loser">$25–$250/yr</td><td class="loser">N/A</td><td class="loser">N/A</td><td class="winner">$0 Free ✓</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div style="margin-top:32px;padding:24px 28px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:6px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-    <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--gold);">Save up to 70%</div>
-    <div style="font-size:15px;color:var(--gray);font-weight:300;max-width:480px;">Compared to national competitors. Same quality. Verified workers. Fair prices.</div>
-    <button class="btn-hero-primary" style="margin-left:auto;" onclick="scrollToSection('book')">Book Now</button>
-  </div>
-</section>
-
-<!-- CONFERENCE SECTION -->
-<section class="section" id="conference">
-  <div class="section-label">Industry Presence</div>
-  <div class="section-title">Meet us at the<br>top conferences.</div>
-  <p class="section-sub">Property Group USA Documents Platform is attending the leading notary conferences in 2026. Scan the QR code to sign up on the spot.</p>
-
-  <div class="conference-section">
-    <div class="conf-grid">
-      <div class="conf-card">
-        <div class="conf-date">AUGUST 21, 2026</div>
-        <div class="conf-name">RONA Learn & Excel</div>
-        <div class="conf-location">📍 The Closing City, Orlando, Florida</div>
-        <div class="conf-badge">Virtual Available</div>
-        <p style="margin-top:14px;font-size:13px;color:var(--gray);line-height:1.6;">The premier Remote Online Notary conference. Meet our team and see a live demo of the platform.</p>
-      </div>
-      <div class="conf-card">
-        <div class="conf-date">OCTOBER 13–14, 2026</div>
-        <div class="conf-name">West Coast Notary Conference</div>
-        <div class="conf-location">📍 Salem Convention Center, Salem, Oregon</div>
-        <div class="conf-badge">In Person</div>
-        <p style="margin-top:14px;font-size:13px;color:var(--gray);line-height:1.6;">Hosted by the Oregon Secretary of State. We'll be presenting on how notaries can earn more using our platform.</p>
+<!-- WORKER SECTION -->
+<div class="worker-section" id="workers">
+  <div class="worker-inner">
+    <div>
+      <div class="eyebrow">For Notaries</div>
+      <h2 class="section-h2" style="text-align:left;max-width:400px;">Earn more doing what you're already commissioned for.</h2>
+      <p class="section-sub" style="text-align:left;margin:0 0 32px;">Join the PGUSA Documents worker network. Set your hours, claim jobs, and get paid every day.</p>
+      <a href="https://propertygroupofusa.github.io/documents" class="btn-hero-primary">Apply as a Notary →</a>
+      <div class="worker-stats">
+        <div class="stat-box">
+          <div class="stat-num">$50</div>
+          <div class="stat-label">Bonus after 5 jobs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">24hr</div>
+          <div class="stat-label">Payout schedule</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">$25</div>
+          <div class="stat-label">Referral bonus</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">Free</div>
+          <div class="stat-label">Pro plan month 1</div>
+        </div>
       </div>
     </div>
-
-    <div class="qr-section">
-      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold);margin-bottom:8px;">Scan to Join the Platform</div>
-      <div style="font-size:14px;color:var(--gray);margin-bottom:20px;">Show this at any conference — scan and sign up in 2 minutes</div>
-      <div class="qr-code" id="qrCode">
-        <canvas id="qrCanvas"></canvas>
+    <div>
+      <div style="margin-bottom:14px;font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:2px;">Worker Pay Structure</div>
+      <div class="pay-tiers">
+        <div class="pay-tier">
+          <div>
+            <div class="tier-name">Starter</div>
+            <div class="tier-sub">New workers</div>
+          </div>
+          <div class="tier-rate">75%</div>
+        </div>
+        <div class="pay-tier tier-active">
+          <div>
+            <div class="tier-name">Pro ⭐</div>
+            <div class="tier-sub">5-star rating maintained</div>
+          </div>
+          <div class="tier-rate">78%</div>
+        </div>
+        <div class="pay-tier">
+          <div>
+            <div class="tier-name">Elite</div>
+            <div class="tier-sub">Top performers</div>
+          </div>
+          <div class="tier-rate">82%</div>
+        </div>
+        <div class="pay-tier">
+          <div>
+            <div class="tier-name">Volume Bonus</div>
+            <div class="tier-sub">10+ jobs/month</div>
+          </div>
+          <div class="tier-rate">85%</div>
+        </div>
       </div>
-      <div style="font-family:'Courier Prime',monospace;font-size:13px;color:var(--gold);margin-top:16px;">propertygroupofusa.github.io/documents</div>
-      <button onclick="window.print()" style="margin-top:20px;padding:10px 24px;background:var(--teal);color:white;border:none;border-radius:4px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">Print QR Card</button>
     </div>
   </div>
-</section>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials-section">
+  <div class="testimonials-inner">
+    <div style="text-align:center;margin-bottom:56px;">
+      <div class="eyebrow">Reviews</div>
+      <h2 class="section-h2">Trusted by thousands.</h2>
+      <p class="section-sub">Real clients, real notaries, real results.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"Got my power of attorney notarized in under 20 minutes from my living room. The notary was professional and patient with my questions. Will definitely use again."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#1A6CF5">MR</div>
+          <div>
+            <div class="author-name">Maria R.</div>
+            <div class="author-role">San Antonio, TX</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"We use PGUSA for all our closing signings now. The LSAs are professional, punctual, and the B2B portal makes scheduling a breeze. Title companies love working with them."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#00C57A">DK</div>
+          <div>
+            <div class="author-name">David K.</div>
+            <div class="author-role">Mortgage Broker</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"As a notary, I made more in my first month with PGUSA than my previous 6 months freelancing alone. The job board is active and the payout system is reliable."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#7C3AED">KD</div>
+          <div>
+            <div class="author-name">Kisha D.</div>
+            <div class="author-role">PGUSA Pro Worker</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="eyebrow">Get Started</div>
+    <h2 class="section-h2">Ready to get notarized?</h2>
+    <p class="section-sub">Join thousands of clients and notaries on the PGUSA Documents Platform. No setup fees. No subscriptions.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-input" placeholder="Enter your email" id="ctaEmail">
+      <button class="btn-start" style="white-space:nowrap;padding:13px 22px" onclick="handleCTA()">Get Started →</button>
+    </div>
+    <p class="cta-note">No credit card required · Available 24/7 · First session in minutes</p>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-top">
+  <div class="footer-grid">
     <div>
-      <div class="footer-brand">Property Group USA</div>
-      <p class="footer-tagline">The document platform built for workers who want to earn and clients who need it done right. Nationwide. Online. Fast.</p>
+      <div class="footer-brand-name">PGUSA Documents</div>
+      <div class="footer-brand-desc">Professional document services and notarization for individuals and businesses across Texas and nationwide.</div>
     </div>
-    <div class="footer-col">
-      <h5>Services</h5>
-      <ul>
-        <li><a onclick="goStripe('notary_remote')">Online Notary</a></li>
-        <li><a onclick="goStripe('notary_mobile')">Mobile Notary</a></li>
-        <li><a onclick="goStripe('tax_w2')">Tax Prep</a></li>
-        <li><a onclick="goStripe('legal')">Legal Docs</a></li>
-        <li><a onclick="goStripe('real_estate')">RE Closing</a></li>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <ul class="footer-links">
+        <li><a href="#">Remote Notary</a></li>
+        <li><a href="#">Mobile Notary</a></li>
+        <li><a href="#">Tax Prep</a></li>
+        <li><a href="#">Real Estate</a></li>
+        <li><a href="#">Legal Docs</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h5>Platform</h5>
-      <ul>
-        <li><a onclick="scrollToSection('book')">Book a Service</a></li>
-        <li><a onclick="openModal('worker')">Become a Worker</a></li>
-        <li><a onclick="scrollToSection('jobs')">Job Board</a></li>
-        <li><a onclick="scrollToSection('pricing')">Pricing</a></li>
-        <li><a onclick="scrollToSection('compare')">Why Us</a></li>
+    <div>
+      <div class="footer-col-title">Workers</div>
+      <ul class="footer-links">
+        <li><a href="#">Apply Now</a></li>
+        <li><a href="#">Worker Dashboard</a></li>
+        <li><a href="#">Pay Structure</a></li>
+        <li><a href="#">Referral Program</a></li>
+        <li><a href="#">Pro Plan</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <ul>
-        <li><a>About</a></li>
-        <li><a>Contact</a></li>
-        <li><a>Privacy</a></li>
-        <li><a>Terms</a></li>
-        <li><a onclick="scrollToSection('conference')">Conferences</a></li>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">B2B Partners</a></li>
+        <li><a href="#">White Label</a></li>
+        <li><a href="mailto:propertygroupofusa@gmail.com">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div>© 2026 Property Group of USA LLC. All rights reserved. San Antonio, Texas.</div>
-    <div style="color:var(--gold);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:1px;">DOCUMENTS PLATFORM v2.0</div>
+    <div class="footer-legal">© 2026 Property Group of USA LLC · San Antonio, TX</div>
+    <div class="footer-legal">Licensed notary services · RON compliant · All 50 states</div>
   </div>
 </footer>
 
-<!-- CLIENT MODAL -->
-<div class="modal-overlay" id="clientModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('client')">×</button>
-    <div id="clientForm">
-      <div class="modal-tag client">Client</div>
-      <h3>Book Your Service</h3>
-      <p>Tell us what you need and we'll match you with a verified worker fast.</p>
-      <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" id="modalFirst" placeholder="First"></div>
-        <div class="form-group"><label>Last Name</label><input type="text" id="modalLast" placeholder="Last"></div>
-      </div>
-      <div class="form-group"><label>Email</label><input type="email" id="modalEmail" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" id="modalPhone" placeholder="(210) 555-0000"></div>
-      <div class="form-group">
-        <label>Service Needed</label>
-        <select id="modalService">
-          <option value="">Select a service</option>
-          <option value="notary_remote">Remote Online Notary — $14.99</option>
-          <option value="notary_mobile">Mobile Notary — $39</option>
-          <option value="tax_w2">Tax Prep W-2 — $49</option>
-          <option value="tax_self">Tax Prep Self-Employed — $99</option>
-          <option value="real_estate">Real Estate Closing — $99</option>
-          <option value="legal">Legal Documents — $35</option>
-        </select>
-      </div>
-      <div class="form-group"><label>State</label>
-        <select id="modalState">
-          <option value="Texas">Texas</option><option value="California">California</option><option value="Florida">Florida</option><option value="New York">New York</option><option value="Other">Other</option>
-        </select>
-      </div>
-      <button class="modal-submit client" onclick="submitClientModal()">Book & Pay →</button>
-      <div class="modal-switch">Are you a worker? <a onclick="switchModal('worker')">Apply instead</a></div>
-    </div>
-    <div class="success-state" id="clientSuccess">
-      <span class="success-icon">✅</span>
-      <h3>Booking Received!</h3>
-      <p>Redirecting you to payment... A verified worker will confirm within 2 hours.</p>
-    </div>
-  </div>
-</div>
-
-<!-- WORKER MODAL -->
-<div class="modal-overlay" id="workerModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('worker')">×</button>
-    <div id="workerForm">
-      <div class="modal-tag worker">Worker</div>
-      <h3>Start Earning Today</h3>
-      <p>First month Pro plan FREE ($29 value). $50 bonus after 5 jobs. 75% of every job. Paid every 4 days. Free to join.</p>
-      <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" placeholder="First"></div>
-        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last"></div>
-      </div>
-      <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" placeholder="(210) 555-0000"></div>
-      <div class="form-group">
-        <label>Specialty</label>
-        <select>
-          <option>Notary Public</option>
-          <option>Loan Signing Agent</option>
-          <option>Tax Preparer (PTIN)</option>
-          <option>Legal Document Preparer</option>
-          <option>Remote Online Notary (RON)</option>
-          <option>Multiple Specialties</option>
-        </select>
-      </div>
-      <div class="form-group"><label>State</label>
-        <select><option>Texas</option><option>California</option><option>Florida</option><option>New York</option><option>Other</option></select>
-      </div>
-      <div class="form-group">
-        <label>Plan</label>
-        <select id="modalPlan">
-          <option value="starter">Starter — Free</option>
-          <option value="pro">Professional — $29/mo</option>
-          <option value="elite">Elite — $79/mo</option>
-        </select>
-      </div>
-      <button class="modal-submit worker" onclick="submitWorkerModal()">Submit Application →</button>
-      <div class="modal-switch">Need documents done? <a onclick="switchModal('client')">Book a service instead</a></div>
-    </div>
-    <div class="success-state" id="workerSuccess">
-      <span class="success-icon">🎉</span>
-      <h3>Application Received!</h3>
-      <p>We'll review your credentials and get you activated within 24–48 hours. Check your email!</p>
-    </div>
-  </div>
-</div>
-
-<!-- WORKER LOGIN MODAL -->
-<div class="modal-overlay" id="loginModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('login')">×</button>
-    <div id="loginForm">
-      <div class="modal-tag worker">Worker Login</div>
-      <h3>Welcome Back</h3>
-      <p>Log in to see your jobs, earnings, and claim new work.</p>
-      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"></div>
-      <div id="loginError" style="display:none;color:var(--red);font-size:13px;margin-bottom:12px;"></div>
-      <button class="modal-submit worker" onclick="submitLogin()">Log In →</button>
-      <div class="modal-switch">New here? <a onclick="switchModal('worker')">Apply as a worker</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- WORKER DASHBOARD (shown after successful login) -->
-<div class="modal-overlay" id="dashboardModal">
-  <div class="modal" style="max-width:680px;">
-    <button class="modal-close" onclick="closeModal('dashboard')">×</button>
-    <div class="modal-tag worker">Your Dashboard</div>
-    <h3 id="dashWelcome">Welcome back</h3>
-    <p id="dashStatus"></p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;">
-      <div style="padding:16px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;">
-        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Total Earned</div>
-        <div id="dashEarned" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);">$0</div>
-      </div>
-      <div style="padding:16px;background:rgba(26,139,139,0.08);border:1px solid rgba(26,139,139,0.2);border-radius:6px;">
-        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Pending Payout</div>
-        <div id="dashPending" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);">$0</div>
-      </div>
-      <div style="padding:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:6px;">
-        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Jobs Completed</div>
-        <div id="dashJobsDone" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--white);">0</div>
-      </div>
-      <div style="padding:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:6px;">
-        <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Available Jobs</div>
-        <div id="dashAvailable" style="font-family:'Playfair Display',serif;font-size:28px;color:var(--white);">0</div>
-      </div>
-    </div>
-
-    <div id="dashBonusMsg" style="display:none;padding:14px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.25);border-radius:6px;margin-bottom:20px;font-size:13px;color:var(--green);"></div>
-
-    <div id="dashPayoutBox" style="display:none;padding:14px;border-radius:6px;margin-bottom:20px;font-size:13px;"></div>
-
-    <div id="dashComplianceBox" style="display:none;padding:14px;border-radius:6px;margin-bottom:20px;font-size:13px;"></div>
-
-    <button class="modal-submit worker" style="background:transparent;border:1px solid var(--teal);color:var(--teal);" onclick="openModal('w9')">Submit W-9 →</button>
-    <button class="modal-submit worker" style="background:transparent;border:1px solid var(--gold);color:var(--gold);margin-top:8px;" onclick="openModal('credentials')">Submit Notary/RON Credentials →</button>
-
-    <button class="modal-submit worker" onclick="closeModal('dashboard'); scrollToSection('jobs');">View & Claim Jobs →</button>
-    <div class="modal-switch"><a onclick="logoutWorker()">Log out</a></div>
-  </div>
-</div>
-
-<!-- W-9 MODAL -->
-<div class="modal-overlay" id="w9Modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('w9')">×</button>
-    <div id="w9Form">
-      <div class="modal-tag worker">Tax Info</div>
-      <h3>Submit W-9</h3>
-      <p>Required before $600+ in earnings — used to issue your 1099-NEC. We only store the last 4 digits of your SSN/EIN here; your full tax ID is collected securely by Stripe when you set up payouts.</p>
-      <div class="form-group"><label>Legal Name (as shown on tax return)</label><input type="text" id="w9Name" placeholder="Full legal name"></div>
-      <div class="form-group">
-        <label>Tax Classification</label>
-        <select id="w9Classification">
-          <option value="individual">Individual / Sole Proprietor</option>
-          <option value="llc">LLC</option>
-          <option value="corporation">Corporation</option>
-          <option value="partnership">Partnership</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Last 4 of SSN or EIN</label><input type="text" id="w9Tin" maxlength="4" placeholder="1234"></div>
-      <div class="form-group"><label>Address</label><textarea id="w9Address" placeholder="Street, City, State, ZIP"></textarea></div>
-      <button class="modal-submit worker" onclick="submitW9()">Submit W-9 →</button>
-    </div>
-    <div class="success-state" id="w9Success">
-      <span class="success-icon">✅</span>
-      <h3>W-9 Saved</h3>
-      <p>Your tax info is on file.</p>
-    </div>
-  </div>
-</div>
-
-<!-- CREDENTIALS MODAL -->
-<div class="modal-overlay" id="credentialsModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('credentials')">×</button>
-    <div id="credentialsForm">
-      <div class="modal-tag worker">Credentials</div>
-      <h3>Notary / RON Credentials</h3>
-      <p>Required to claim notary, RON, or real estate closing jobs. Submitted info is reviewed by our team before approval — usually within 24–48 hours.</p>
-      <div class="form-group"><label>Notary Commission Number</label><input type="text" id="credCommissionNum" placeholder="e.g. 123456789"></div>
-      <div class="form-group"><label>Commission State</label>
-        <select id="credCommissionState">
-          <option value="">Select state</option>
-          <option>Texas</option><option>California</option><option>Florida</option>
-          <option>New York</option><option>Georgia</option><option>Illinois</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Commission Expiration Date</label><input type="date" id="credExpires"></div>
-      <div class="form-group">
-        <label>Remote Online Notary (RON) Authorized?</label>
-        <select id="credRonAuthorized">
-          <option value="false">No</option>
-          <option value="true">Yes</option>
-        </select>
-      </div>
-      <div class="form-group"><label>RON Authorization State (if applicable)</label><input type="text" id="credRonState" placeholder="State that authorized your RON status"></div>
-      <button class="modal-submit worker" onclick="submitCredentials()">Submit for Review →</button>
-    </div>
-    <div class="success-state" id="credentialsSuccess">
-      <span class="success-icon">✅</span>
-      <h3>Submitted for Review</h3>
-      <p>We'll verify your credentials and notify you once approved.</p>
-    </div>
-  </div>
-</div>
-
-<!-- CLAIM JOB MODAL -->
-<div class="modal-overlay" id="claimModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('claim')">×</button>
-    <div id="claimForm">
-      <div class="modal-tag worker">Claim Job</div>
-      <h3 id="claimJobTitle">Claim This Job</h3>
-      <p>Enter your info and we'll confirm this job is yours within 30 minutes.</p>
-      <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" id="claimFirst" placeholder="First"></div>
-        <div class="form-group"><label>Last Name</label><input type="text" id="claimLast" placeholder="Last"></div>
-      </div>
-      <div class="form-group"><label>Email</label><input type="email" id="claimEmail" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Phone</label><input type="tel" id="claimPhone" placeholder="(210) 555-0000"></div>
-      <button class="modal-submit worker" onclick="submitClaim()">Claim This Job →</button>
-    </div>
-    <div class="success-state" id="claimSuccess">
-      <span class="success-icon">✅</span>
-      <h3>Job Claimed!</h3>
-      <p>Check your email for confirmation within 30 minutes.</p>
-    </div>
-  </div>
-</div>
-
 <script>
-// ── Backend API ─────────────────────────────────────────────
-const API_BASE = 'https://pgusa-platform-production.up.railway.app';
-
-// ── Stripe Links ─────────────────────────────────────────────
-const STRIPE = {
-  notary_remote:  'https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00',
-  notary_mobile:  'https://buy.stripe.com/14A4gA4l85440oDfB51sQ01',
-  tax_w2:         'https://buy.stripe.com/9B64gAg3QgMMc7l3Sn1sQ02',
-  tax_self:       'https://buy.stripe.com/cNidRa3h47cc8V92Oj1sQ03',
-  real_estate:    'https://buy.stripe.com/28E6oIg3Q9kk4ET0Gb1sQ04',
-  legal:          'https://buy.stripe.com/bJe6oI2d06886N1gF91sQ05',
-  worker_pro:     'https://buy.stripe.com/8x2cN65pc2VWc7lcoT1sQ09',
-  worker_elite:   'https://buy.stripe.com/9B614o18W9kk1sHgF91sQ08',
-};
-
-function goStripe(key) { window.open(STRIPE[key], '_blank'); }
-
-// ── Scroll ───────────────────────────────────────────────────
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ── Modal ────────────────────────────────────────────────────
-function openModal(type) {
-  document.getElementById(type + 'Modal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal(type) {
-  document.getElementById(type + 'Modal').classList.remove('active');
-  document.body.style.overflow = '';
-  document.getElementById(type + 'Form').style.display = 'block';
-  document.getElementById(type + 'Success').style.display = 'none';
-}
-
-function switchModal(to) {
-  const from = to === 'client' ? 'worker' : 'client';
-  closeModal(from);
-  setTimeout(() => openModal(to), 100);
-}
-
-// Close on overlay click
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', function(e) {
-    if (e.target === this) closeModal(this.id.replace('Modal', ''));
-  });
-});
-
-// ── Booking State ────────────────────────────────────────────
-let selectedService = null;
-let selectedServiceKey = null;
-let selectedPrice = 0;
-let selectedDate = null;
-let selectedTime = null;
-
-function selectService(el, name, price, key) {
-  document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedService = name;
-  selectedServiceKey = key;
-  selectedPrice = price;
-  updateSummary();
-}
-
-function selectTime(el, time) {
-  if (el.classList.contains('booked')) return;
-  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedTime = time;
-  updateSummary();
-}
-
-function updateSummary() {
-  const summary = document.getElementById('bookingSummary');
-  if (selectedService) {
-    summary.style.display = 'block';
-    document.getElementById('summaryService').textContent = '📋 ' + selectedService;
-    document.getElementById('summaryDateTime').textContent =
-      (selectedDate ? '📅 ' + selectedDate : '') +
-      (selectedTime ? '  ⏰ ' + selectedTime : '');
-    document.getElementById('summaryPrice').textContent = '$' + selectedPrice.toFixed(2);
-  }
-}
-
-async function bookAndPay() {
-  const first = document.getElementById('clientFirst').value;
-  const last = document.getElementById('clientLast').value;
-  const email = document.getElementById('clientEmail').value;
-  const phone = document.getElementById('clientPhone').value;
-  const state = document.getElementById('clientState').value;
-  const notes = document.getElementById('clientNotes').value;
-
-  if (!first || !email) { alert('Please fill in your name and email.'); return; }
-  if (!selectedService) { alert('Please select a service.'); return; }
-  if (!state) { alert('Please select your state.'); return; }
-
-  // Create a real job in the backend so workers can see and claim it
-  try {
-    const jobRes = await fetch(API_BASE + '/jobs/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_type: selectedServiceKey,
-        description: `Client: ${first} ${last} | Email: ${email} | Phone: ${phone}`,
-        location: state,
-        state: state,
-        is_remote: selectedServiceKey === 'notary_remote',
-        scheduled_date: null,
-        scheduled_time: selectedTime || null,
-        is_urgent: false,
-        notes: notes || null,
-      })
-    });
-    if (!jobRes.ok) {
-      console.error('Job creation failed', await jobRes.text());
-    }
-  } catch (e) {
-    console.error('Job creation request failed', e);
-  }
-
-  // Also notify by email (backup, non-blocking)
-  try {
-    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        type: 'CLIENT BOOKING',
-        name: first + ' ' + last,
-        email, phone,
-        service: selectedService,
-        price: '$' + selectedPrice,
-        date: selectedDate || 'TBD',
-        time: selectedTime || 'TBD',
-      })
-    });
-  } catch(e) {}
-
-  // Go to Stripe
-  if (selectedServiceKey) goStripe(selectedServiceKey);
-}
-
-async function submitWorker() {
-  const first = document.getElementById('workerFirst').value;
-  const email = document.getElementById('workerEmail').value;
-  if (!first || !email) { alert('Please fill in your name and email.'); return; }
-
-  try {
-    await fetch('https://formspree.io/f/propertygroupofusa@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        type: 'WORKER APPLICATION',
-        name: first + ' ' + document.getElementById('workerLast').value,
-        email,
-        phone: document.getElementById('workerPhone').value,
-        specialty: document.getElementById('workerSpecialty').value,
-        state: document.getElementById('workerState').value,
-        experience: document.getElementById('workerExp').value,
-        certifications: document.getElementById('workerCerts').value,
-        plan: document.getElementById('workerPlan').value,
-      })
-    });
-  } catch(e) {}
-
-  const plan = document.getElementById('workerPlan').value;
-  document.getElementById('workerFirst').closest('.booking-card').innerHTML = `
-    <div style="text-align:center;padding:40px 0;">
-      <div style="font-size:48px;margin-bottom:16px;">🎉</div>
-      <div style="font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:8px;">Application Received!</div>
-      <p style="color:var(--gray);margin-bottom:20px;">We'll review your credentials and activate your account within 24–48 hours.</p>
-      ${plan !== 'starter' ? `<button onclick="goStripe('worker_${plan}')" style="padding:12px 28px;background:var(--teal);color:white;border:none;border-radius:4px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;">Complete Plan Subscription →</button>` : ''}
-    </div>
-  `;
-}
-
-async function submitClientModal() {
-  const service = document.getElementById('modalService').value;
-  const first = document.getElementById('modalFirst').value;
-  const last = document.getElementById('modalLast').value;
-  const email = document.getElementById('modalEmail').value;
-  const phone = document.getElementById('modalPhone').value;
-  const state = document.getElementById('modalState').value;
-
-  if (!service) { alert('Please select a service.'); return; }
-  if (!first || !email) { alert('Please fill in your name and email.'); return; }
-
-  // Create real job in backend
-  try {
-    await fetch(API_BASE + '/jobs/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_type: service,
-        description: `Client: ${first} ${last} | Email: ${email} | Phone: ${phone}`,
-        location: state,
-        state: state,
-        is_remote: service === 'notary_remote',
-        scheduled_date: null,
-        scheduled_time: null,
-        is_urgent: false,
-        notes: null,
-      })
-    });
-  } catch(e) {
-    console.error('Modal job creation failed', e);
-  }
-
-  document.getElementById('clientForm').style.display = 'none';
-  document.getElementById('clientSuccess').style.display = 'block';
-  if (service) setTimeout(() => goStripe(service), 1500);
-}
-
-async function submitWorkerModal() {
-  const plan = document.getElementById('modalPlan').value;
-  document.getElementById('workerForm').style.display = 'none';
-  document.getElementById('workerSuccess').style.display = 'block';
-  if (plan !== 'starter') setTimeout(() => goStripe('worker_' + plan), 2000);
-}
-
-// ── Worker Login & Dashboard ───────────────────────────────
-async function submitLogin() {
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  errEl.style.display = 'none';
-
-  if (!email || !password) {
-    errEl.textContent = 'Please enter your email and password.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  try {
-    const form = new URLSearchParams();
-    form.append('username', email);
-    form.append('password', password);
-
-    const res = await fetch(API_BASE + '/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: form.toString(),
-    });
-
-    if (!res.ok) {
-      errEl.textContent = 'Login failed. Check your email and password.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    const data = await res.json();
-    localStorage.setItem('pgusa_token', data.access_token);
-    localStorage.setItem('pgusa_name', data.name);
-
-    closeModal('login');
-    await showDashboard(data.access_token, data.name);
-  } catch (e) {
-    console.error('Login failed', e);
-    errEl.textContent = 'Something went wrong. Please try again.';
-    errEl.style.display = 'block';
-  }
-}
-
-async function showDashboard(token, name) {
-  document.getElementById('dashWelcome').textContent = 'Welcome back, ' + (name || 'there') + '!';
-
-  try {
-    const res = await fetch(API_BASE + '/workers/dashboard', {
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-    if (!res.ok) throw new Error('Dashboard fetch failed');
-    const data = await res.json();
-
-    document.getElementById('dashStatus').textContent =
-      'Status: ' + data.worker.status + ' · Plan: ' + data.worker.plan + ' · Payout rate: ' + data.earnings.payout_rate;
-    document.getElementById('dashEarned').textContent = '$' + data.earnings.total_earned.toFixed(2);
-    document.getElementById('dashPending').textContent = '$' + data.earnings.pending_payout.toFixed(2);
-    document.getElementById('dashJobsDone').textContent = data.jobs.total_completed;
-    document.getElementById('dashAvailable').textContent = data.jobs.available;
-
-    const bonusEl = document.getElementById('dashBonusMsg');
-    if (data.bonuses.bonus_message) {
-      bonusEl.textContent = data.bonuses.bonus_message;
-      bonusEl.style.display = 'block';
-    } else {
-      bonusEl.style.display = 'none';
-    }
-  } catch (e) {
-    console.error('Could not load dashboard data', e);
-    document.getElementById('dashStatus').textContent = 'Could not load your stats right now — try refreshing.';
-  }
-
-  await checkPayoutStatus(token);
-  await checkComplianceStatus(token);
-  openModal('dashboard');
-}
-
-async function checkComplianceStatus(token) {
-  const box = document.getElementById('dashComplianceBox');
-  try {
-    const res = await fetch(API_BASE + '/workers/compliance/status', {
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-    if (!res.ok) throw new Error('Compliance check failed');
-    const data = await res.json();
-
-    box.style.display = 'block';
-    const items = [];
-    items.push(data.w9_submitted ? '✅ W-9 on file' : '⚠️ W-9 not submitted yet');
-    if (!data.credentials_submitted) {
-      items.push('⚠️ Notary/RON credentials not submitted');
-    } else if (!data.credentials_verified) {
-      items.push('⏳ Credentials submitted — pending review');
-    } else {
-      items.push('✅ Credentials verified — you can claim notary/RON/closing jobs');
-    }
-
-    const allGood = data.w9_submitted && data.credentials_verified;
-    box.style.background = allGood ? 'rgba(46,204,113,0.1)' : 'rgba(201,168,76,0.1)';
-    box.style.border = allGood ? '1px solid rgba(46,204,113,0.25)' : '1px solid rgba(201,168,76,0.25)';
-    box.innerHTML = items.join('<br>');
-  } catch (e) {
-    console.error('Compliance status check failed', e);
-    box.style.display = 'none';
-  }
-}
-
-async function submitW9() {
-  const token = localStorage.getItem('pgusa_token');
-  const legal_name = document.getElementById('w9Name').value;
-  const tax_classification = document.getElementById('w9Classification').value;
-  const tin_last4 = document.getElementById('w9Tin').value;
-  const address = document.getElementById('w9Address').value;
-
-  if (!legal_name || !tin_last4 || !address) {
-    alert('Please fill in all fields.');
-    return;
-  }
-  if (tin_last4.length !== 4 || !/^\d{4}$/.test(tin_last4)) {
-    alert('Last 4 of SSN/EIN must be exactly 4 digits.');
-    return;
-  }
-
-  try {
-    const res = await fetch(API_BASE + '/workers/compliance/w9', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ legal_name, tax_classification, tin_last4, address }),
-    });
-    if (!res.ok) { alert('Could not save W-9. Please try again.'); return; }
-
-    document.getElementById('w9Form').style.display = 'none';
-    document.getElementById('w9Success').style.display = 'block';
-  } catch (e) {
-    console.error(e);
-    alert('Network error — please try again.');
-  }
-}
-
-async function submitCredentials() {
-  const token = localStorage.getItem('pgusa_token');
-  const notary_commission_number = document.getElementById('credCommissionNum').value || null;
-  const notary_commission_state = document.getElementById('credCommissionState').value || null;
-  const expiresRaw = document.getElementById('credExpires').value;
-  const notary_commission_expires = expiresRaw || null;
-  const ron_authorized = document.getElementById('credRonAuthorized').value === 'true';
-  const ron_authorization_state = document.getElementById('credRonState').value || null;
-
-  try {
-    const res = await fetch(API_BASE + '/workers/compliance/credentials', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({
-        notary_commission_number, notary_commission_state,
-        notary_commission_expires, ron_authorized, ron_authorization_state,
-      }),
-    });
-    if (!res.ok) { alert('Could not submit credentials. Please try again.'); return; }
-
-    document.getElementById('credentialsForm').style.display = 'none';
-    document.getElementById('credentialsSuccess').style.display = 'block';
-  } catch (e) {
-    console.error(e);
-    alert('Network error — please try again.');
-  }
-}
-
-async function checkPayoutStatus(token) {
-  const box = document.getElementById('dashPayoutBox');
-  try {
-    const res = await fetch(API_BASE + '/payments/worker/payout-status', {
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-    if (!res.ok) throw new Error('Status check failed');
-    const data = await res.json();
-
-    box.style.display = 'block';
-    if (data.payouts_enabled) {
-      box.style.background = 'rgba(46,204,113,0.1)';
-      box.style.border = '1px solid rgba(46,204,113,0.25)';
-      box.innerHTML = '✅ Your bank account is connected. Payouts go out every 4 days.';
-    } else if (data.connected) {
-      box.style.background = 'rgba(201,168,76,0.1)';
-      box.style.border = '1px solid rgba(201,168,76,0.25)';
-      box.innerHTML = '⚠️ Almost done — finish linking your bank account to get paid. <br><br><button class="modal-submit worker" style="margin-top:8px;" onclick="startPayoutSetup()">Finish Bank Setup →</button>';
-    } else {
-      box.style.background = 'rgba(26,139,139,0.1)';
-      box.style.border = '1px solid rgba(26,139,139,0.25)';
-      box.innerHTML = '💳 Add your bank account to start getting paid for completed jobs. <br><br><button class="modal-submit worker" style="margin-top:8px;" onclick="startPayoutSetup()">Set Up Payouts →</button>';
-    }
-  } catch (e) {
-    console.error('Payout status check failed', e);
-    box.style.display = 'none';
-  }
-}
-
-async function startPayoutSetup() {
-  const token = localStorage.getItem('pgusa_token');
-  if (!token) return;
-
-  try {
-    const res = await fetch(API_BASE + '/payments/worker/connect-onboarding', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-    if (!res.ok) {
-      alert('Could not start bank setup. Please try again.');
-      return;
-    }
-    const data = await res.json();
-    window.location.href = data.onboarding_url;
-  } catch (e) {
-    console.error('Payout setup failed', e);
-    alert('Network error — please try again.');
-  }
-}
-
-function logoutWorker() {
-  localStorage.removeItem('pgusa_token');
-  localStorage.removeItem('pgusa_name');
-  closeModal('dashboard');
-}
-
-// On page load, if already logged in, offer to jump straight to dashboard
-window.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('pgusa_token');
-  const name = localStorage.getItem('pgusa_name');
-  if (token) {
-    const navWorkerBtn = document.querySelector('.nav-cta .btn-outline:nth-child(2)');
-    if (navWorkerBtn) {
-      navWorkerBtn.textContent = 'My Dashboard';
-      navWorkerBtn.onclick = () => showDashboard(token, name);
-    }
+// Sticky nav scroll effect
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
   }
 });
 
-// ── Calendar ─────────────────────────────────────────────────
-function buildCalendar() {
-  const cal = document.getElementById('calendar');
-  const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  const today = new Date();
-  const year = 2026, month = 5; // June 2026
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  days.forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'cal-header';
-    h.textContent = d;
-    cal.appendChild(h);
-  });
-
-  for (let i = 0; i < firstDay; i++) {
-    const e = document.createElement('div');
-    e.className = 'cal-day empty';
-    cal.appendChild(e);
+// CTA handler
+function handleCTA() {
+  const email = document.getElementById('ctaEmail').value;
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
   }
+  window.location.href = 'https://propertygroupofusa.github.io/documents';
+}
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const el = document.createElement('div');
-    el.className = 'cal-day';
-    el.textContent = d;
-    const date = new Date(year, month, d);
-    const isToday = date.toDateString() === today.toDateString();
-    const isPast = date < today;
-    const isSunday = date.getDay() === 0;
-
-    if (isToday) el.classList.add('today');
-    if (isPast || isSunday) el.classList.add('past');
-    else {
-      el.onclick = () => {
-        document.querySelectorAll('.cal-day').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedDate = `June ${d}, 2026`;
-        updateSummary();
-      };
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    cal.appendChild(el);
-  }
-}
-
-// ── Job Board ────────────────────────────────────────────────
-// Fallback demo jobs — shown only if the live backend is unreachable
-const DEMO_JOBS = [
-  { type: 'notary', label: 'Notary', title: 'Loan Signing', location: 'San Antonio, TX', pay: '$75', time: 'Today 2:00 PM', docs: '85 pages, purchase loan', urgent: true, remote: false },
-  { type: 'tax', label: 'Tax', title: 'Self-Employed Tax Return', location: 'Austin, TX (Remote)', pay: '$99', time: 'This week', docs: 'Schedule C, 1099s', urgent: false, remote: true },
-  { type: 'closing', label: 'Closing', title: 'Real Estate Closing', location: 'Houston, TX', pay: '$150', time: 'Tomorrow 10:00 AM', docs: 'Cash purchase, 120 pages', urgent: true, remote: false },
-];
-
-let JOBS = [];
-let currentFilter = 'all';
-
-const SERVICE_TYPE_MAP = {
-  notary_remote: 'notary', notary_mobile: 'notary',
-  tax_w2: 'tax', tax_self: 'tax', tax_investor: 'tax',
-  real_estate: 'closing',
-  legal: 'legal', business_docs: 'legal',
-};
-
-function mapApiJobToCard(j) {
-  const type = SERVICE_TYPE_MAP[j.service_type] || 'legal';
-  return {
-    id: j.id,
-    type,
-    label: type.charAt(0).toUpperCase() + type.slice(1),
-    title: j.title,
-    location: j.is_remote ? (j.location || j.state) + ' (Remote)' : (j.location || j.state),
-    pay: '$' + Number(j.worker_pay).toFixed(2),
-    time: j.scheduled_time || (j.scheduled_date ? j.scheduled_date : 'Flexible'),
-    docs: '',
-    urgent: !!j.is_urgent,
-    remote: !!j.is_remote,
-  };
-}
-
-async function loadJobsFromBackend() {
-  try {
-    const res = await fetch(API_BASE + '/jobs/board');
-    if (!res.ok) throw new Error('Bad response');
-    const data = await res.json();
-    JOBS = (data.jobs || []).map(mapApiJobToCard);
-    if (JOBS.length === 0) JOBS = DEMO_JOBS; // keep board from looking empty
-  } catch (e) {
-    console.error('Falling back to demo jobs', e);
-    JOBS = DEMO_JOBS;
-  }
-  renderJobs(currentFilter);
-}
-
-function renderJobs(filter) {
-  const grid = document.getElementById('jobGrid');
-  grid.innerHTML = '';
-  const filtered = filter === 'all' ? JOBS :
-    filter === 'remote' ? JOBS.filter(j => j.remote) :
-    JOBS.filter(j => j.type === filter);
-
-  filtered.forEach(job => {
-    grid.innerHTML += `
-      <div class="job-card">
-        ${job.urgent ? '<div class="job-urgency">URGENT</div>' : ''}
-        <div class="job-type ${job.type}">${job.label}${job.remote ? ' · Remote' : ''}</div>
-        <h4>${job.title}</h4>
-        <div class="location">📍 ${job.location}</div>
-        <div class="pay">${job.pay}</div>
-        <div class="details">⏰ ${job.time}${job.docs ? '<br>📄 ' + job.docs : ''}</div>
-        <button class="claim-btn" onclick="claimJob('${job.id || ''}', '${job.title.replace(/'/g, "\\'")}')">Claim This Job</button>
-      </div>
-    `;
   });
-}
+});
 
-function filterJobs(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderJobs(filter);
-}
-
-// ── Claim Job (real backend claim, requires worker login) ────
-let claimingJobId = null;
-let claimingJobTitle = null;
-
-function claimJob(jobId, title) {
-  const token = localStorage.getItem('pgusa_token');
-
-  if (!token) {
-    closeModal('claim');
-    alert('Please log in as a worker first to claim jobs.');
-    openModal('login');
-    return;
-  }
-
-  if (!jobId) {
-    alert('This is a sample listing and can\'t be claimed yet. Check back once real jobs are posted in your area.');
-    return;
-  }
-
-  claimingJobId = jobId;
-  claimingJobTitle = title;
-  document.getElementById('claimJobTitle').textContent = 'Claim: ' + title;
-
-  // Skip the contact-info form for logged-in workers — go straight to confirm
-  document.getElementById('claimForm').innerHTML = `
-    <div class="modal-tag worker">Claim Job</div>
-    <h3>Claim: ${title}</h3>
-    <p>You're logged in. Confirm to claim this job — it will be assigned to you immediately.</p>
-    <button class="modal-submit worker" onclick="submitClaim()">Confirm Claim →</button>
-  `;
-  openModal('claim');
-}
-
-async function submitClaim() {
-  const token = localStorage.getItem('pgusa_token');
-  if (!token || !claimingJobId) {
-    alert('Something went wrong. Please log in again.');
-    return;
-  }
-
-  try {
-    const res = await fetch(API_BASE + '/workers/jobs/' + claimingJobId + '/claim', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      alert(err.detail || 'Could not claim this job. It may already be taken, or your account may not be approved yet.');
-      return;
+// Intersection observer for fade-in animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
     }
+  });
+}, { threshold: 0.1 });
 
-    const data = await res.json();
-    document.getElementById('claimForm').style.display = 'none';
-    const successEl = document.getElementById('claimSuccess');
-    successEl.innerHTML = `
-      <span class="success-icon">✅</span>
-      <h3>Job Claimed!</h3>
-      <p>You'll earn $${data.worker_pay}. This job is now on your dashboard.</p>
-    `;
-    successEl.style.display = 'block';
-
-    // Refresh the job board so the claimed job disappears from "open" listings
-    loadJobsFromBackend();
-  } catch (e) {
-    console.error('Claim request failed', e);
-    alert('Network error — please try again.');
-  }
-}
-
-// ── QR Code (simple SVG-based) ───────────────────────────────
-function buildQR() {
-  const url = 'propertygroupofusa.github.io/documents';
-  const qrDiv = document.getElementById('qrCode');
-  qrDiv.innerHTML = `
-    <div style="text-align:center;padding:10px;">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=168x168&data=https://${url}&bgcolor=ffffff&color=0A0E14&margin=4" 
-           alt="QR Code" style="width:168px;height:168px;" />
-    </div>
-  `;
-}
-
-// ── Init ─────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  buildCalendar();
-  loadJobsFromBackend();
-  buildQR();
+document.querySelectorAll('.service-card, .step, .testimonial-card, .pay-tier, .stat-box').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
 });
 </script>
 </body>
