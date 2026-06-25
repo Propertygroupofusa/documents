@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGUSA Document Membership — Unlimited Document Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:  #0D1B2A;
+  --blue:  #1A6CF5;
+  --green: #00C57A;
+  --amber: #F59E0B;
+  --white: #FFFFFF;
+  --off:   #F7F9FC;
+  --gray:  #64748B;
+  --light: #E2E8F0;
+  --text:  #334155;
+  --mono:  'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 64px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--light);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+
+.nav-logo { font-size: 16px; font-weight: 800; color: var(--navy); text-decoration: none; }
+.nav-logo span { color: var(--blue); }
+
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.btn-nav {
+  padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  text-decoration: none; font-family: inherit; cursor: pointer; border: none;
+  transition: all 0.2s;
+}
+.btn-nav-ghost { background: transparent; color: var(--text); border: 1px solid var(--light); }
+.btn-nav-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.btn-nav-primary { background: var(--blue); color: white; }
+.btn-nav-primary:hover { background: #1558CC; }
+
+/* HERO */
+.hero {
+  padding: 120px 40px 80px; text-align: center;
+  background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 60%);
+  position: relative; overflow: hidden;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,108,245,0.08); border: 1px solid rgba(26,108,245,0.2);
+  border-radius: 20px; padding: 5px 14px; margin-bottom: 20px;
+  font-size: 12px; font-weight: 600; color: var(--blue);
+}
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 58px); font-weight: 800;
+  letter-spacing: -2px; line-height: 1.05; color: var(--navy);
+  margin-bottom: 16px; max-width: 700px; margin-left: auto; margin-right: auto;
+}
+
+.hero-sub {
+  font-size: 17px; color: var(--gray); line-height: 1.7;
+  max-width: 480px; margin: 0 auto 40px;
+}
+
+/* PRICING TOGGLE */
+.toggle-wrap {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 48px;
+}
+
+.toggle-label { font-size: 14px; font-weight: 500; color: var(--gray); }
+.toggle-label.active { color: var(--navy); font-weight: 600; }
+
+.toggle-switch {
+  width: 48px; height: 26px; background: var(--blue); border-radius: 13px;
+  position: relative; cursor: pointer; transition: background 0.2s; border: none;
+}
+
+.toggle-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%; background: white;
+  transition: transform 0.2s;
+}
+
+.toggle-switch.yearly::after { transform: translateX(22px); }
+
+.save-badge {
+  background: var(--green); color: white; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px; letter-spacing: 0.5px;
+}
+
+/* PRICING CARDS */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; max-width: 1000px; margin: 0 auto; padding: 0 40px;
+}
+
+.plan-card {
+  background: var(--white); border: 1px solid var(--light);
+  border-radius: 16px; padding: 28px 24px; position: relative;
+  transition: all 0.2s;
+}
+
+.plan-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+
+.plan-card.featured {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26,108,245,0.12), 0 8px 32px rgba(26,108,245,0.15);
+}
+
+.plan-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--blue); color: white; font-size: 11px; font-weight: 700;
+  padding: 3px 12px; border-radius: 20px; letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.plan-name { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+
+.plan-price {
+  font-size: 42px; font-weight: 800; color: var(--navy);
+  letter-spacing: -2px; line-height: 1; margin-bottom: 4px;
+  font-family: var(--mono);
+}
+
+.plan-price sup { font-size: 20px; font-weight: 600; vertical-align: top; margin-top: 8px; display: inline-block; }
+.plan-period { font-size: 13px; color: var(--gray); margin-bottom: 20px; }
+.plan-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--light); }
+
+.plan-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+.plan-feature {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--text); line-height: 1.5;
+}
+
+.plan-feature-icon { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.plan-feature-x { color: #CBD5E1; }
+
+.plan-cta {
+  display: block; width: 100%; padding: 13px;
+  text-align: center; border-radius: 8px; font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: all 0.2s; cursor: pointer;
+  font-family: inherit; border: none;
+}
+
+.plan-cta-primary { background: var(--blue); color: white; }
+.plan-cta-primary:hover { background: #1558CC; }
+.plan-cta-ghost { background: var(--off); color: var(--navy); border: 1px solid var(--light); }
+.plan-cta-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+/* WHAT'S INCLUDED */
+.included-section { padding: 100px 40px; background: var(--off); }
+.included-inner { max-width: 1000px; margin: 0 auto; }
+.section-center { text-align: center; }
+
+.eyebrow { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
+.section-h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--navy); letter-spacing: -1px; margin-bottom: 12px; }
+.section-sub { font-size: 15px; color: var(--gray); max-width: 480px; margin: 0 auto 56px; line-height: 1.7; }
+
+.included-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.included-card {
+  background: var(--white); border: 1px solid var(--light);
+  border-radius: 12px; padding: 24px;
+}
+
+.included-icon { font-size: 28px; margin-bottom: 14px; }
+.included-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.included-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 14px; }
+
+.included-plans {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+.plan-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
+.tag-solo { background: rgba(26,108,245,0.1); color: var(--blue); }
+.tag-biz { background: rgba(0,197,122,0.1); color: #007A4D; }
+.tag-enterprise { background: rgba(245,158,11,0.1); color: #B45309; }
+
+/* COMPARISON TABLE */
+.compare-section { padding: 100px 40px; }
+.compare-inner { max-width: 900px; margin: 0 auto; }
+
+.compare-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+
+.compare-table th {
+  padding: 16px 20px; font-size: 13px; font-weight: 700; color: var(--navy);
+  border-bottom: 2px solid var(--light); text-align: center;
+}
+
+.compare-table th:first-child { text-align: left; }
+.compare-table th.featured-col { color: var(--blue); }
+
+.compare-table td {
+  padding: 14px 20px; font-size: 13px; color: var(--text);
+  border-bottom: 1px solid var(--light); text-align: center;
+}
+
+.compare-table td:first-child { text-align: left; font-weight: 500; }
+.compare-table tr:hover td { background: var(--off); }
+
+.check { color: var(--green); font-weight: 700; font-size: 16px; }
+.cross { color: #CBD5E1; font-size: 16px; }
+.val { font-weight: 600; color: var(--navy); }
+
+/* FAQ */
+.faq-section { padding: 100px 40px; background: var(--off); }
+.faq-inner { max-width: 700px; margin: 0 auto; }
+
+.faq-items { display: flex; flex-direction: column; gap: 12px; margin-top: 48px; }
+
+.faq-item {
+  background: var(--white); border: 1px solid var(--light);
+  border-radius: 10px; overflow: hidden;
+}
+
+.faq-q {
+  padding: 18px 20px; font-size: 14px; font-weight: 600; color: var(--navy);
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  user-select: none;
+}
+
+.faq-q:hover { background: var(--off); }
+.faq-toggle { color: var(--blue); font-size: 18px; transition: transform 0.2s; font-weight: 300; }
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+.faq-a {
+  padding: 0 20px; font-size: 13px; color: var(--gray); line-height: 1.7;
+  max-height: 0; overflow: hidden; transition: all 0.3s ease;
+}
+
+.faq-item.open .faq-a { padding: 0 20px 18px; max-height: 200px; }
+
+/* CTA BOTTOM */
+.cta-section {
+  padding: 100px 40px; text-align: center;
+  background: linear-gradient(135deg, var(--navy), #1A2E4A);
+}
+
+.cta-section .eyebrow { color: var(--blue); }
+.cta-section .section-h2 { color: white; margin-bottom: 14px; }
+.cta-section .section-sub { color: rgba(255,255,255,0.5); margin-bottom: 36px; }
+
+.cta-plans { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.cta-plan-btn {
+  padding: 14px 28px; border-radius: 8px; font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: all 0.2s; cursor: pointer; font-family: inherit; border: none;
+}
+
+.cta-plan-primary { background: var(--blue); color: white; box-shadow: 0 4px 14px rgba(26,108,245,0.4); }
+.cta-plan-primary:hover { background: #1558CC; transform: translateY(-1px); }
+.cta-plan-ghost { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.cta-plan-ghost:hover { background: rgba(255,255,255,0.15); }
+
+/* FOOTER */
+footer {
+  background: var(--navy); padding: 28px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.footer-brand { font-size: 14px; font-weight: 700; color: white; }
+.footer-brand span { color: var(--blue); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+.footer-links a:hover { color: white; }
+.footer-legal { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .hero { padding: 100px 20px 60px; }
+  .pricing-grid { grid-template-columns: 1fr; padding: 0 20px; }
+  .included-section, .compare-section, .faq-section, .cta-section { padding: 64px 20px; }
+  .included-grid { grid-template-columns: 1fr; }
+  .compare-table { font-size: 12px; }
+  .compare-table th, .compare-table td { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://propertygroupofusa.github.io/documents" class="nav-logo">PGUSA <span>Documents</span></a>
+  <div class="nav-right">
+    <a href="https://propertygroupofusa.github.io/documents" class="btn-nav btn-nav-ghost">Sign In</a>
+    <a href="#pricing" class="btn-nav btn-nav-primary">View Plans</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">💳 Document Membership — Now Available</div>
+  <h1>One membership.<br>Every document you need.</h1>
+  <p class="hero-sub">Stop paying per-notarization. Get unlimited document services for one flat monthly rate — notarizations, legal doc reviews, tax consultations, and more.</p>
+</section>
+
+<!-- PRICING TOGGLE -->
+<div id="pricing" style="padding: 20px 0 0; background: white;">
+  <div class="toggle-wrap">
+    <span class="toggle-label active" id="label-monthly">Monthly</span>
+    <button class="toggle-switch" id="billing-toggle" onclick="toggleBilling()"></button>
+    <span class="toggle-label" id="label-yearly">Annual <span class="save-badge">SAVE 20%</span></span>
+  </div>
+
+  <!-- PRICING CARDS -->
+  <div class="pricing-grid">
+
+    <!-- SOLO -->
+    <div class="plan-card">
+      <div class="plan-name">Solo</div>
+      <div class="plan-price" id="price-solo"><sup>$</sup>49</div>
+      <div class="plan-period" id="period-solo">per month</div>
+      <div class="plan-desc">For individuals who need notarizations and document services regularly. Stop paying $15–$39 per session.</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> 3 notarizations/month (RON or mobile)</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> 1 legal document review</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Priority booking</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Email support</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Digital document vault</div>
+        <div class="plan-feature"><span class="plan-feature-x">✗</span> Tax consultation</div>
+        <div class="plan-feature"><span class="plan-feature-x">✗</span> Same-day SLA</div>
+        <div class="plan-feature"><span class="plan-feature-x">✗</span> Invoice billing</div>
+      </div>
+      <a href="https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00" class="plan-cta plan-cta-ghost" id="cta-solo">Start Solo Plan →</a>
+    </div>
+
+    <!-- BUSINESS (FEATURED) -->
+    <div class="plan-card featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">Business</div>
+      <div class="plan-price" id="price-business"><sup>$</sup>99</div>
+      <div class="plan-period" id="period-business">per month</div>
+      <div class="plan-desc">For small businesses, real estate agents, and property managers who need document services regularly without friction.</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Unlimited notarizations</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> 2 legal document reviews</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> 1 tax consultation/month</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Priority booking + same-day SLA</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Invoice billing (no per-booking Stripe)</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Dedicated worker assigned</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Monthly usage report</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> B2B partner portal access</div>
+      </div>
+      <a href="https://buy.stripe.com/8x2cN65pc2VWc7lcoT1sQ09" class="plan-cta plan-cta-primary" id="cta-business">Start Business Plan →</a>
+    </div>
+
+    <!-- ENTERPRISE -->
+    <div class="plan-card">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" id="price-enterprise"><sup>$</sup>299</div>
+      <div class="plan-period" id="period-enterprise">per month</div>
+      <div class="plan-desc">For title companies, mortgage brokers, and law firms processing high document volume. Full white-glove service.</div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Unlimited everything</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Dedicated account manager</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Custom SLA agreement</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> White-label option</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> API access</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Net-30 invoicing</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Volume discount negotiation</div>
+        <div class="plan-feature"><span class="plan-feature-icon">✓</span> Custom integrations</div>
+      </div>
+      <a href="mailto:propertygroupofusa@gmail.com?subject=Enterprise%20Membership%20Inquiry" class="plan-cta plan-cta-ghost">Contact Sales →</a>
+    </div>
+
+  </div>
+
+  <p style="text-align:center;font-size:12px;color:var(--gray);margin:20px 0 0;padding-bottom:40px;">
+    Cancel anytime · No contracts · Unused credits don't roll over
+  </p>
+</div>
+
+<!-- VALUE CALCULATION -->
+<div style="padding:60px 40px;background:var(--navy);text-align:center;">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:3px;margin-bottom:16px;">The Math</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:800;color:white;letter-spacing:-0.5px;margin-bottom:24px;">
+      3 notarizations/month at $14.99 each = <span style="text-decoration:line-through;color:rgba(255,255,255,0.3)">$44.97</span>
+    </div>
+    <div style="font-size:28px;font-weight:800;color:var(--green);margin-bottom:12px;">Solo Membership: $49/mo</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;">
+      You're getting 3 notarizations + 1 legal review + priority booking for the same price as 3 RON sessions.<br>Business plan: unlimited notarizations for the cost of 3 mobile notary appointments.
+    </div>
+  </div>
+</div>
+
+<!-- WHAT'S INCLUDED -->
+<div class="included-section">
+  <div class="included-inner">
+    <div class="section-center">
+      <div class="eyebrow">What's Included</div>
+      <h2 class="section-h2">Every service in one membership.</h2>
+      <p class="section-sub">All plans include access to PGUSA's full network of verified professionals.</p>
+    </div>
+    <div class="included-grid">
+      <div class="included-card">
+        <div class="included-icon">💻</div>
+        <div class="included-title">Remote Online Notarization</div>
+        <div class="included-desc">Video-based notarization sessions from any device. Available 24/7 with certified RON notaries.</div>
+        <div class="included-plans">
+          <span class="plan-tag tag-solo">Solo: 3/mo</span>
+          <span class="plan-tag tag-biz">Business: Unlimited</span>
+          <span class="plan-tag tag-enterprise">Enterprise: Unlimited</span>
+        </div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">🚗</div>
+        <div class="included-title">Mobile Notary</div>
+        <div class="included-desc">A commissioned notary comes to you — counts against your monthly notarization allowance.</div>
+        <div class="included-plans">
+          <span class="plan-tag tag-solo">Solo: 3/mo</span>
+          <span class="plan-tag tag-biz">Business: Unlimited</span>
+          <span class="plan-tag tag-enterprise">Enterprise: Unlimited</span>
+        </div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">⚖️</div>
+        <div class="included-title">Legal Document Review</div>
+        <div class="included-desc">Certified legal document preparers review your affidavits, POAs, contracts, and consent forms.</div>
+        <div class="included-plans">
+          <span class="plan-tag tag-solo">Solo: 1/mo</span>
+          <span class="plan-tag tag-biz">Business: 2/mo</span>
+          <span class="plan-tag tag-enterprise">Enterprise: Unlimited</span>
+        </div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">📊</div>
+        <div class="included-title">Tax Consultation</div>
+        <div class="included-desc">30-minute sessions with a certified tax professional. Not included in Solo — upgrade to Business.</div>
+        <div class="included-plans">
+          <span class="plan-tag" style="background:rgba(203,213,225,0.3);color:#94A3B8">Solo: —</span>
+          <span class="plan-tag tag-biz">Business: 1/mo</span>
+          <span class="plan-tag tag-enterprise">Enterprise: Unlimited</span>
+        </div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">🏠</div>
+        <div class="included-title">Real Estate Closings</div>
+        <div class="included-desc">Loan signing sessions with certified LSAs — counts toward notarization allowance for Solo.</div>
+        <div class="included-plans">
+          <span class="plan-tag tag-solo">Solo: Counts as 1</span>
+          <span class="plan-tag tag-biz">Business: Unlimited</span>
+          <span class="plan-tag tag-enterprise">Enterprise: Unlimited</span>
+        </div>
+      </div>
+      <div class="included-card">
+        <div class="included-icon">📁</div>
+        <div class="included-title">Digital Document Vault</div>
+        <div class="included-desc">Securely store all notarized documents in your PGUSA account. Accessible anytime, shareable with attorneys and lenders.</div>
+        <div class="included-plans">
+          <span class="plan-tag tag-solo">All plans</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="compare-section">
+  <div class="compare-inner">
+    <div class="section-center">
+      <div class="eyebrow">Compare Plans</div>
+      <h2 class="section-h2">Side by side.</h2>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Solo<br><span style="font-size:11px;font-weight:500;color:var(--gray)">$49/mo</span></th>
+          <th class="featured-col">Business<br><span style="font-size:11px;font-weight:500">$99/mo</span></th>
+          <th>Enterprise<br><span style="font-size:11px;font-weight:500;color:var(--gray)">$299/mo</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Notarizations</td>
+          <td class="val">3/mo</td>
+          <td class="val" style="color:var(--blue)">Unlimited</td>
+          <td class="val">Unlimited</td>
+        </tr>
+        <tr>
+          <td>Legal doc reviews</td>
+          <td class="val">1/mo</td>
+          <td class="val" style="color:var(--blue)">2/mo</td>
+          <td class="val">Unlimited</td>
+        </tr>
+        <tr>
+          <td>Tax consultation</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span> 1/mo</td>
+          <td><span class="check">✓</span> Unlimited</td>
+        </tr>
+        <tr>
+          <td>Priority booking</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Same-day SLA</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Dedicated worker</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Invoice billing</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Monthly usage report</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>B2B partner portal</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>White-label option</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>API access</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Digital vault</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-inner">
+    <div class="section-center">
+      <div class="eyebrow">FAQ</div>
+      <h2 class="section-h2">Common questions.</h2>
+    </div>
+    <div class="faq-items">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do unused notarizations roll over?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">No — unused credits expire at the end of each month. This keeps the service sustainable and priced fairly. If you consistently don't use your allowance, Solo might be more than you need.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel anytime?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">Yes. Cancel anytime from your account dashboard. You keep access until the end of your billing period. No cancellation fees, no questions asked.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What counts as one notarization?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">One notarization session — regardless of how many documents are signed in that session. A real estate closing with 12 pages counts as one session. A remote online session for a power of attorney counts as one session.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is the Business plan right for a title company?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">For title companies processing 5–20 closings per month, Business works well. For 20+ closings, Enterprise with net-30 invoicing and a dedicated account manager will serve you better. Contact us and we'll help you choose.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How does invoice billing on Business work?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">Business plan members receive a single monthly invoice instead of per-booking Stripe charges. This eliminates 40+ individual transactions for active B2B clients. Pay one invoice per month, net-15.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I upgrade or downgrade mid-month?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-a">Yes. Upgrades take effect immediately (prorated). Downgrades take effect at the next billing cycle.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BOTTOM -->
+<div class="cta-section">
+  <div class="eyebrow">Get Started</div>
+  <h2 class="section-h2">Pick your plan. Start today.</h2>
+  <p class="section-sub">No setup fees. No long-term contracts. Cancel anytime.</p>
+  <div class="cta-plans">
+    <a href="https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00" class="cta-plan-btn cta-plan-ghost">Solo — $49/mo</a>
+    <a href="https://buy.stripe.com/8x2cN65pc2VWc7lcoT1sQ09" class="cta-plan-btn cta-plan-primary">Business — $99/mo ⭐</a>
+    <a href="mailto:propertygroupofusa@gmail.com?subject=Enterprise%20Membership" class="cta-plan-btn cta-plan-ghost">Enterprise — Contact Sales</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">PGUSA <span>Documents</span></div>
+  <div class="footer-links">
+    <a href="https://propertygroupofusa.github.io/documents">Platform</a>
+    <a href="mailto:propertygroupofusa@gmail.com">Contact</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+  <div class="footer-legal">© 2026 Property Group of USA LLC · San Antonio, TX</div>
+</footer>
+
+<script>
+// Billing toggle
+let isYearly = false;
+
+const prices = {
+  solo:       { monthly: 49,  yearly: 39  },
+  business:   { monthly: 99,  yearly: 79  },
+  enterprise: { monthly: 299, yearly: 239 },
+};
+
+function toggleBilling() {
+  isYearly = !isYearly;
+  const toggle = document.getElementById('billing-toggle');
+  toggle.classList.toggle('yearly', isYearly);
+  document.getElementById('label-monthly').classList.toggle('active', !isYearly);
+  document.getElementById('label-yearly').classList.toggle('active', isYearly);
+
+  Object.keys(prices).forEach(plan => {
+    const price = isYearly ? prices[plan].yearly : prices[plan].monthly;
+    const period = isYearly ? 'per month, billed annually' : 'per month';
+    document.getElementById(`price-${plan}`).innerHTML = `<sup>$</sup>${price}`;
+    document.getElementById(`period-${plan}`).textContent = period;
+  });
+}
+
+// FAQ toggle
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+// Scroll fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.plan-card, .included-card, .faq-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(12px)';
+  el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
