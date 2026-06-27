@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Services & AI Products — Property Group of USA</title>
+  <style>
+    :root {
+      --gold: #F59E0B;
+      --gold-dark: #D97706;
+      --green: #34D399;
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2333;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand { font-size: 16px; font-weight: 700; color: var(--gold); text-decoration: none; }
+    .nav-brand span { color: var(--text); font-weight: 400; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--gold);
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--gold);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .trust-line {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trust-line span { display: flex; align-items: center; gap: 5px; }
+    .trust-line .dot { color: var(--green); font-size: 10px; }
+
+    /* SECTION LABELS */
+    .section-label {
+      text-align: center;
+      margin: 48px 0 24px;
+      padding: 0 24px;
+    }
+    .section-label h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .section-label p { color: var(--muted); font-size: 14px; }
+
+    .auto-tag {
+      display: inline-block;
+      background: rgba(52,211,153,0.12);
+      border: 1px solid rgba(52,211,153,0.3);
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* PRODUCT GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      padding: 0 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .card.featured {
+      border-color: rgba(245,158,11,0.5);
+      background: linear-gradient(135deg, var(--bg2), rgba(245,158,11,0.05));
+    }
+    .featured-badge {
+      position: absolute;
+      top: -1px;
+      right: 20px;
+      background: var(--gold);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 0 0 6px 6px;
+      letter-spacing: 0.5px;
+    }
+    .card-icon { font-size: 28px; }
+    .card-title { font-size: 16px; font-weight: 700; color: var(--white); }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; flex: 1; }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .price {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .price-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .delivery-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: block;
+      text-align: center;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s, transform 0.15s;
+      width: 100%;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-gold:hover { background: var(--gold-dark); }
+    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+    .btn-outline:hover { background: rgba(245,158,11,0.08); }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 24px;
+      max-width: 1100px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 28px;
+    }
+    .modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .modal .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .modal-price {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-price .label { font-size: 13px; color: var(--muted); }
+    .modal-price .amount { font-size: 24px; font-weight: 800; color: var(--gold); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group select option { background: var(--bg2); }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-actions .btn { flex: 1; }
+    .btn-cancel { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 32px 16px;
+    }
+    .success-message .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-message h3 { font-size: 20px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+    .success-message p { color: var(--muted); font-size: 14px; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 64px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero { padding: 40px 16px 32px; }
+      .modal { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Property Group <span>of USA</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="membership.html">Membership</a>
+    <a href="worker-login.html">Workers</a>
+    <a href="services.html" style="color:var(--gold);">Services</a>
+  </div>
+  <a href="#ai-docs" class="nav-cta">Get a Document</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ Instant Digital Delivery</div>
+  <h1>Professional Documents<br/><span>Done in Minutes</span></h1>
+  <p>AI-generated legal docs, tax organizers, and certified notary services — all online, all fast, all backed by Property Group of USA.</p>
+  <div class="trust-line">
+    <span><span class="dot">●</span> San Antonio-based</span>
+    <span><span class="dot">●</span> Stripe-secured payments</span>
+    <span><span class="dot">●</span> Delivered to your inbox</span>
+    <span><span class="dot">●</span> No appointment needed</span>
+  </div>
+</div>
+
+<!-- AI DOCUMENTS SECTION -->
+<div class="section-label" id="ai-docs">
+  <div class="auto-tag">⚡ INSTANT — AI GENERATED</div>
+  <h2>AI Legal Documents</h2>
+  <p>Pay once. Receive your personalized, complete document by email within minutes. No scheduling, no waiting.</p>
+</div>
+
+<div class="grid">
+
+  <div class="card featured" onclick="openModal('nda')">
+    <div class="featured-badge">MOST POPULAR</div>
+    <div class="card-icon">🤝</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Non-Disclosure Agreement (NDA)</div>
+    <div class="card-desc">Protect your business ideas and confidential information. Mutual or one-way. Delivered ready to sign.</div>
+    <div class="card-meta">
+      <div><div class="price">$25</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My NDA →</button>
+  </div>
+
+  <div class="card" onclick="openModal('independent_contractor_agreement')">
+    <div class="card-icon">📋</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Independent Contractor Agreement</div>
+    <div class="card-desc">Full IC agreement between your business and a contractor. Covers payment, IP, scope, and termination.</div>
+    <div class="card-meta">
+      <div><div class="price">$29</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Contract →</button>
+  </div>
+
+  <div class="card" onclick="openModal('lease_agreement')">
+    <div class="card-icon">🏠</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Residential Lease Agreement</div>
+    <div class="card-desc">Month-to-month or fixed-term lease. Texas-compliant. Covers rent, deposits, maintenance, and tenant rights.</div>
+    <div class="card-meta">
+      <div><div class="price">$49</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Lease →</button>
+  </div>
+
+  <div class="card" onclick="openModal('eviction_notice')">
+    <div class="card-icon">📨</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Notice to Vacate</div>
+    <div class="card-desc">Texas-compliant eviction notice for non-payment or lease violation. Legally required first step before filing.</div>
+    <div class="card-meta">
+      <div><div class="price">$29</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Notice →</button>
+  </div>
+
+  <div class="card" onclick="openModal('demand_letter')">
+    <div class="card-icon">⚖️</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Demand Letter</div>
+    <div class="card-desc">Formal demand for payment or action. Used for unpaid invoices, security deposits, breach of contract, and more.</div>
+    <div class="card-meta">
+      <div><div class="price">$35</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Letter →</button>
+  </div>
+
+  <div class="card" onclick="openModal('llc_operating_agreement')">
+    <div class="card-icon">🏢</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">LLC Operating Agreement</div>
+    <div class="card-desc">Single or multi-member LLC operating agreement. Covers ownership, management, profit distribution, and dissolution.</div>
+    <div class="card-meta">
+      <div><div class="price">$59</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Agreement →</button>
+  </div>
+
+  <div class="card" onclick="openModal('bill_of_sale')">
+    <div class="card-icon">🚗</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Bill of Sale</div>
+    <div class="card-desc">Transfer of personal property — vehicles, equipment, or other assets. Both parties protected.</div>
+    <div class="card-meta">
+      <div><div class="price">$19</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Bill of Sale →</button>
+  </div>
+
+  <div class="card" onclick="openModal('w9_cover_letter')">
+    <div class="card-icon">📄</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">W-9 Cover Letter</div>
+    <div class="card-desc">Professional cover letter to accompany your W-9 when submitting to a client or employer. Clean, formal, ready to send.</div>
+    <div class="card-meta">
+      <div><div class="price">$15</div><div class="price-note">one-time</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Get My Letter →</button>
+  </div>
+
+</div>
+
+<hr class="divider"/>
+
+<!-- TAX ORGANIZER -->
+<div class="section-label" id="tax">
+  <div class="auto-tag">⚡ INSTANT — AI GENERATED</div>
+  <h2>Tax Document Organizer</h2>
+  <p>Answer a few questions. Receive a personalized checklist of every document you need to file your taxes — based on your exact situation.</p>
+</div>
+
+<div class="grid" style="max-width:700px;">
+  <div class="card featured" onclick="openModal('tax_organizer')">
+    <div class="card-icon">🧾</div>
+    <div class="auto-tag">⚡ INSTANT</div>
+    <div class="card-title">Personalized Tax Organizer</div>
+    <div class="card-desc">Tell us about your income, filing status, and situation. We build a custom checklist of documents to gather, deductions you may qualify for, and your next steps — delivered by email instantly.</div>
+    <div class="card-meta">
+      <div><div class="price">$29</div><div class="price-note">one-time · tax year 2025</div></div>
+      <div class="delivery-badge">⚡ ~2 min delivery</div>
+    </div>
+    <button class="btn btn-gold">Build My Tax Organizer →</button>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- NOTARY SERVICES -->
+<div class="section-label" id="notary">
+  <h2>Notary & Signing Services</h2>
+  <p>Need a real notary? We have certified professionals across the San Antonio metro. Pay online, we handle the rest.</p>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="card-icon">💻</div>
+    <div class="card-title">Remote Online Notarization (RON)</div>
+    <div class="card-desc">Get any document notarized from your phone or computer. A licensed RON notary meets you via video — done in minutes.</div>
+    <div class="card-meta">
+      <div><div class="price">$39</div><div class="price-note">per session</div></div>
+      <div class="delivery-badge">📅 Same day</div>
+    </div>
+    <a href="https://buy.stripe.com/cNi14o3h40NO2wLbkP1sQ00" class="btn btn-gold">Book RON Session →</a>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">🚗</div>
+    <div class="card-title">Mobile Notary</div>
+    <div class="card-desc">A certified notary comes to you — home, office, hospital, or wherever you need. SA metro coverage.</div>
+    <div class="card-meta">
+      <div><div class="price">$39</div><div class="price-note">per visit</div></div>
+      <div class="delivery-badge">📅 Same/next day</div>
+    </div>
+    <a href="https://buy.stripe.com/14A4gA4l85440oDfB51sQ01" class="btn btn-gold">Book Mobile Notary →</a>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Tax Preparation (W-2)</div>
+    <div class="card-desc">Full tax return preparation by a qualified tax preparer. W-2 filers, single or married. Fast turnaround.</div>
+    <div class="card-meta">
+      <div><div class="price">$49</div><div class="price-note">per return</div></div>
+      <div class="delivery-badge">📅 2–3 business days</div>
+    </div>
+    <a href="https://buy.stripe.com/9B64gAg3QgMMc7l3Sn1sQ02" class="btn btn-gold">Book Tax Prep →</a>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📁</div>
+    <div class="card-title">Legal Document Prep</div>
+    <div class="card-desc">A trained document specialist prepares your legal paperwork — deeds, affidavits, real estate forms, and more.</div>
+    <div class="card-meta">
+      <div><div class="price">$35</div><div class="price-note">per document</div></div>
+      <div class="delivery-badge">📅 1–2 business days</div>
+    </div>
+    <a href="https://buy.stripe.com/9B614o18W9kk1sHgF91sQ08" class="btn btn-gold">Book Document Prep →</a>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-box">
+
+    <div id="modal-form-view">
+      <h2 id="modal-title">Get Your Document</h2>
+      <p class="modal-sub" id="modal-sub">Fill in your details and we'll generate your document instantly.</p>
+
+      <div class="modal-price">
+        <span class="label">Total</span>
+        <span class="amount" id="modal-price-display">$25</span>
+      </div>
+
+      <div id="modal-fields">
+        <div class="form-group">
+          <label>Your Full Name</label>
+          <input type="text" id="field-client_name" placeholder="Delfine Stennis" required/>
+        </div>
+        <div class="form-group">
+          <label>Email Address (document delivered here)</label>
+          <input type="email" id="field-client_email" placeholder="you@email.com" required/>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-gold" id="pay-btn" onclick="handlePay()">Pay & Get Document →</button>
+      </div>
+
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;">
+        Secured by Stripe · Document emailed within 2 minutes · Questions? propertygroupofusa@gmail.com
+      </p>
+    </div>
+
+    <div class="success-message" id="modal-success">
+      <div class="success-icon">✅</div>
+      <h3>Payment Received!</h3>
+      <p>Your document is being generated right now. Check your email inbox — it'll arrive within 2 minutes.<br/><br/>
+      Questions? Email <a href="mailto:propertygroupofusa@gmail.com" style="color:var(--gold);">propertygroupofusa@gmail.com</a></p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="membership.html">Membership</a>
+    <a href="worker-login.html">Worker Portal</a>
+    <a href="mailto:propertygroupofusa@gmail.com">Contact</a>
+  </div>
+  <p>© 2026 Property Group of USA LLC · San Antonio, TX · propertygroupofusa@gmail.com</p>
+  <p style="margin-top:8px;font-size:11px;">AI-generated documents are provided for informational purposes. Consult an attorney for legal advice specific to your situation.</p>
+</footer>
+
+<script>
+  const BACKEND = 'https://pgusa-platform-production.up.railway.app';
+
+  // Product config — maps to backend doc_type keys and dynamic form fields
+  const PRODUCTS = {
+    nda: {
+      title: 'Non-Disclosure Agreement (NDA)',
+      price: '$25',
+      sub: 'Enter the parties involved and we\'ll generate your complete NDA.',
+      extraFields: [
+        { id: 'party_one', label: 'Your Name / Company (Disclosing Party)', placeholder: 'Property Group of USA LLC' },
+        { id: 'party_two', label: 'Other Party Name / Company (Receiving Party)', placeholder: 'Jane Smith' },
+        { id: 'purpose', label: 'Purpose of NDA', placeholder: 'Discussing a potential business partnership' },
+        { id: 'duration', label: 'NDA Duration', placeholder: '2 years' },
+      ],
+      stripeLink: null, // uses our backend + sendgrid
+    },
+    independent_contractor_agreement: {
+      title: 'Independent Contractor Agreement',
+      price: '$29',
+      sub: 'Tell us about the parties and the work being contracted.',
+      extraFields: [
+        { id: 'company_name', label: 'Your Business Name (Client)', placeholder: 'Property Group of USA LLC' },
+        { id: 'contractor_name', label: 'Contractor Full Name', placeholder: 'Jane Smith' },
+        { id: 'services_description', label: 'Services to be Performed', placeholder: 'Mobile notary services for real estate closings' },
+        { id: 'payment_rate', label: 'Payment Rate', placeholder: '$25 per completed signing' },
+        { id: 'start_date', label: 'Start Date', placeholder: 'July 1, 2026' },
+      ],
+    },
+    lease_agreement: {
+      title: 'Residential Lease Agreement',
+      price: '$49',
+      sub: 'Enter property and tenant details for your lease.',
+      extraFields: [
+        { id: 'landlord_name', label: 'Landlord Full Name', placeholder: 'Delfine Stennis' },
+        { id: 'tenant_name', label: 'Tenant Full Name(s)', placeholder: 'John Smith' },
+        { id: 'property_address', label: 'Property Address', placeholder: '1005 Sacramento, San Antonio TX 78201' },
+        { id: 'monthly_rent', label: 'Monthly Rent', placeholder: '$1,200' },
+        { id: 'security_deposit', label: 'Security Deposit', placeholder: '$1,200' },
+        { id: 'lease_start', label: 'Lease Start Date', placeholder: 'August 1, 2026' },
+        { id: 'lease_term', label: 'Lease Term', placeholder: '12 months / Month-to-month' },
+      ],
+    },
+    eviction_notice: {
+      title: 'Notice to Vacate',
+      price: '$29',
+      sub: 'Texas-compliant notice. Enter property and tenant info.',
+      extraFields: [
+        { id: 'landlord_name', label: 'Landlord Name', placeholder: 'Delfine Stennis' },
+        { id: 'tenant_name', label: 'Tenant Full Name(s)', placeholder: 'John Smith' },
+        { id: 'property_address', label: 'Property Address', placeholder: '1005 Sacramento, San Antonio TX 78201' },
+        { id: 'reason', label: 'Reason for Notice', placeholder: 'Non-payment of rent / Lease violation' },
+        { id: 'vacate_by_date', label: 'Must Vacate By Date', placeholder: 'July 10, 2026' },
+      ],
+    },
+    demand_letter: {
+      title: 'Demand Letter',
+      price: '$35',
+      sub: 'Enter the details of what you\'re demanding and from whom.',
+      extraFields: [
+        { id: 'sender_name', label: 'Your Name / Business', placeholder: 'Property Group of USA LLC' },
+        { id: 'recipient_name', label: 'Recipient Name / Business', placeholder: 'John Smith' },
+        { id: 'amount_owed', label: 'Amount Owed (if applicable)', placeholder: '$1,500' },
+        { id: 'reason', label: 'Reason for Demand', placeholder: 'Unpaid invoice for services rendered March 2026' },
+        { id: 'respond_by', label: 'Response Deadline', placeholder: '10 days from receipt' },
+      ],
+    },
+    llc_operating_agreement: {
+      title: 'LLC Operating Agreement',
+      price: '$59',
+      sub: 'Enter your LLC details for a complete operating agreement.',
+      extraFields: [
+        { id: 'llc_name', label: 'LLC Name', placeholder: 'Property Group of USA LLC' },
+        { id: 'state', label: 'State of Formation', placeholder: 'Texas' },
+        { id: 'members', label: 'Member Names & Ownership %', placeholder: 'Delfine Stennis — 100%' },
+        { id: 'management_type', label: 'Management Type', placeholder: 'Member-managed / Manager-managed' },
+        { id: 'principal_address', label: 'Principal Office Address', placeholder: 'San Antonio, TX' },
+      ],
+    },
+    bill_of_sale: {
+      title: 'Bill of Sale',
+      price: '$19',
+      sub: 'Enter buyer, seller, and item details.',
+      extraFields: [
+        { id: 'seller_name', label: 'Seller Full Name', placeholder: 'Jane Smith' },
+        { id: 'buyer_name', label: 'Buyer Full Name', placeholder: 'John Doe' },
+        { id: 'item_description', label: 'Item Description', placeholder: '2018 Toyota Camry, VIN: XXXXXXX' },
+        { id: 'sale_price', label: 'Sale Price', placeholder: '$8,500' },
+        { id: 'sale_date', label: 'Sale Date', placeholder: 'July 1, 2026' },
+      ],
+    },
+    w9_cover_letter: {
+      title: 'W-9 Cover Letter',
+      price: '$15',
+      sub: 'Who is submitting the W-9 and to whom?',
+      extraFields: [
+        { id: 'your_name', label: 'Your Full Name / Business Name', placeholder: 'Delfine Stennis' },
+        { id: 'recipient_name', label: 'Recipient Name / Company', placeholder: 'Client Company LLC' },
+        { id: 'your_role', label: 'Your Role / Service Provided', placeholder: 'Independent contractor / notary services' },
+      ],
+    },
+    tax_organizer: {
+      title: 'Personalized Tax Organizer',
+      price: '$29',
+      sub: 'Answer a few questions and we\'ll build your custom tax checklist.',
+      extraFields: [
+        { id: 'full_name', label: 'Full Name', placeholder: 'Delfine Stennis' },
+        { id: 'filing_status', label: 'Filing Status', placeholder: 'Single / Married Filing Jointly / Head of Household', type: 'select',
+          options: ['Single', 'Married Filing Jointly', 'Married Filing Separately', 'Head of Household', 'Qualifying Widow(er)'] },
+        { id: 'tax_year', label: 'Tax Year', placeholder: '2025', type: 'select',
+          options: ['2025', '2024'] },
+        { id: 'self_employed', label: 'Self-Employed / Gig Worker?', placeholder: '', type: 'select',
+          options: ['Yes', 'No'] },
+        { id: 'has_dependents', label: 'Do you have dependents?', placeholder: '', type: 'select',
+          options: ['Yes', 'No'] },
+        { id: 'owns_home', label: 'Do you own a home?', placeholder: '', type: 'select',
+          options: ['Yes', 'No'] },
+        { id: 'additional_notes', label: 'Anything else we should know? (optional)', placeholder: 'Side business income, crypto, rental property...', type: 'textarea' },
+      ],
+    },
+  };
+
+  let currentProduct = null;
+
+  function openModal(productKey) {
+    const product = PRODUCTS[productKey];
+    if (!product) return;
+    currentProduct = productKey;
+
+    document.getElementById('modal-title').textContent = product.title;
+    document.getElementById('modal-sub').textContent = product.sub;
+    document.getElementById('modal-price-display').textContent = product.price;
+    document.getElementById('modal-form-view').style.display = 'block';
+    document.getElementById('modal-success').style.display = 'none';
+
+    // Build dynamic fields
+    const container = document.getElementById('modal-fields');
+    container.innerHTML = `
+      <div class="form-group">
+        <label>Your Full Name</label>
+        <input type="text" id="field-client_name" placeholder="Delfine Stennis" required/>
+      </div>
+      <div class="form-group">
+        <label>Email Address (document delivered here)</label>
+        <input type="email" id="field-client_email" placeholder="you@email.com" required/>
+      </div>
+    `;
+
+    (product.extraFields || []).forEach(f => {
+      const div = document.createElement('div');
+      div.className = 'form-group';
+      let input = '';
+      if (f.type === 'select' && f.options) {
+        input = `<select id="field-${f.id}">` +
+          f.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+          `</select>`;
+      } else if (f.type === 'textarea') {
+        input = `<textarea id="field-${f.id}" placeholder="${f.placeholder || ''}"></textarea>`;
+      } else {
+        input = `<input type="text" id="field-${f.id}" placeholder="${f.placeholder || ''}" required/>`;
+      }
+      div.innerHTML = `<label>${f.label}</label>${input}`;
+      container.appendChild(div);
+    });
+
+    document.getElementById('modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    currentProduct = null;
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  async function handlePay() {
+    const clientName = document.getElementById('field-client_name')?.value?.trim();
+    const clientEmail = document.getElementById('field-client_email')?.value?.trim();
+    if (!clientName || !clientEmail) {
+      alert('Please enter your name and email.');
+      return;
+    }
+    if (!clientEmail.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    const btn = document.getElementById('pay-btn');
+    btn.textContent = 'Processing...';
+    btn.disabled = true;
+
+    // Collect all extra fields
+    const product = PRODUCTS[currentProduct];
+    const fields = { client_name: clientName, client_email: clientEmail };
+    (product.extraFields || []).forEach(f => {
+      const el = document.getElementById(`field-${f.id}`);
+      if (el) fields[f.id] = el.value;
+    });
+
+    try {
+      // Determine endpoint
+      const endpoint = currentProduct === 'tax_organizer'
+        ? `${BACKEND}/auto/generate-tax-organizer`
+        : `${BACKEND}/auto/generate-document`;
+
+      const body = currentProduct === 'tax_organizer'
+        ? { ...fields, full_name: fields.full_name || clientName, filing_status: fields.filing_status || 'Single', tax_year: fields.tax_year || '2025' }
+        : { doc_type: currentProduct, client_name: clientName, client_email: clientEmail, fields };
+
+      const resp = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (resp.ok) {
+        document.getElementById('modal-form-view').style.display = 'none';
+        document.getElementById('modal-success').style.display = 'block';
+      } else {
+        throw new Error('Server error');
+      }
+    } catch (err) {
+      alert('Something went wrong. Please email propertygroupofusa@gmail.com and we\'ll get your document to you right away.');
+      btn.textContent = 'Pay & Get Document →';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
