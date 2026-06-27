@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service — Property Group of USA LLC</title>
+  <style>
+    :root {
+      --gold: #F59E0B;
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand { font-size: 16px; font-weight: 700; color: var(--gold); text-decoration: none; }
+    .nav-brand span { color: var(--text); font-weight: 400; }
+    .nav-back { color: var(--muted); text-decoration: none; font-size: 13px; }
+    .nav-back:hover { color: var(--gold); }
+
+    .page-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .page-header .meta {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .page-header .meta span { color: var(--gold); }
+
+    /* TOC */
+    .toc {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    .toc h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .toc ol {
+      padding-left: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 20px;
+    }
+    .toc li { font-size: 13px; }
+    .toc a { color: var(--gold); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* Sections */
+    .tos-section {
+      margin-bottom: 40px;
+      scroll-margin-top: 80px;
+    }
+    .tos-section h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sec-num {
+      background: var(--gold);
+      color: #000;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .tos-section p {
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .tos-section ul, .tos-section ol {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    .tos-section li {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .tos-section strong { color: var(--white); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .highlight-box strong { color: var(--gold); }
+
+    .warning-box {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .warning-box strong { color: #EF4444; }
+
+    /* Contact block */
+    .contact-block {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .contact-block h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .contact-block p { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .contact-block a { color: var(--gold); text-decoration: none; }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 48px;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .toc ol { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Property Group <span>of USA</span></a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <h1>Terms of Service</h1>
+    <div class="meta">
+      Property Group of USA LLC · San Antonio, Texas<br/>
+      <span>Effective Date: July 1, 2026</span> · Last Updated: June 26, 2026
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#s1">Agreement to Terms</a></li>
+      <li><a href="#s2">Who We Are</a></li>
+      <li><a href="#s3">Services Offered</a></li>
+      <li><a href="#s4">Document Preparation — Not Legal Advice</a></li>
+      <li><a href="#s5">Payments & Refunds</a></li>
+      <li><a href="#s6">Delivery of Services</a></li>
+      <li><a href="#s7">Worker Platform Terms</a></li>
+      <li><a href="#s8">User Accounts</a></li>
+      <li><a href="#s9">Prohibited Use</a></li>
+      <li><a href="#s10">Intellectual Property</a></li>
+      <li><a href="#s11">Disclaimer of Warranties</a></li>
+      <li><a href="#s12">Limitation of Liability</a></li>
+      <li><a href="#s13">Indemnification</a></li>
+      <li><a href="#s14">Governing Law</a></li>
+      <li><a href="#s15">Changes to Terms</a></li>
+      <li><a href="#s16">Contact Us</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="tos-section" id="s1">
+    <h2><span class="sec-num">1</span> Agreement to Terms</h2>
+    <p>By accessing or using any service offered by Property Group of USA LLC, including our website at <strong>propertygroupofusa.github.io/documents</strong>, our document generation tools, our notary booking system, our worker platform, or any API or automated service we provide, you agree to be bound by these Terms of Service ("Terms").</p>
+    <p>If you do not agree to these Terms, do not use our services. These Terms apply to all visitors, clients, workers, partners, and any other users of our platform.</p>
+    <div class="highlight-box">
+      <strong>Plain English:</strong> By using our website or paying for any service, you're agreeing to these rules. Read them — they protect both you and us.
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="tos-section" id="s2">
+    <h2><span class="sec-num">2</span> Who We Are</h2>
+    <p><strong>Property Group of USA LLC</strong> is a Texas limited liability company based in San Antonio, Texas. We operate a document services marketplace and platform connecting clients with document preparation services, notary professionals, tax preparers, and legal document specialists.</p>
+    <p>We also operate <strong>Payee Trust</strong>, a financial technology platform for gig economy workers. Payee Trust services are governed by separate terms available on the Payee Trust platform.</p>
+    <ul>
+      <li><strong>Business Name:</strong> Property Group of USA LLC</li>
+      <li><strong>State of Formation:</strong> Texas</li>
+      <li><strong>Principal Office:</strong> San Antonio, Texas</li>
+      <li><strong>Contact:</strong> propertygroupofusa@gmail.com</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="tos-section" id="s3">
+    <h2><span class="sec-num">3</span> Services Offered</h2>
+    <p>Property Group of USA LLC provides the following categories of services:</p>
+    <ul>
+      <li><strong>AI Document Preparation:</strong> Automated generation of legal document templates including NDAs, lease agreements, contractor agreements, demand letters, eviction notices, LLC operating agreements, bills of sale, and related documents. Delivered electronically.</li>
+      <li><strong>Tax Document Organizers:</strong> AI-generated personalized checklists and organizers to assist with tax preparation. Not a substitute for a licensed CPA or tax professional.</li>
+      <li><strong>Notary Services:</strong> Booking and coordination of certified notary professionals for in-person mobile notary and Remote Online Notarization (RON) sessions.</li>
+      <li><strong>Tax Preparation:</strong> Coordination of qualified tax preparers for W-2 and contractor returns.</li>
+      <li><strong>Legal Document Preparation:</strong> Document specialist services for deeds, affidavits, and related paperwork. Not legal representation.</li>
+      <li><strong>Worker Marketplace:</strong> A platform for independent contractors to offer document services to clients. Workers are independent contractors, not employees of Property Group of USA LLC.</li>
+      <li><strong>White Label Licensing:</strong> Licensing of our platform technology to third-party agencies and franchisees.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="tos-section" id="s4">
+    <h2><span class="sec-num">4</span> Document Preparation — Not Legal Advice</h2>
+    <div class="warning-box">
+      <strong>Important:</strong> Property Group of USA LLC is a document preparation service. We are NOT a law firm. We do NOT provide legal advice, legal representation, or legal counsel of any kind. No attorney-client relationship is created by use of our services.
+    </div>
+    <p>Our AI-generated documents and document preparation services are provided for <strong>informational and general use purposes only</strong>. These documents:</p>
+    <ul>
+      <li>Are prepared using publicly available legal templates and AI technology</li>
+      <li>May not be suitable for every individual situation or jurisdiction</li>
+      <li>Have not been reviewed by a licensed attorney on your behalf</li>
+      <li>Should be reviewed by a licensed attorney before use in any legal proceeding or significant transaction</li>
+    </ul>
+    <p>This model is the same used by LegalZoom, Rocket Lawyer, and similar legal document preparation services operating lawfully throughout the United States under the Texas Unauthorized Practice of Law statutes and equivalent laws in other states.</p>
+    <div class="highlight-box">
+      <strong>Our recommendation:</strong> For complex legal matters, significant real estate transactions, business formations, or any document that could have serious legal consequences, please consult a licensed attorney. We are here to make documents faster and more affordable — not to replace professional legal counsel when you need it.
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="tos-section" id="s5">
+    <h2><span class="sec-num">5</span> Payments & Refunds</h2>
+    <p>All payments are processed securely through <strong>Stripe</strong>, a PCI-compliant payment processor. Property Group of USA LLC does not store your credit card information.</p>
+    <p><strong>Payment Terms:</strong></p>
+    <ul>
+      <li>Payment is due in full at the time of service for all one-time purchases</li>
+      <li>Subscription and membership plans are billed on a recurring monthly basis</li>
+      <li>All prices are listed in U.S. dollars</li>
+      <li>Applicable taxes may be added depending on your location</li>
+    </ul>
+    <p><strong>Refund Policy:</strong></p>
+    <ul>
+      <li><strong>AI-Generated Documents:</strong> Because documents are generated and delivered immediately upon payment, all sales are final. If you experience a technical failure in delivery, contact us within 48 hours and we will regenerate and resend your document at no charge.</li>
+      <li><strong>Notary Services:</strong> Cancellations made more than 24 hours before a scheduled appointment will receive a full refund. Cancellations within 24 hours are non-refundable.</li>
+      <li><strong>Tax Preparation:</strong> Refunds are available if work has not yet begun. Once preparation has started, no refund will be issued.</li>
+      <li><strong>Memberships:</strong> Monthly memberships may be cancelled at any time. No partial-month refunds are issued.</li>
+      <li><strong>White Label Licenses:</strong> Non-refundable after setup has commenced.</li>
+    </ul>
+    <p>To request a refund or report a delivery issue, contact us at <strong>propertygroupofusa@gmail.com</strong> within 48 hours of your transaction.</p>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="tos-section" id="s6">
+    <h2><span class="sec-num">6</span> Delivery of Services</h2>
+    <p><strong>AI Document Delivery:</strong> Documents are generated automatically and delivered to the email address you provide at checkout, typically within 2–5 minutes of payment confirmation. You are responsible for providing a valid, accessible email address. We are not responsible for documents undelivered due to spam filters, full inboxes, or incorrect email addresses provided at checkout.</p>
+    <p><strong>Notary Appointments:</strong> Scheduling confirmation will be sent to your email. A certified professional will contact you to confirm timing and location. Service availability is subject to professional availability in your area.</p>
+    <p><strong>Tax & Legal Document Services:</strong> Estimated turnaround times are provided at booking. Delays caused by incomplete client information are not the responsibility of Property Group of USA LLC.</p>
+    <p>If you have not received your document or confirmation within 30 minutes of payment, email us at propertygroupofusa@gmail.com with your order details.</p>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="tos-section" id="s7">
+    <h2><span class="sec-num">7</span> Worker Platform Terms</h2>
+    <p>Individuals who register as service providers ("Workers") on the Property Group of USA platform agree to the following additional terms:</p>
+    <ul>
+      <li><strong>Independent Contractor Status:</strong> All Workers are independent contractors. Nothing in these Terms creates an employment, partnership, or joint venture relationship between Workers and Property Group of USA LLC.</li>
+      <li><strong>Credential Verification:</strong> Workers are required to submit accurate professional credentials including notary commission numbers, state licensing, RON authorizations, and tax preparation certifications where applicable. Submission of false credentials is grounds for immediate termination and may result in legal action.</li>
+      <li><strong>Tax Responsibility:</strong> Workers are solely responsible for all applicable federal, state, and local taxes on income earned through the platform. Property Group of USA LLC will issue 1099-NEC forms to qualifying workers at year-end.</li>
+      <li><strong>W-9 Requirement:</strong> Workers must submit a completed W-9 before receiving any payout. Failure to submit a W-9 will result in held payouts until the form is received and verified.</li>
+      <li><strong>Pay Schedule:</strong> Earnings are paid out every 4 business days via Stripe Connect to the verified bank account on file. Minimum payout thresholds may apply.</li>
+      <li><strong>Code of Conduct:</strong> Workers must conduct themselves professionally with all clients. Harassment, misrepresentation, or fraud will result in immediate suspension and forfeiture of pending earnings.</li>
+      <li><strong>Platform Fee:</strong> Property Group of USA LLC retains a platform fee on each completed job. Current rates are: Starter 25%, Pro 22%, Elite 18%. Workers receive 75%, 78%, and 82% respectively.</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="tos-section" id="s8">
+    <h2><span class="sec-num">8</span> User Accounts</h2>
+    <p>To access certain features of our platform — including the worker portal, booking history, and membership management — you may be required to create an account. You agree to:</p>
+    <ul>
+      <li>Provide accurate, current, and complete information during registration</li>
+      <li>Maintain the security of your password and not share account credentials</li>
+      <li>Notify us immediately of any unauthorized access to your account at propertygroupofusa@gmail.com</li>
+      <li>Accept responsibility for all activity that occurs under your account</li>
+    </ul>
+    <p>We reserve the right to suspend or terminate accounts that violate these Terms, engage in fraudulent activity, or are inactive for an extended period.</p>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="tos-section" id="s9">
+    <h2><span class="sec-num">9</span> Prohibited Use</h2>
+    <p>You may not use Property Group of USA LLC's services to:</p>
+    <ul>
+      <li>Create fraudulent, forged, or deceptive documents intended to deceive any person or entity</li>
+      <li>Violate any applicable federal, state, or local law or regulation</li>
+      <li>Infringe upon the intellectual property rights of any third party</li>
+      <li>Harass, threaten, or harm any individual</li>
+      <li>Attempt to gain unauthorized access to our systems, databases, or other users' accounts</li>
+      <li>Use automated tools to scrape, crawl, or extract data from our platform without written permission</li>
+      <li>Resell or sublicense our services without written authorization</li>
+      <li>Submit false or misleading professional credentials as a worker</li>
+    </ul>
+    <p>Violation of these prohibitions may result in immediate account termination, forfeiture of fees paid, and referral to appropriate law enforcement authorities.</p>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="tos-section" id="s10">
+    <h2><span class="sec-num">10</span> Intellectual Property</h2>
+    <p>All content on the Property Group of USA platform — including website design, logos, software, document templates, text, and branding — is the property of Property Group of USA LLC and is protected by applicable intellectual property laws.</p>
+    <p>Documents generated for you through our AI document preparation service are provided for your personal or business use. You may not resell, redistribute, or represent AI-generated documents as having been prepared by a licensed attorney.</p>
+    <p>White label licensees are granted a limited, non-exclusive license to use the platform under their brand per the terms of their licensing agreement. This license does not transfer ownership of any underlying technology or intellectual property.</p>
+  </div>
+
+  <!-- SECTION 11 -->
+  <div class="tos-section" id="s11">
+    <h2><span class="sec-num">11</span> Disclaimer of Warranties</h2>
+    <p>OUR SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.</p>
+    <p>We do not warrant that:</p>
+    <ul>
+      <li>Our services will be uninterrupted, error-free, or secure</li>
+      <li>AI-generated documents will be legally sufficient for your specific situation</li>
+      <li>Results obtained from use of our services will be accurate or reliable</li>
+      <li>Any errors in the service will be corrected</li>
+    </ul>
+    <div class="highlight-box">
+      <strong>In plain English:</strong> We work hard to deliver quality services, but we cannot guarantee that an AI-generated document will be perfect for your situation. That is why we always recommend attorney review for important legal matters.
+    </div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="tos-section" id="s12">
+    <h2><span class="sec-num">12</span> Limitation of Liability</h2>
+    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, PROPERTY GROUP OF USA LLC SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF OUR SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+    <p>OUR TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING FROM OR RELATED TO THESE TERMS OR OUR SERVICES SHALL NOT EXCEED THE AMOUNT YOU PAID TO US IN THE 30 DAYS PRECEDING THE CLAIM.</p>
+    <p>Some jurisdictions do not allow limitations on implied warranties or exclusions of certain damages. In such jurisdictions, our liability shall be limited to the greatest extent permitted by law.</p>
+  </div>
+
+  <!-- SECTION 13 -->
+  <div class="tos-section" id="s13">
+    <h2><span class="sec-num">13</span> Indemnification</h2>
+    <p>You agree to indemnify, defend, and hold harmless Property Group of USA LLC, its members, managers, employees, contractors, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or in any way connected with:</p>
+    <ul>
+      <li>Your use of our services in violation of these Terms</li>
+      <li>Your misrepresentation of credentials, identity, or professional qualifications</li>
+      <li>Any document you create, use, or submit using our platform</li>
+      <li>Your violation of any third-party rights</li>
+      <li>Any claim that your use of our services caused damage to a third party</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 14 -->
+  <div class="tos-section" id="s14">
+    <h2><span class="sec-num">14</span> Governing Law & Dispute Resolution</h2>
+    <p>These Terms shall be governed by and construed in accordance with the laws of the <strong>State of Texas</strong>, without regard to its conflict of law principles.</p>
+    <p>Any dispute arising from or relating to these Terms or our services shall first be subject to good-faith negotiation between the parties. If negotiation fails, disputes shall be resolved by binding arbitration in <strong>Bexar County, Texas</strong>, under the rules of the American Arbitration Association (AAA).</p>
+    <p>You waive any right to participate in a class action lawsuit or class-wide arbitration against Property Group of USA LLC.</p>
+    <p>Nothing in this section prevents either party from seeking injunctive or other equitable relief in a court of competent jurisdiction where necessary to prevent irreparable harm.</p>
+  </div>
+
+  <!-- SECTION 15 -->
+  <div class="tos-section" id="s15">
+    <h2><span class="sec-num">15</span> Changes to These Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. When we make material changes, we will update the "Last Updated" date at the top of this page. We may also send notice to the email address associated with your account.</p>
+    <p>Your continued use of our services after any changes take effect constitutes your acceptance of the revised Terms. If you do not agree with the updated Terms, you must stop using our services.</p>
+  </div>
+
+  <!-- SECTION 16 -->
+  <div class="tos-section" id="s16">
+    <h2><span class="sec-num">16</span> Contact Us</h2>
+    <p>If you have questions about these Terms, want to report a violation, or need to reach our team for any reason, contact us at:</p>
+    <ul>
+      <li><strong>Email:</strong> propertygroupofusa@gmail.com</li>
+      <li><strong>Business:</strong> Property Group of USA LLC</li>
+      <li><strong>Location:</strong> San Antonio, Texas</li>
+      <li><strong>Website:</strong> propertygroupofusa.github.io/documents</li>
+    </ul>
+    <p>We aim to respond to all inquiries within 2 business days.</p>
+  </div>
+
+  <div class="contact-block">
+    <h3>Questions About These Terms?</h3>
+    <p>Email us anytime at <a href="mailto:propertygroupofusa@gmail.com">propertygroupofusa@gmail.com</a></p>
+    <p>We respond within 2 business days.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Property Group of USA LLC · San Antonio, TX ·
+  <a href="index.html">Home</a> ·
+  <a href="services.html">Services</a> ·
+  <a href="mailto:propertygroupofusa@gmail.com">Contact</a>
+  </p>
+  <p style="margin-top:6px;">These Terms of Service were last updated June 26, 2026.</p>
+</footer>
+
+</body>
+</html>
