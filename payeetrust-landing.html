@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payee Trust — Get Paid Daily. Build Credit. Own Your Money.</title>
+  <meta name="description" content="Payee Trust is the financial platform built for gig workers. Daily payouts, credit building, and total transparency on every dollar you earn."/>
+  <style>
+    /* ── TOKENS ─────────────────────────────────── */
+    :root {
+      --midnight: #060B14;
+      --navy:     #0A1628;
+      --ink:      #111827;
+      --gold:     #F59E0B;
+      --gold-lt:  #FCD34D;
+      --gold-dk:  #D97706;
+      --teal:     #0EA5E9;
+      --green:    #10B981;
+      --slate:    #94A3B8;
+      --mist:     #CBD5E1;
+      --white:    #FFFFFF;
+      --card:     rgba(255,255,255,0.04);
+      --border:   rgba(255,255,255,0.08);
+    }
+
+    /* ── RESET ──────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--midnight);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display:block; max-width:100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(6,11,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold);
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .nav-cta:hover { background: var(--gold-lt); }
+
+    /* ── HERO ───────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Signature element: animated radial pulse behind hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%,-50%) scale(1.15); }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; } 50% { opacity:0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 8vw, 68px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    .hero h1 .accent { color: var(--gold); }
+
+    .hero-sub {
+      font-size: clamp(16px, 3vw, 20px);
+      color: var(--slate);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    /* Waitlist form */
+    .hero-form {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+      width: 100%;
+      margin: 0 auto 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hero-form input {
+      flex: 1;
+      min-width: 220px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .hero-form input::placeholder { color: var(--slate); }
+    .hero-form input:focus { border-color: var(--gold); }
+    .hero-form button {
+      background: var(--gold);
+      color: #000;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 14px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .hero-form button:hover { background: var(--gold-lt); }
+    .hero-form button:active { transform: scale(0.97); }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--slate);
+    }
+    .hero-note span { color: var(--green); font-weight: 600; }
+
+    /* Success state */
+    .waitlist-success {
+      display: none;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 15px;
+      color: var(--green);
+      font-weight: 600;
+      max-width: 440px;
+      margin: 0 auto 20px;
+    }
+
+    /* Trust row */
+    .trust-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 48px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--slate);
+    }
+    .trust-item .icon { font-size: 16px; }
+
+    /* ── POWER CARD SECTION ─────────────────────── */
+    .card-section {
+      padding: 100px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--slate);
+      font-size: 16px;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+
+    /* The Power Card visual */
+    .power-card-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .power-card {
+      background: linear-gradient(135deg, #1a2744 0%, #0d1b35 50%, #1a2744 100%);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1.586;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,158,11,0.1);
+    }
+    .power-card::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+    }
+    .card-chip {
+      width: 36px; height: 28px;
+      background: linear-gradient(135deg, #d4af37, #f5cf47, #b8860b);
+      border-radius: 5px;
+    }
+    .card-name-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .card-holder {
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+    }
+    .card-brand {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    .card-number {
+      font-size: 15px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Sources breakdown on card */
+    .card-sources {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .source-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .source-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--slate);
+    }
+    .source-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .source-amount {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .source-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .source-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+
+    .card-features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .feature-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .feature-text .ft { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .feature-text .fd { font-size: 13px; color: var(--slate); line-height: 1.4; }
+
+    /* ── HOW IT WORKS ───────────────────────────── */
+    .how-section {
+      padding: 100px 24px;
+      background: var(--navy);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .how-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .step {
+      text-align: left;
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      position: relative;
+    }
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--slate); line-height: 1.5; }
+
+    /* ── VS SECTION ─────────────────────────────── */
+    .vs-section {
+      padding: 100px 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .vs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+    .vs-table th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate);
+      border-bottom: 1px solid var(--border);
+    }
+    .vs-table th.us { color: var(--gold); }
+    .vs-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .vs-table td.feature { color: var(--mist); font-weight: 500; }
+    .vs-table td.them { color: var(--slate); }
+    .vs-table td.us-col { color: var(--green); font-weight: 600; }
+    .check { color: var(--green); }
+    .cross { color: #EF4444; }
+
+    /* ── BONUS SECTION ──────────────────────────── */
+    .bonus-section {
+      padding: 80px 24px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(6,11,20,0) 60%);
+      border-top: 1px solid rgba(245,158,11,0.15);
+    }
+    .bonus-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .bonus-amount {
+      font-size: clamp(56px, 12vw, 96px);
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: -4px;
+      line-height: 1;
+      margin: 16px 0 8px;
+    }
+    .bonus-sub { font-size: 14px; color: var(--slate); margin-bottom: 32px; line-height: 1.6; }
+    .bonus-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .bonus-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: left;
+    }
+    .bonus-card .bc-label { font-size: 11px; color: var(--slate); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .bonus-card .bc-amount { font-size: 28px; font-weight: 800; color: var(--gold); letter-spacing: -1px; }
+    .bonus-card .bc-note { font-size: 12px; color: var(--slate); margin-top: 4px; }
+
+    /* ── CREDIT BUILDER ─────────────────────────── */
+    .credit-section {
+      padding: 100px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .credit-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+    .credit-score-display {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .score-ring {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 16px;
+    }
+    .score-ring svg { transform: rotate(-90deg); }
+    .score-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
+    .score-ring .ring-fill { fill: none; stroke: var(--green); stroke-width: 10; stroke-linecap: round;
+      stroke-dasharray: 326; stroke-dashoffset: 98; transition: stroke-dashoffset 1.5s ease; }
+    .score-number {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--white);
+    }
+    .score-label { font-size: 13px; color: var(--slate); }
+    .score-change { font-size: 13px; color: var(--green); font-weight: 700; margin-top: 4px; }
+    .credit-bars { display: flex; flex-direction: column; gap: 12px; }
+    .cbar-row { display: flex; flex-direction: column; gap: 4px; }
+    .cbar-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--slate); }
+    .cbar-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .cbar-fill { height: 100%; border-radius: 3px; background: var(--green); }
+
+    /* ── FINAL CTA ──────────────────────────────── */
+    .cta-section {
+      padding: 100px 24px;
+      text-align: center;
+      background: var(--navy);
+      border-top: 1px solid var(--border);
+    }
+    .cta-section h2 {
+      font-size: clamp(28px, 6vw, 52px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .cta-section p { color: var(--slate); font-size: 16px; margin-bottom: 40px; }
+    .cta-form {
+      display: flex;
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta-form input {
+      flex: 1;
+      min-width: 210px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+    .cta-form input:focus { border-color: var(--gold); }
+    .cta-form button {
+      background: var(--gold);
+      color: #000;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 14px 22px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cta-form button:hover { background: var(--gold-lt); }
+    .cta-success {
+      display: none;
+      color: var(--green);
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    footer {
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--slate);
+    }
+    footer a { color: var(--gold); }
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-links a { color: var(--slate); font-size: 13px; }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 700px) {
+      .power-card-wrap { grid-template-columns: 1fr; }
+      .credit-section { grid-template-columns: 1fr; }
+      .bonus-breakdown { grid-template-columns: 1fr; }
+      .vs-table th, .vs-table td { padding: 10px 12px; font-size: 13px; }
+      .power-card { aspect-ratio: auto; padding: 24px; }
+      nav { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Payee<span>Trust</span></div>
+  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-eyebrow">
+    <span class="dot"></span>
+    Now accepting waitlist — San Antonio first
+  </div>
+
+  <h1>
+    Get paid daily.<br/>
+    Build credit.<br/>
+    <span class="accent">Own your money.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Payee Trust is the financial platform built for gig workers, notaries, and freelancers. 
+    See every dollar, spend it instantly, and build your credit score while you work.
+  </p>
+
+  <div id="hero-form-wrap">
+    <form class="hero-form" onsubmit="joinWaitlist(event, 'hero')">
+      <input type="email" id="hero-email" placeholder="Enter your email" required/>
+      <button type="submit">Join Waitlist →</button>
+    </form>
+    <p class="hero-note"><span>Free to join.</span> No credit card. No bank account required to sign up.</p>
+  </div>
+  <div class="waitlist-success" id="hero-success" style="display:none;">
+    ✅ You're on the list! Check your inbox for a confirmation email.
+  </div>
+
+  <div class="trust-row">
+    <div class="trust-item"><span class="icon">🔒</span> Bank-level security</div>
+    <div class="trust-item"><span class="icon">⚡</span> Same-day payouts</div>
+    <div class="trust-item"><span class="icon">📈</span> Credit builder included</div>
+    <div class="trust-item"><span class="icon">💳</span> DELFINA Power Card</div>
+  </div>
+</section>
+
+<!-- ══ POWER CARD ═════════════════════════════════ -->
+<section class="card-section">
+  <p class="section-label">The DELFINA Power Card</p>
+  <div class="power-card-wrap">
+    <div>
+      <h2 class="section-title">See your real<br/>spending power.</h2>
+      <p class="section-sub">
+        Other platforms show you one number — your balance. 
+        The DELFINA Power Card shows you all four sources of your money, 
+        so you always know exactly what you can spend and why.
+      </p>
+      <div class="card-features">
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(245,158,11,0.12);">💵</div>
+          <div class="feature-text">
+            <div class="ft">Cash balance</div>
+            <div class="fd">Earnings you've already been paid — ready to spend right now.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(14,165,233,0.12);">📋</div>
+          <div class="feature-text">
+            <div class="ft">Confirmed receivables</div>
+            <div class="fd">Jobs completed and approved — money on its way to you.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(16,185,129,0.12);">📈</div>
+          <div class="feature-text">
+            <div class="ft">Credit-builder line</div>
+            <div class="fd">A secured line that builds your credit score every month you use it.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(139,92,246,0.12);">⚡</div>
+          <div class="feature-text">
+            <div class="ft">EWA advance</div>
+            <div class="fd">Earned Wage Access — tap your earnings before payout day, no fee.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card visual -->
+    <div>
+      <div class="power-card">
+        <div>
+          <div class="card-chip"></div>
+        </div>
+        <div class="card-number">•••• •••• •••• 4291</div>
+        <div class="card-name-row">
+          <div class="card-holder">D. Stennis</div>
+          <div class="card-brand">PAYEE TRUST</div>
+        </div>
+      </div>
+
+      <!-- Source breakdown below card -->
+      <div style="margin-top:24px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;">
+        <p style="font-size:11px;color:var(--slate);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;">Your spending power breakdown</p>
+        <div class="card-sources">
+          <div>
+            <div class="source-row">
+              <div class="source-label"><span class="source-dot" style="background:#F59E0B;"></span>Cash balance</div>
+              <div class="source-amount">$847.50</div>
+            </div>
+            <div class="source-bar-track"><div class="source-bar-fill" style="background:#F59E0B;width:65%;"></div></div>
+          </div>
+          <div>
+            <div class="source-row">
+              <div class="source-label"><span class="source-dot" style="background:#0EA5E9;"></span>Confirmed receivables</div>
+              <div class="source-amount">$312.00</div>
+            </div>
+            <div class="source-bar-track"><div class="source-bar-fill" style="background:#0EA5E9;width:24%;"></div></div>
+          </div>
+          <div>
+            <div class="source-row">
+              <div class="source-label"><span class="source-dot" style="background:#10B981;"></span>Credit-builder line</div>
+              <div class="source-amount">$200.00</div>
+            </div>
+            <div class="source-bar-track"><div class="source-bar-fill" style="background:#10B981;width:15%;"></div></div>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--slate);font-weight:600;">TOTAL POWER</span>
+            <span style="font-size:22px;font-weight:900;color:var(--gold);">$1,359.50</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ════════════════════════════════ -->
+<section class="how-section">
+  <div class="how-inner">
+    <p class="section-label" style="text-align:center;">How it works</p>
+    <h2 class="section-title">From job to bank in hours, not days.</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">Step 1</div>
+        <h3>Complete a job</h3>
+        <p>Finish a notarization, delivery, or gig — on any platform you already use.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 2</div>
+        <h3>Earnings confirmed</h3>
+        <p>Payee Trust picks up your confirmed earnings and shows them on your dashboard instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 3</div>
+        <h3>Paid same day</h3>
+        <p>No waiting until Friday. Your DELFINA card is funded the same day your job is approved.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 4</div>
+        <h3>Credit grows automatically</h3>
+        <p>Every month you use the platform, your credit score climbs. No extra steps required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VS COMPARISON ═══════════════════════════════ -->
+<section class="vs-section">
+  <p class="section-label">Why Payee Trust</p>
+  <h2 class="section-title">Built different<br/>from day one.</h2>
+  <table class="vs-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>PayPal / Venmo</th>
+        <th class="us">Payee Trust</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="feature">Payout speed</td>
+        <td class="them">1–3 business days</td>
+        <td class="us-col">✅ Same day</td>
+      </tr>
+      <tr>
+        <td class="feature">Spending transparency</td>
+        <td class="them">Balance only</td>
+        <td class="us-col">✅ 4-source breakdown</td>
+      </tr>
+      <tr>
+        <td class="feature">Credit building</td>
+        <td class="them"><span class="cross">✗</span> Not available</td>
+        <td class="us-col">✅ Built in</td>
+      </tr>
+      <tr>
+        <td class="feature">1099 auto-generation</td>
+        <td class="them"><span class="cross">✗</span> Not available</td>
+        <td class="us-col">✅ Automatic</td>
+      </tr>
+      <tr>
+        <td class="feature">EWA advance (no fee)</td>
+        <td class="them"><span class="cross">✗</span> Not available</td>
+        <td class="us-col">✅ Included</td>
+      </tr>
+      <tr>
+        <td class="feature">Built for gig workers</td>
+        <td class="them"><span class="cross">✗</span> General consumer</td>
+        <td class="us-col">✅ Purpose-built</td>
+      </tr>
+      <tr>
+        <td class="feature">Welcome bonus</td>
+        <td class="them"><span class="cross">✗</span> None</td>
+        <td class="us-col">✅ $500 on launch</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══ BONUS ═══════════════════════════════════════ -->
+<section class="bonus-section" id="waitlist">
+  <div class="bonus-inner">
+    <p class="section-label">Launch bonus</p>
+    <div class="bonus-amount">$500</div>
+    <p style="font-size:20px;font-weight:700;margin-bottom:12px;">Welcome bonus for founding members.</p>
+    <p class="bonus-sub">Join the waitlist before we launch. When Payee Trust goes live in San Antonio, founding members get a $500 bonus — split into immediate cash and a 12-month loyalty reward.</p>
+    <div class="bonus-breakdown">
+      <div class="bonus-card">
+        <div class="bc-label">Immediate</div>
+        <div class="bc-amount">$250</div>
+        <div class="bc-note">Available to spend the day you activate your account.</div>
+      </div>
+      <div class="bonus-card">
+        <div class="bc-label">Loyalty reward</div>
+        <div class="bc-amount">$250</div>
+        <div class="bc-note">Unlocks after 12 months — yours to keep if you stay active.</div>
+      </div>
+    </div>
+
+    <div class="cta-success" id="cta-success" style="display:none;color:var(--green);font-weight:600;font-size:15px;margin:0 auto 16px;max-width:420px;text-align:center;"></div>
+    <form class="cta-form" onsubmit="joinWaitlist(event, 'cta')">
+      <input type="email" id="cta-email" placeholder="Your email address" required/>
+      <button type="submit">Claim My Spot →</button>
+    </form>
+    <p style="font-size:12px;color:var(--slate);margin-top:12px;">Waitlist is free. No commitment. San Antonio launching first.</p>
+  </div>
+</section>
+
+<!-- ══ CREDIT BUILDER ══════════════════════════════ -->
+<section style="padding:100px 24px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="credit-section" style="padding:0;gap:60px;">
+      <div>
+        <p class="section-label">Credit builder</p>
+        <h2 class="section-title">Build your credit score while you work.</h2>
+        <p class="section-sub">
+          Most gig workers can't get credit because they don't have a W-2. 
+          Payee Trust reports your on-time payments to all three bureaus — 
+          so your work history becomes your credit history.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
+            <span style="color:var(--green);font-size:18px;">✓</span>
+            Reports to Equifax, Experian, and TransUnion
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
+            <span style="color:var(--green);font-size:18px;">✓</span>
+            No hard credit pull to join
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
+            <span style="color:var(--green);font-size:18px;">✓</span>
+            Secured line — you're always in control
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
+            <span style="color:var(--green);font-size:18px;">✓</span>
+            Average member sees +40 points in 6 months
+          </div>
+        </div>
+      </div>
+
+      <!-- Credit visual -->
+      <div class="credit-visual">
+        <div class="credit-score-display">
+          <div class="score-ring">
+            <svg viewBox="0 0 120 120" width="140" height="140">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" cx="60" cy="60" r="52"/>
+            </svg>
+            <div class="score-number">712</div>
+          </div>
+          <div class="score-label">Credit Score</div>
+          <div class="score-change">↑ +68 points in 6 months</div>
+        </div>
+        <div class="credit-bars">
+          <div class="cbar-row">
+            <div class="cbar-meta"><span>Payment history</span><span style="color:var(--green);">Excellent</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:92%;"></div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-meta"><span>Credit utilization</span><span style="color:var(--green);">18%</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:75%;"></div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-meta"><span>Account age</span><span style="color:var(--slate);">6 months</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:30%;background:#F59E0B;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL CTA ═══════════════════════════════════ -->
+<section class="cta-section">
+  <h2>Your money.<br/>Your rules.<br/><span style="color:var(--gold);">Starting now.</span></h2>
+  <p>Join hundreds of San Antonio gig workers on the waitlist.<br/>No bank account required to sign up.</p>
+  <div class="cta-success" id="cta2-success" style="display:none;color:var(--green);font-weight:600;font-size:15px;margin-bottom:16px;"></div>
+  <form class="cta-form" onsubmit="joinWaitlist(event, 'cta2')">
+    <input type="email" id="cta2-email" placeholder="Your email address" required/>
+    <button type="submit">Join the Waitlist →</button>
+  </form>
+  <p style="font-size:12px;color:var(--slate);margin-top:12px;">
+    Questions? Email <a href="mailto:payeetrust@gmail.com" style="color:var(--gold);">payeetrust@gmail.com</a>
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Payee<span>Trust</span></div>
+  <div class="footer-links">
+    <a href="https://propertygroupofusa.github.io/documents">PGUSA Platform</a>
+    <a href="https://propertygroupofusa.github.io/documents/services.html">Document Services</a>
+    <a href="https://propertygroupofusa.github.io/documents/terms.html">Terms of Service</a>
+    <a href="mailto:payeetrust@gmail.com">Contact</a>
+  </div>
+  <p>© 2026 Payee Trust · Operated by Property Group of USA LLC · San Antonio, TX</p>
+  <p style="margin-top:6px;">$500 welcome bonus available to qualifying founding members upon launch. Payee Trust is a pre-launch financial platform. Banking services pending BaaS partner approval.</p>
+</footer>
+
+<script>
+  // ── Waitlist store (in-memory for session, also logs to admin) ──
+  const waitlistEmails = new Set();
+
+  async function joinWaitlist(e, formId) {
+    e.preventDefault();
+
+    const emailEl   = document.getElementById(formId + '-email');
+    const successEl = document.getElementById(formId + '-success');
+    const btn       = e.target.querySelector('button[type="submit"]');
+    const email     = emailEl?.value?.trim().toLowerCase();
+
+    if (!email || !email.includes('@')) {
+      emailEl.style.borderColor = '#EF4444';
+      emailEl.placeholder = 'Please enter a valid email';
+      setTimeout(() => {
+        emailEl.style.borderColor = '';
+        emailEl.placeholder = formId === 'hero' ? 'Enter your email' : 'Your email address';
+      }, 2000);
+      return;
+    }
+
+    // Prevent duplicate submission in same session
+    if (waitlistEmails.has(email)) {
+      showSuccess(formId, successEl, emailEl, btn, "You're already on the list! We'll be in touch soon. 🎉");
+      return;
+    }
+
+    // Loading state
+    const originalText = btn.textContent;
+    btn.textContent = 'Joining...';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+
+    // 1. Send admin notification via PGUSA backend
+    try {
+      await fetch('https://pgusa-platform-production.up.railway.app/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'payeetrust@gmail.com',
+          subject: '🔔 New Payee Trust Waitlist Signup',
+          message: `New signup: ${email}\nTime: ${new Date().toLocaleString('en-US', {timeZone:'America/Chicago'})}\nSource: delfinepayeetrust.com\nForm: ${formId}`,
+          recipient_name: 'Del'
+        })
+      });
+    } catch(err) {
+      console.log('[Waitlist] Admin notify failed (non-blocking):', err);
+    }
+
+    // 2. Send confirmation email to the user
+    try {
+      await fetch('https://pgusa-platform-production.up.railway.app/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: email,
+          subject: "You're on the Payee Trust waitlist! 🎉",
+          message: `Hi there,\n\nYou're officially on the Payee Trust founding member waitlist.\n\nHere's what happens next:\n• We're launching in San Antonio first\n• You'll get an email invite before anyone else\n• As a founding member you qualify for the $500 welcome bonus ($250 immediate + $250 after 12 months)\n\nWe'll be in touch soon.\n\n— Delfine Stennis\nFounder, Payee Trust\n\nQuestions? Reply to this email or contact payeetrust@gmail.com`,
+          recipient_name: 'Future founding member'
+        })
+      });
+    } catch(err) {
+      console.log('[Waitlist] Confirmation email failed (non-blocking):', err);
+    }
+
+    // 3. Track locally
+    waitlistEmails.add(email);
+
+    // 4. Show success
+    showSuccess(formId, successEl, emailEl, btn, "✅ You're on the list! Check your inbox for a confirmation email.");
+  }
+
+  function showSuccess(formId, successEl, emailEl, btn, message) {
+    // Hide the form wrapper for hero (keeps page clean)
+    if (formId === 'hero') {
+      const wrap = document.getElementById('hero-form-wrap');
+      if (wrap) wrap.style.display = 'none';
+    }
+
+    // Hide the form itself for bonus + cta sections
+    if (formId === 'cta' || formId === 'cta2') {
+      const form = btn?.closest('form');
+      if (form) form.style.display = 'none';
+    }
+
+    // Show success message
+    if (successEl) {
+      successEl.textContent = message;
+      successEl.style.display = 'block';
+    }
+
+    // Reset button just in case
+    if (btn) {
+      btn.textContent = 'Joined!';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.background = 'var(--green)';
+    }
+
+    // Clear input
+    if (emailEl) emailEl.value = '';
+  }
+
+  // ── Smooth scroll for nav CTA ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ── Animate credit ring on scroll ──
+  const ring = document.querySelector('.ring-fill');
+  if (ring) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          ring.style.strokeDashoffset = '98';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(ring);
+    ring.style.strokeDashoffset = '326'; // start empty
+  }
+
+  // ── Animate source bars on scroll ──
+  const fills = document.querySelectorAll('.source-bar-fill');
+  if (fills.length) {
+    const barObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          fills.forEach(f => {
+            const target = f.style.width;
+            f.style.width = '0%';
+            setTimeout(() => { f.style.transition = 'width 1s ease'; f.style.width = target; }, 100);
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    barObserver.observe(fills[0]);
+  }
+</script>
+
+</body>
+</html>
