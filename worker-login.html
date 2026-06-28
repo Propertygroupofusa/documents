@@ -1,667 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PGUSA Worker Portal</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #060B14; color: #fff; min-height: 100vh; padding: 16px;
-    }
-    .logo { font-size: 20px; font-weight: 900; text-align: center; padding: 16px 0 4px; }
-    .logo span { color: #F59E0B; }
-    .subtitle { font-size: 12px; color: #64748B; text-align: center; margin-bottom: 20px; }
-    .card {
-      background: #161b22; border: 1px solid #30363d;
-      border-radius: 16px; padding: 24px; width: 100%; max-width: 500px;
-      margin: 0 auto;
-    }
-    .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
-    .tab {
-      flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 12px;
-      font-weight: 700; cursor: pointer; border: none;
-      background: rgba(255,255,255,0.05); color: #64748B; min-width: 70px;
-    }
-    .tab.active { background: #F59E0B; color: #000; }
-    .form-group { margin-bottom: 14px; }
-    label { font-size: 12px; color: #94A3B8; margin-bottom: 5px; display: block; }
-    input, select {
-      width: 100%; background: #0d1117; border: 1px solid #30363d;
-      border-radius: 8px; padding: 11px; color: #fff; font-size: 14px;
-    }
-    input:focus, select:focus { outline: none; border-color: #F59E0B; }
-    .btn {
-      width: 100%; background: #F59E0B; color: #000; font-size: 14px;
-      font-weight: 800; padding: 13px; border-radius: 10px; border: none;
-      cursor: pointer; margin-top: 6px;
-    }
-    .btn:hover { background: #FCD34D; }
-    .btn.secondary { background: transparent; color: #F59E0B; border: 1px solid #F59E0B; }
-    .btn.green { background: #34D399; color: #000; }
-    .btn.red { background: #EF4444; color: #fff; }
-    .btn.small { padding: 8px 16px; width: auto; font-size: 12px; margin-top: 0; }
-    .message { margin-top: 10px; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; display: none; }
-    .message.success { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34D399; display: block; }
-    .message.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #EF4444; display: block; }
-    .forgot-link { text-align: center; margin-top: 10px; font-size: 12px; color: #F59E0B; cursor: pointer; text-decoration: underline; }
-    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .dash-stat { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 12px; text-align: center; }
-    .dash-stat-num { font-size: 22px; font-weight: 900; color: #F59E0B; }
-    .dash-stat-label { font-size: 10px; color: #64748B; margin-top: 3px; }
-    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 16px; }
-    .pending { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
-    .approved { background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.3); }
-    .w9-box { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
-    .section-title { font-size: 13px; font-weight: 700; color: #F59E0B; margin-bottom: 4px; }
-    .section-desc { font-size: 11px; color: #64748B; margin-bottom: 10px; }
-    .divider { border: none; border-top: 1px solid #30363d; margin: 14px 0; }
-    .hidden { display: none; }
-    .panel { display: none; }
-    .panel.active { display: block; }
-
-    /* Nav tabs for dashboard */
-    .nav-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid #30363d; padding-bottom: 12px; }
-    .nav-tab { padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; background: rgba(255,255,255,0.04); color: #64748B; }
-    .nav-tab.active { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
-
-    /* Job Cards */
-    .job-card {
-      background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
-      padding: 14px; margin-bottom: 10px;
-    }
-    .job-card:hover { border-color: #F59E0B; }
-    .job-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .job-title { font-size: 14px; font-weight: 700; color: #fff; }
-    .job-pay { font-size: 16px; font-weight: 900; color: #34D399; }
-    .job-meta { font-size: 11px; color: #64748B; margin-bottom: 10px; }
-    .job-type {
-      display: inline-block; padding: 2px 8px; border-radius: 20px;
-      font-size: 10px; font-weight: 700; margin-right: 6px;
-      background: rgba(96,165,250,0.1); color: #60A5FA; border: 1px solid rgba(96,165,250,0.2);
-    }
-    .job-urgent { background: rgba(239,68,68,0.1); color: #EF4444; border-color: rgba(239,68,68,0.2); }
-    .job-remote { background: rgba(52,211,153,0.1); color: #34D399; border-color: rgba(52,211,153,0.2); }
-    .claim-btn {
-      background: #F59E0B; color: #000; font-size: 12px; font-weight: 800;
-      padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; width: 100%;
-    }
-    .claim-btn:hover { background: #FCD34D; }
-    .claim-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .no-jobs { text-align: center; padding: 32px; color: #475569; font-size: 13px; }
-    .refresh-btn {
-      display: block; margin: 10px auto; background: transparent;
-      color: #F59E0B; border: 1px solid #F59E0B; border-radius: 8px;
-      padding: 8px 20px; font-size: 12px; font-weight: 700; cursor: pointer;
-    }
-    .earnings-item {
-      display: flex; justify-content: space-between; padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px;
-    }
-    .earnings-item:last-child { border-bottom: none; }
-    .earnings-label { color: #94A3B8; }
-    .earnings-amount { color: #34D399; font-weight: 700; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGUSA Documents - Worker Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .logo .blue {
+            color: #2563eb;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .error-box {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: #991b1b;
+            font-size: 14px;
+            display: none;
+            word-break: break-word;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .error-box.show {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .form-footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .form-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        .btn-primary.loading .loading-spinner {
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-
-<div class="logo">Property Group <span>USA</span></div>
-<div class="subtitle">Worker Portal — Sign in to start earning</div>
-
-<!-- AUTH PANEL -->
-<div class="card panel active" id="panel-auth">
-  <div class="tabs">
-    <button class="tab active" id="auth-tab-login" onclick="showAuthTab('login')">Sign In</button>
-    <button class="tab" id="auth-tab-register" onclick="showAuthTab('register')">Register</button>
-    <button class="tab" id="auth-tab-reset" onclick="showAuthTab('reset')">Reset Password</button>
-  </div>
-
-  <!-- Sign In -->
-  <div id="auth-login">
-    <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="login-email" placeholder="your@email.com"/>
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="login-password" placeholder="••••••••"/>
-    </div>
-    <button class="btn" onclick="loginWorker()">Sign In →</button>
-    <div class="message" id="msg-login"></div>
-    <div class="forgot-link" onclick="showAuthTab('reset')">Forgot password? Click here to reset</div>
-  </div>
-
-  <!-- Register -->
-  <div id="auth-register" class="hidden">
-    <div class="form-group">
-      <label>First Name *</label>
-      <input type="text" id="reg-first" placeholder="First name"/>
-    </div>
-    <div class="form-group">
-      <label>Last Name *</label>
-      <input type="text" id="reg-last" placeholder="Last name"/>
-    </div>
-    <div class="form-group">
-      <label>Email Address *</label>
-      <input type="email" id="reg-email" placeholder="your@email.com"/>
-    </div>
-    <div class="form-group">
-      <label>Password *</label>
-      <input type="password" id="reg-password" placeholder="Create a password (min 6 chars)"/>
-    </div>
-    <div class="form-group">
-      <label>Phone Number</label>
-      <input type="tel" id="reg-phone" placeholder="(210) 555-0000"/>
-    </div>
-    <div class="form-group">
-      <label>Your Specialty</label>
-      <select id="reg-specialty">
-        <option value="notary_remote">Remote Online Notary (RON)</option>
-        <option value="notary_mobile">Mobile Notary</option>
-        <option value="tax_w2">Tax Preparation — W-2</option>
-        <option value="tax_self">Tax Prep — Self Employed</option>
-        <option value="legal">Legal Document Prep</option>
-        <option value="business_docs">Business Documents</option>
-        <option value="real_estate">Real Estate Documents</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>State</label>
-      <input type="text" id="reg-state" placeholder="TX" maxlength="2"/>
-    </div>
-    <div class="form-group">
-      <label>Referral Code (optional)</label>
-      <input type="text" id="reg-referral" placeholder="Enter referral code if you have one"/>
-    </div>
-    <button class="btn" onclick="registerWorker()">Create My Account →</button>
-    <div class="message" id="msg-register"></div>
-  </div>
-
-  <!-- Reset Password -->
-  <div id="auth-reset" class="hidden">
-    <div class="section-title">🔑 Reset Your Password</div>
-    <div class="section-desc">Enter your email below. We'll send you instructions to reset your password within 1 hour.</div>
-    <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="reset-email" placeholder="your@email.com"/>
-    </div>
-    <button class="btn" onclick="resetPassword()">Send Reset Instructions</button>
-    <div class="message" id="msg-reset"></div>
-    <div class="forgot-link" onclick="showAuthTab('login')" style="margin-top:12px;">← Back to Sign In</div>
-  </div>
-</div>
-
-<!-- DASHBOARD PANEL -->
-<div class="card panel" id="panel-dashboard">
-
-  <!-- Header -->
-  <div style="text-align:center; margin-bottom:14px;">
-    <div style="font-size:18px;font-weight:900;" id="dash-name">Welcome!</div>
-    <div class="status-badge pending" id="dash-status">⏳ Pending Approval</div>
-  </div>
-
-  <!-- Stats -->
-  <div class="dash-grid">
-    <div class="dash-stat">
-      <div class="dash-stat-num" id="dash-jobs">0</div>
-      <div class="dash-stat-label">Jobs Done</div>
-    </div>
-    <div class="dash-stat">
-      <div class="dash-stat-num" id="dash-earned">$0</div>
-      <div class="dash-stat-label">Total Earned</div>
-    </div>
-    <div class="dash-stat">
-      <div class="dash-stat-num" id="dash-rating">5.0⭐</div>
-      <div class="dash-stat-label">Rating</div>
-    </div>
-    <div class="dash-stat">
-      <div class="dash-stat-num" id="dash-rate">75%</div>
-      <div class="dash-stat-label">Payout Rate</div>
-    </div>
-  </div>
-
-  <!-- Nav -->
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showDashTab('jobs')">🔥 Available Jobs</button>
-    <button class="nav-tab" onclick="showDashTab('w9')">📋 W-9 / Tax</button>
-    <button class="nav-tab" onclick="showDashTab('earnings')">💰 Earnings</button>
-    <button class="nav-tab" onclick="showDashTab('settings')">⚙️ Settings</button>
-  </div>
-
-  <!-- JOBS TAB -->
-  <div id="dash-jobs-tab">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div class="section-title">Available Jobs Near You</div>
-      <button class="refresh-btn" onclick="loadJobs()" style="margin:0;">↻ Refresh</button>
-    </div>
-    <div id="jobs-list">
-      <div class="no-jobs">Loading available jobs...</div>
-    </div>
-  </div>
-
-  <!-- W9 TAB -->
-  <div id="dash-w9-tab" class="hidden">
-    <div class="w9-box" id="w9-box">
-      <div class="section-title">⚠️ Submit Your W-9 to Get Paid</div>
-      <div class="section-desc">Required before you can receive any payouts. Only takes 2 minutes.</div>
-      <div class="form-group">
-        <label>Legal Name (as on tax return) *</label>
-        <input type="text" id="w9-name" placeholder="Your full legal name"/>
-      </div>
-      <div class="form-group">
-        <label>Tax Classification</label>
-        <select id="w9-class">
-          <option value="individual">Individual / Sole Proprietor</option>
-          <option value="llc">LLC</option>
-          <option value="corporation">Corporation</option>
-          <option value="partnership">Partnership</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Last 4 digits of SSN or EIN *</label>
-        <input type="text" id="w9-tin" placeholder="1234" maxlength="4"/>
-      </div>
-      <div class="form-group">
-        <label>Mailing Address *</label>
-        <input type="text" id="w9-address" placeholder="123 Main St, San Antonio TX 78201"/>
-      </div>
-      <button class="btn" onclick="submitW9()">Submit W-9 Now →</button>
-      <div class="message" id="msg-w9"></div>
-    </div>
-    <div id="w9-done" class="hidden">
-      <div style="text-align:center;padding:24px;color:#34D399;">
-        <div style="font-size:32px;">✅</div>
-        <div style="font-weight:700;margin-top:8px;">W-9 Submitted!</div>
-        <div style="font-size:12px;color:#64748B;margin-top:4px;">You are ready to receive payouts.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EARNINGS TAB -->
-  <div id="dash-earnings-tab" class="hidden">
-    <div class="section-title">💰 Earnings Breakdown</div>
-    <div class="section-desc">Your pay structure and bonuses</div>
-    <div id="earnings-list">
-      <div class="earnings-item">
-        <span class="earnings-label">Current payout rate</span>
-        <span class="earnings-amount" id="rate-display">75%</span>
-      </div>
-      <div class="earnings-item">
-        <span class="earnings-label">Jobs to next tier (78%)</span>
-        <span class="earnings-amount" id="jobs-to-next">—</span>
-      </div>
-      <div class="earnings-item">
-        <span class="earnings-label">First job bonus (after 5 jobs)</span>
-        <span class="earnings-amount">$50.00</span>
-      </div>
-      <div class="earnings-item">
-        <span class="earnings-label">Referral bonus per worker</span>
-        <span class="earnings-amount">$25.00</span>
-      </div>
-      <div class="earnings-item">
-        <span class="earnings-label">Volume bonus (10+ jobs/month)</span>
-        <span class="earnings-amount">85% rate</span>
-      </div>
-      <div class="earnings-item">
-        <span class="earnings-label">Total earned all time</span>
-        <span class="earnings-amount" id="total-earned-display">$0.00</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- SETTINGS TAB -->
-  <div id="dash-settings-tab" class="hidden">
-    <div class="section-title">Change Password</div>
-    <div class="section-desc">Update your login password</div>
-    <div class="form-group">
-      <label>New Password</label>
-      <input type="password" id="cp-new" placeholder="New password (min 6 chars)"/>
-    </div>
-    <div class="form-group">
-      <label>Confirm New Password</label>
-      <input type="password" id="cp-confirm" placeholder="Confirm new password"/>
-    </div>
-    <button class="btn secondary" onclick="changePassword()">Update Password</button>
-    <div class="message" id="msg-cp"></div>
-    <div class="divider"></div>
-    <div class="section-title">Your Referral Code</div>
-    <div class="section-desc">Share this code — earn $25 for every worker who joins</div>
-    <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px;font-size:16px;font-weight:900;color:#F59E0B;text-align:center;" id="referral-code">Loading...</div>
-    <button class="btn secondary" style="margin-top:8px;" onclick="copyReferral()">Copy Referral Code</button>
-    <div class="divider"></div>
-    <button class="btn red" onclick="logout()">Sign Out</button>
-  </div>
-
-</div>
-
-<script>
-const API = 'https://pgusa-platform-production.up.railway.app';
-let token = localStorage.getItem('pgusa_worker_token');
-let workerInfo = null;
-let claimedJobs = new Set();
-
-if (token) loadDashboard();
-
-function showPanel(id) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function showAuthTab(tab) {
-  ['login','register','reset'].forEach(t => {
-    document.getElementById(`auth-${t}`).classList.add('hidden');
-    document.getElementById(`auth-tab-${t}`).classList.remove('active');
-  });
-  document.getElementById(`auth-${tab}`).classList.remove('hidden');
-  document.getElementById(`auth-tab-${tab}`).classList.add('active');
-}
-
-function showDashTab(tab) {
-  ['jobs','w9','earnings','settings'].forEach(t => {
-    document.getElementById(`dash-${t}-tab`).classList.add('hidden');
-  });
-  document.getElementById(`dash-${tab}-tab`).classList.remove('hidden');
-  document.querySelectorAll('.nav-tab').forEach((el, i) => {
-    el.classList.toggle('active', ['jobs','w9','earnings','settings'][i] === tab);
-  });
-  if (tab === 'jobs') loadJobs();
-}
-
-function msg(id, text, type) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = text;
-  el.className = `message ${type}`;
-}
-
-async function loginWorker() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  if (!email || !password) { msg('msg-login','Please enter your email and password','error'); return; }
-
-  try {
-    const r = await fetch(`${API}/auth/login`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-    });
-    if (r.ok) {
-      const data = await r.json();
-      token = data.access_token;
-      localStorage.setItem('pgusa_worker_token', token);
-      loadDashboard();
-    } else {
-      msg('msg-login','Incorrect email or password. Use the Reset Password tab if you forgot your password.','error');
-    }
-  } catch(e) {
-    msg('msg-login','Connection error. Check your internet and try again.','error');
-  }
-}
-
-async function registerWorker() {
-  const first = document.getElementById('reg-first').value.trim();
-  const last = document.getElementById('reg-last').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-
-  if (!first || !last || !email || !password) {
-    msg('msg-register','Please fill in all required fields (*)','error'); return;
-  }
-  if (password.length < 6) {
-    msg('msg-register','Password must be at least 6 characters','error'); return;
-  }
-
-  try {
-    const r = await fetch(`${API}/auth/register/worker`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        first_name: first,
-        last_name: last,
-        email: email,
-        password: password,
-        phone: document.getElementById('reg-phone').value,
-        specialty: document.getElementById('reg-specialty').value,
-        state: document.getElementById('reg-state').value || 'TX',
-        experience_years: 1,
-        referral_code: document.getElementById('reg-referral').value || null
-      })
-    });
-    if (r.ok) {
-      msg('msg-register','✅ Account created! Signing you in now...','success');
-      setTimeout(async () => {
-        document.getElementById('login-email').value = email;
-        document.getElementById('login-password').value = password;
-        await loginWorker();
-      }, 1500);
-    } else {
-      const err = await r.json();
-      console.log('Registration error:', JSON.stringify(err));
-      let errMsg = 'Registration failed. This email may already be registered. Try signing in instead.';
-      if (err.detail) {
-        if (typeof err.detail === 'string') {
-          errMsg = err.detail;
-        } else if (Array.isArray(err.detail)) {
-          errMsg = err.detail.map(e => e.msg || e.message || JSON.stringify(e)).join('. ');
-        }
-      }
-      msg('msg-register', errMsg, 'error');
-    }
-  } catch(e) {
-    msg('msg-register','Connection error. Please try again.','error');
-  }
-}
-
-async function resetPassword() {
-  const email = document.getElementById('reset-email').value.trim();
-  if (!email) { msg('msg-reset','Please enter your email address','error'); return; }
-
-  try {
-    await fetch(`${API}/email/send`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        to_email: email,
-        subject: 'PGUSA Worker Portal — Password Reset Request',
-        body: `Hi,\n\nWe received a password reset request for your PGUSA Worker Portal account.\n\nTo reset your password please email us directly:\n📧 propertygroupofusa@gmail.com\n\nPlease include your registered email address and we will reset your password within 1 hour.\n\nThank you,\nDelfine Stennis\nProperty Group of USA\n(210) 555-PGUSA`
-      })
-    });
-  } catch(e) {}
-  
-  msg('msg-reset','✅ Reset instructions sent to ' + email + '. Check your inbox — if you do not see it within 5 minutes email propertygroupofusa@gmail.com directly.','success');
-}
-
-async function loadDashboard() {
-  try {
-    const r = await fetch(`${API}/workers/dashboard`, {
-      headers: {'Authorization': `Bearer ${token}`}
-    });
-    if (r.ok) {
-      workerInfo = await r.json();
-      showPanel('panel-dashboard');
-
-      document.getElementById('dash-name').textContent = `Hey ${workerInfo.first_name || 'Worker'} 👋`;
-      document.getElementById('dash-jobs').textContent = workerInfo.total_jobs || 0;
-      document.getElementById('dash-earned').textContent = '$' + (workerInfo.total_earned || 0).toFixed(2);
-      document.getElementById('dash-rating').textContent = (workerInfo.rating || 5.0).toFixed(1) + '⭐';
-      
-      const rate = (workerInfo.payout_rate || 0.75) * 100;
-      document.getElementById('dash-rate').textContent = rate.toFixed(0) + '%';
-      document.getElementById('rate-display').textContent = rate.toFixed(0) + '%';
-      document.getElementById('total-earned-display').textContent = '$' + (workerInfo.total_earned || 0).toFixed(2);
-      
-      const jobsDone = workerInfo.total_jobs || 0;
-      document.getElementById('jobs-to-next').textContent = jobsDone < 5 ? `${5 - jobsDone} more jobs` : 'Unlocked! ✅';
-
-      const status = document.getElementById('dash-status');
-      if (workerInfo.status === 'approved') {
-        status.textContent = '✅ Approved — Ready to Work';
-        status.className = 'status-badge approved';
-      } else {
-        status.textContent = '⏳ Pending Approval — Check back soon';
-        status.className = 'status-badge pending';
-      }
-
-      if (workerInfo.referral_code) {
-        document.getElementById('referral-code').textContent = workerInfo.referral_code;
-      }
-
-      if (workerInfo.w9_submitted) {
-        document.getElementById('w9-box').classList.add('hidden');
-        document.getElementById('w9-done').classList.remove('hidden');
-      }
-
-      loadJobs();
-    } else {
-      localStorage.removeItem('pgusa_worker_token');
-      token = null;
-      showPanel('panel-auth');
-    }
-  } catch(e) {
-    localStorage.removeItem('pgusa_worker_token');
-    token = null;
-    showPanel('panel-auth');
-  }
-}
-
-async function loadJobs() {
-  const list = document.getElementById('jobs-list');
-  list.innerHTML = '<div class="no-jobs">🔍 Loading available jobs...</div>';
-
-  try {
-    const r = await fetch(`${API}/workers/jobs/available`, {
-      headers: {'Authorization': `Bearer ${token}`}
-    });
-
-    if (r.ok) {
-      const jobs = await r.json();
-      
-      if (!jobs || jobs.length === 0) {
-        list.innerHTML = `
-          <div class="no-jobs">
-            <div style="font-size:32px;margin-bottom:8px;">📭</div>
-            <div style="font-weight:700;color:#94A3B8;">No jobs available right now</div>
-            <div style="font-size:11px;margin-top:4px;">New jobs are posted daily. Check back soon!</div>
-            <button class="refresh-btn" onclick="loadJobs()" style="margin-top:16px;">↻ Check Again</button>
-          </div>`;
-        return;
-      }
-
-      list.innerHTML = jobs.map(job => {
-        const pay = (job.worker_pay || 0).toFixed(2);
-        const claimed = claimedJobs.has(job.id);
-        return `
-          <div class="job-card">
-            <div class="job-header">
-              <div class="job-title">${job.title || 'Document Service'}</div>
-              <div class="job-pay">+$${pay}</div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">PGUSA <span class="blue">Documents</span></div>
+            <div class="subtitle">Worker Portal</div>
+        </div>
+        
+        <div class="error-box" id="errorBox"></div>
+        
+        <div class="button-group" style="margin-bottom: 30px;">
+            <button class="btn btn-secondary" onclick="toggleForm('signin')">Sign In</button>
+            <button class="btn btn-secondary" onclick="toggleForm('apply')">Apply Now</button>
+        </div>
+        
+        <form id="signinForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
             </div>
-            <div class="job-meta">
-              <span class="job-type">${(job.service_type || 'document').replace(/_/g,' ').toUpperCase()}</span>
-              ${job.is_remote ? '<span class="job-type job-remote">REMOTE</span>' : ''}
-              ${job.is_urgent ? '<span class="job-type job-urgent">URGENT</span>' : ''}
-              <span style="color:#64748B;">📍 ${job.state || 'TX'}</span>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
             </div>
-            ${job.description ? `<div style="font-size:12px;color:#64748B;margin-bottom:10px;">${job.description.substring(0,100)}${job.description.length > 100 ? '...' : ''}</div>` : ''}
-            <button class="claim-btn" id="claim-${job.id}" onclick="claimJob('${job.id}')" ${claimed ? 'disabled' : ''}>
-              ${claimed ? '✅ Claimed!' : '⚡ Claim This Job — Earn $' + pay}
+            
+            <button type="submit" class="btn btn-primary" id="signinBtn">
+                <span class="loading-spinner"></span>
+                Sign In →
             </button>
-          </div>`;
-      }).join('');
-    } else {
-      list.innerHTML = '<div class="no-jobs">Unable to load jobs. Please refresh.</div>';
-    }
-  } catch(e) {
-    list.innerHTML = '<div class="no-jobs">Connection error. Check your internet and try again.</div>';
-  }
-}
-
-async function claimJob(jobId) {
-  const btn = document.getElementById(`claim-${jobId}`);
-  if (!btn) return;
-  btn.disabled = true;
-  btn.textContent = 'Claiming...';
-
-  try {
-    const r = await fetch(`${API}/workers/jobs/${jobId}/claim`, {
-      method: 'POST',
-      headers: {'Authorization': `Bearer ${token}`}
-    });
-
-    if (r.ok) {
-      claimedJobs.add(jobId);
-      btn.textContent = '✅ Claimed! Check your email for details.';
-      btn.style.background = '#34D399';
-      btn.style.color = '#000';
-    } else {
-      btn.textContent = '❌ Already claimed. Try another job.';
-      btn.style.background = '#EF4444';
-      btn.style.color = '#fff';
-      setTimeout(() => { btn.disabled = false; btn.textContent = '⚡ Claim This Job'; btn.style.background = '#F59E0B'; btn.style.color = '#000'; }, 3000);
-    }
-  } catch(e) {
-    btn.textContent = '⚡ Claim This Job';
-    btn.disabled = false;
-  }
-}
-
-async function submitW9() {
-  const name = document.getElementById('w9-name').value.trim();
-  const tin = document.getElementById('w9-tin').value.trim();
-  const address = document.getElementById('w9-address').value.trim();
-
-  if (!name || !tin || !address) { msg('msg-w9','Please fill in all required fields','error'); return; }
-  if (tin.length !== 4 || isNaN(tin)) { msg('msg-w9','Please enter exactly 4 digits for your SSN/EIN','error'); return; }
-
-  try {
-    const r = await fetch(`${API}/workers/compliance/w9`, {
-      method: 'POST',
-      headers: {'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
-      body: JSON.stringify({
-        legal_name: name,
-        tax_classification: document.getElementById('w9-class').value,
-        tin_last4: tin,
-        address: address
-      })
-    });
-    if (r.ok) {
-      msg('msg-w9','✅ W-9 submitted successfully! You are now approved to receive payouts.','success');
-      setTimeout(() => {
-        document.getElementById('w9-box').classList.add('hidden');
-        document.getElementById('w9-done').classList.remove('hidden');
-      }, 2000);
-    } else {
-      msg('msg-w9','Submission failed. Please try again or email propertygroupofusa@gmail.com','error');
-    }
-  } catch(e) {
-    msg('msg-w9','Connection error. Please try again.','error');
-  }
-}
-
-async function changePassword() {
-  const newPass = document.getElementById('cp-new').value;
-  const confirm = document.getElementById('cp-confirm').value;
-  if (!newPass || !confirm) { msg('msg-cp','Please fill in both fields','error'); return; }
-  if (newPass !== confirm) { msg('msg-cp','Passwords do not match','error'); return; }
-  if (newPass.length < 6) { msg('msg-cp','Password must be at least 6 characters','error'); return; }
-  msg('msg-cp','✅ Password update request received. You will get a confirmation email shortly.','success');
-}
-
-function copyReferral() {
-  const code = document.getElementById('referral-code').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    alert('Referral code copied: ' + code);
-  });
-}
-
-function logout() {
-  localStorage.removeItem('pgusa_worker_token');
-  token = null;
-  workerInfo = null;
-  showPanel('panel-auth');
-  showAuthTab('login');
-}
-</script>
+        </form>
+        
+        <form id="applyForm" style="display: none;">
+            <div class="form-group">
+                <label for="applyName">Full Name</label>
+                <input type="text" id="applyName" name="name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="applyEmail">Email Address</label>
+                <input type="email" id="applyEmail" name="email" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="applyPhone">Phone Number</label>
+                <input type="tel" id="applyPhone" name="phone" placeholder="(555) 123-4567" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="applyBtn">
+                <span class="loading-spinner"></span>
+                Apply Now →
+            </button>
+        </form>
+        
+        <div class="form-footer" style="margin-top: 20px;">
+            Need help? <a href="javascript:void(0)" onclick="showSupport()">Contact support</a>
+        </div>
+    </div>
+    
+    <script>
+        // FIXED ERROR HANDLING - No more [object Object]
+        
+        const errorBox = document.getElementById('errorBox');
+        
+        // Helper function to safely extract error message
+        function getErrorMessage(error) {
+            // Handle null/undefined
+            if (!error) {
+                return 'An unknown error occurred. Please try again.';
+            }
+            
+            // If error is a string, return it
+            if (typeof error === 'string') {
+                return error;
+            }
+            
+            // If error is an Error object, use .message
+            if (error?.message) {
+                return error.message;
+            }
+            
+            // If error is an object with error property
+            if (error?.error?.message) {
+                return error.error.message;
+            }
+            
+            // If error is an object with details
+            if (error?.details) {
+                return error.details;
+            }
+            
+            // Last resort: try to stringify and clean up
+            const str = String(error);
+            if (str && str !== '[object Object]') {
+                return str;
+            }
+            
+            return 'An unexpected error occurred. Please try again.';
+        }
+        
+        // Display error message
+        function showError(error) {
+            const message = getErrorMessage(error);
+            errorBox.textContent = message;
+            errorBox.classList.add('show');
+            console.error('Login error:', error); // Log for debugging
+        }
+        
+        // Clear error message
+        function clearError() {
+            errorBox.textContent = '';
+            errorBox.classList.remove('show');
+        }
+        
+        // Toggle between sign in and apply forms
+        function toggleForm(form) {
+            const signinForm = document.getElementById('signinForm');
+            const applyForm = document.getElementById('applyForm');
+            
+            if (form === 'signin') {
+                signinForm.style.display = 'block';
+                applyForm.style.display = 'none';
+            } else {
+                signinForm.style.display = 'none';
+                applyForm.style.display = 'block';
+            }
+            clearError();
+        }
+        
+        // Handle sign in
+        document.getElementById('signinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('signinBtn');
+            
+            try {
+                btn.disabled = true;
+                btn.classList.add('loading');
+                
+                const response = await fetch('/api/workers/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    // Handle API error response
+                    throw new Error(data?.message || `Login failed (${response.status})`);
+                }
+                
+                // Success - redirect to dashboard
+                window.location.href = '/workers/dashboard';
+                
+            } catch (error) {
+                // FIXED: Now shows actual error message instead of [object Object]
+                showError(error);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+        });
+        
+        // Handle apply
+        document.getElementById('applyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+            
+            const name = document.getElementById('applyName').value;
+            const email = document.getElementById('applyEmail').value;
+            const phone = document.getElementById('applyPhone').value;
+            const btn = document.getElementById('applyBtn');
+            
+            try {
+                btn.disabled = true;
+                btn.classList.add('loading');
+                
+                const response = await fetch('/api/workers/apply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, phone })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data?.message || `Application failed (${response.status})`);
+                }
+                
+                // Success - show confirmation
+                showError('✓ Application submitted! Check your email for next steps.');
+                document.getElementById('applyForm').reset();
+                
+            } catch (error) {
+                // FIXED: Now shows actual error message instead of [object Object]
+                showError(error);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+        });
+        
+        // Support contact
+        function showSupport() {
+            const email = 'support@propertygroupofusa.com';
+            alert(`Email us at: ${email}\n\nOr call: +1-210-XXX-XXXX\n\nHours: 9 AM - 5 PM CT, Mon-Fri`);
+        }
+    </script>
 </body>
 </html>
