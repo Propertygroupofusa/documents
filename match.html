@@ -91,6 +91,7 @@ var state = {
   authLoading: false,
   forgotSent: false,
   resetDone: false,
+  formValues: { firstName: '', lastName: '', phone: '', state: '', email: '', forgotEmail: '' },
   bookingWorker: null,
   pricingOptions: [],
   pricingLoading: false,
@@ -146,11 +147,11 @@ function renderLogin() {
   if (!isLogin) {
     extraFields =
       '<div class="two-col">' +
-        '<input type="text" id="regFirstName" placeholder="First name" required />' +
-        '<input type="text" id="regLastName" placeholder="Last name" required />' +
+        '<input type="text" id="regFirstName" placeholder="First name" value="' + esc(state.formValues.firstName) + '" required />' +
+        '<input type="text" id="regLastName" placeholder="Last name" value="' + esc(state.formValues.lastName) + '" required />' +
       '</div>' +
-      '<input type="tel" id="regPhone" placeholder="Phone" required />' +
-      '<input type="text" id="regState" placeholder="State (e.g. TX)" maxlength="2" required />';
+      '<input type="tel" id="regPhone" placeholder="Phone" value="' + esc(state.formValues.phone) + '" required />' +
+      '<input type="text" id="regState" placeholder="State (e.g. TX)" value="' + esc(state.formValues.state) + '" maxlength="2" required />';
   }
   var errorHtml = state.authError ? ('<div class="error-text">' + esc(state.authError) + '</div>') : '';
   var forgotLink = isLogin ? '<p style="text-align:center;margin-top:10px;"><button type="button" id="forgotLink" style="background:none;border:none;color:#2563eb;font-size:12px;cursor:pointer;text-decoration:underline;">Forgot password?</button></p>' : '';
@@ -166,7 +167,7 @@ function renderLogin() {
       '</div>' +
       '<form id="authForm">' +
         extraFields +
-        '<input type="email" id="loginEmail" placeholder="Email" required />' +
+        '<input type="email" id="loginEmail" placeholder="Email" value="' + esc(state.formValues.email) + '" required />' +
         '<input type="password" id="loginPassword" placeholder="Password" required />' +
         errorHtml +
         '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Please wait...' : (isLogin ? 'Log In' : 'Create Account')) + '</button>' +
@@ -196,7 +197,7 @@ function renderForgotForm() {
         '<p style="font-size:13px;color:#64748b;margin-top:6px;">Enter your email and we will send a reset link.</p>' +
       '</div>' +
       '<form id="forgotForm">' +
-        '<input type="email" id="forgotEmail" placeholder="Email" required />' +
+        '<input type="email" id="forgotEmail" placeholder="Email" value="' + esc(state.formValues.forgotEmail) + '" required />' +
         errorHtml +
         '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Sending...' : 'Send Reset Link') + '</button>' +
       '</form>' +
@@ -243,11 +244,25 @@ function attachLoginHandlers() {
   if (forgotLink) forgotLink.onclick = function() { state.authMode = 'forgot'; state.authError = null; state.forgotSent = false; render(); };
   document.getElementById('authForm').onsubmit = function(e) {
     e.preventDefault();
+    captureAuthFieldValues();
     state.authError = null;
     state.authLoading = true;
     render();
     doAuth();
   };
+}
+
+function captureAuthFieldValues() {
+  var emailEl = document.getElementById('loginEmail');
+  if (emailEl) state.formValues.email = emailEl.value;
+  var fn = document.getElementById('regFirstName');
+  if (fn) state.formValues.firstName = fn.value;
+  var ln = document.getElementById('regLastName');
+  if (ln) state.formValues.lastName = ln.value;
+  var ph = document.getElementById('regPhone');
+  if (ph) state.formValues.phone = ph.value;
+  var st = document.getElementById('regState');
+  if (st) state.formValues.state = st.value;
 }
 
 function attachForgotHandlers() {
@@ -260,10 +275,12 @@ function attachForgotHandlers() {
   var form = document.getElementById('forgotForm');
   if (form) form.onsubmit = function(e) {
     e.preventDefault();
+    var emailEl = document.getElementById('forgotEmail');
+    if (emailEl) state.formValues.forgotEmail = emailEl.value;
     state.authError = null;
     state.authLoading = true;
     render();
-    var email = document.getElementById('forgotEmail').value;
+    var email = state.formValues.forgotEmail;
     fetch(API_BASE + '/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
