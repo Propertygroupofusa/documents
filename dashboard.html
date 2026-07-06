@@ -200,6 +200,87 @@
             background: #e0e0e0;
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .plan-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .plan-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .plan-card.current {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+        .plan-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+
+        .plan-rate {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .plan-description {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upgrade-btn.upgrade {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .upgrade-btn.upgrade:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .upgrade-btn.current {
+            background: #e0e0e0;
+            color: #666;
+            cursor: default;
+        }
+
         .loading {
             text-align: center;
             padding: 40px;
@@ -355,6 +436,35 @@
                     <div class="card-subtext" id="accountLevelSub">Upgrade to Pro for 78% rate</div>
                 </div>
             </div>
+
+            <!-- Plan Upgrade Section -->
+            <h2 class="section-title" style="margin-top: 30px;">💎 Upgrade Your Plan</h2>
+            <div class="grid">
+                <div class="plan-card" id="planCardStarter">
+                    <div class="plan-name">Starter</div>
+                    <div class="plan-rate">75%</div>
+                    <div class="plan-description">Baseline commission rate</div>
+                    <button class="upgrade-btn current" disabled>✅ Current Plan</button>
+                </div>
+
+                <div class="plan-card" id="planCardPro">
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-rate">78%</div>
+                    <div class="plan-description">Higher earnings, priority jobs</div>
+                    <button class="upgrade-btn upgrade" onclick="upgradePlan('pro')" id="btnUpgradePro">
+                        Upgrade to Pro
+                    </button>
+                </div>
+
+                <div class="plan-card" id="planCardElite">
+                    <div class="plan-name">Elite</div>
+                    <div class="plan-rate">82%</div>
+                    <div class="plan-description">Best rate, VIP treatment</div>
+                    <button class="upgrade-btn upgrade" onclick="upgradePlan('elite')" id="btnUpgradeElite">
+                        Upgrade to Elite
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -437,14 +547,83 @@
             }
 
             // Account level
+            const currentPlan = data.worker.plan.toLowerCase();
             document.getElementById('accountLevel').textContent = 
-                data.worker.plan.toUpperCase();
+                currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1);
+
+            // Update plan cards based on current plan
+            updatePlanCards(currentPlan);
 
             // Compliance
             document.getElementById('w9Status').textContent = 
                 data.worker.w9_verified ? '✅' : '⏳';
             document.getElementById('credStatus').textContent = 
                 data.worker.credentials_verified ? '✅' : '⏳';
+        }
+
+        function updatePlanCards(currentPlan) {
+            const plans = ['starter', 'pro', 'elite'];
+            plans.forEach(plan => {
+                const card = document.getElementById(`planCard${plan.charAt(0).toUpperCase() + plan.slice(1)}`);
+                const btn = document.getElementById(`btnUpgrade${plan.charAt(0).toUpperCase() + plan.slice(1)}`);
+                
+                if (plan === currentPlan) {
+                    card.classList.add('current');
+                    btn.textContent = '✅ Current Plan';
+                    btn.classList.remove('upgrade');
+                    btn.classList.add('current');
+                    btn.disabled = true;
+                } else {
+                    card.classList.remove('current');
+                    btn.textContent = `Upgrade to ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
+                    btn.classList.add('upgrade');
+                    btn.classList.remove('current');
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        async function upgradePlan(plan) {
+            const token = getToken();
+            if (!token) {
+                showError('Not authenticated');
+                return;
+            }
+
+            const btn = document.getElementById(`btnUpgrade${plan.charAt(0).toUpperCase() + plan.slice(1)}`);
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = 'Loading...';
+
+            try {
+                const response = await fetch(`${API_URL}/workers/upgrade-plan`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ plan: plan })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to upgrade plan');
+                }
+
+                const data = await response.json();
+                
+                // Redirect to Stripe checkout
+                if (data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    throw new Error('No checkout URL received');
+                }
+
+            } catch (error) {
+                showError('Upgrade failed: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
         }
 
         function showError(message) {
@@ -469,6 +648,18 @@
         function viewEarnings() {
             window.location.href = '/documents/earnings.html';
         }
+
+        // Handle upgrade success/cancellation from URL params
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('upgrade') === 'success') {
+                showSuccess('Plan upgraded successfully! Your new rate is now active.');
+                // Refresh dashboard to show updated plan
+                setTimeout(() => location.reload(), 3000);
+            } else if (params.get('upgrade') === 'cancelled') {
+                showError('Upgrade was cancelled. No charges were made.');
+            }
+        });
     </script>
 </body>
 </html>
