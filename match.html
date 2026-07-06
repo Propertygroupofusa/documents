@@ -71,8 +71,14 @@
 <script>
 var API_BASE = 'https://pgusa-platform-production.up.railway.app';
 
+function getResetTokenFromUrl() {
+  var params = new URLSearchParams(window.location.search);
+  return params.get('reset_token');
+}
+
 var state = {
-  authMode: 'login',
+  authMode: getResetTokenFromUrl() ? 'reset' : 'login', // login | register | forgot | reset
+  resetToken: getResetTokenFromUrl(),
   token: localStorage.getItem('pgusa_client_token') || null,
   clientName: localStorage.getItem('pgusa_client_name') || null,
   activeTab: 'discover',
@@ -83,6 +89,8 @@ var state = {
   error: null,
   authError: null,
   authLoading: false,
+  forgotSent: false,
+  resetDone: false,
   bookingWorker: null,
   pricingOptions: [],
   pricingLoading: false,
@@ -116,6 +124,9 @@ function render() {
 }
 
 function renderLogin() {
+  if (state.authMode === 'forgot') return renderForgotForm();
+  if (state.authMode === 'reset') return renderResetForm();
+
   var isLogin = state.authMode === 'login';
   var extraFields = '';
   if (!isLogin) {
@@ -128,6 +139,7 @@ function renderLogin() {
       '<input type="text" id="regState" placeholder="State (e.g. TX)" maxlength="2" required />';
   }
   var errorHtml = state.authError ? ('<div class="error-text">' + esc(state.authError) + '</div>') : '';
+  var forgotLink = isLogin ? '<p style="text-align:center;margin-top:10px;"><button type="button" id="forgotLink" style="background:none;border:none;color:#2563eb;font-size:12px;cursor:pointer;text-decoration:underline;">Forgot password?</button></p>' : '';
   return (
     '<div class="login-wrap"><div class="login-box">' +
       '<div style="text-align:center;margin-bottom:20px;">' +
@@ -145,19 +157,149 @@ function renderLogin() {
         errorHtml +
         '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Please wait...' : (isLogin ? 'Log In' : 'Create Account')) + '</button>' +
       '</form>' +
+      forgotLink +
+    '</div></div>'
+  );
+}
+
+function renderForgotForm() {
+  if (state.forgotSent) {
+    return (
+      '<div class="login-wrap"><div class="login-box" style="text-align:center;">' +
+        '<div class="logo" style="margin-bottom:10px;">WorkMatch</div>' +
+        '<div style="font-size:40px;">&#9993;&#65039;</div>' +
+        '<h3 style="margin:10px 0;">Check your email</h3>' +
+        '<p style="font-size:13px;color:#64748b;margin-bottom:16px;">If that email is registered, a reset link is on its way. It expires in 60 minutes.</p>' +
+        '<button class="btn-primary btn-secondary" id="backToLoginBtn">Back to Log In</button>' +
+      '</div></div>'
+    );
+  }
+  var errorHtml = state.authError ? ('<div class="error-text">' + esc(state.authError) + '</div>') : '';
+  return (
+    '<div class="login-wrap"><div class="login-box">' +
+      '<div style="text-align:center;margin-bottom:20px;">' +
+        '<div class="logo">WorkMatch</div>' +
+        '<p style="font-size:13px;color:#64748b;margin-top:6px;">Enter your email and we will send a reset link.</p>' +
+      '</div>' +
+      '<form id="forgotForm">' +
+        '<input type="email" id="forgotEmail" placeholder="Email" required />' +
+        errorHtml +
+        '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Sending...' : 'Send Reset Link') + '</button>' +
+      '</form>' +
+      '<p style="text-align:center;margin-top:10px;"><button type="button" id="backToLoginBtn2" style="background:none;border:none;color:#2563eb;font-size:12px;cursor:pointer;text-decoration:underline;">Back to Log In</button></p>' +
+    '</div></div>'
+  );
+}
+
+function renderResetForm() {
+  if (state.resetDone) {
+    return (
+      '<div class="login-wrap"><div class="login-box" style="text-align:center;">' +
+        '<div class="logo" style="margin-bottom:10px;">WorkMatch</div>' +
+        '<div style="font-size:40px;">&#9989;</div>' +
+        '<h3 style="margin:10px 0;">Password updated</h3>' +
+        '<p style="font-size:13px;color:#64748b;margin-bottom:16px;">You can now log in with your new password.</p>' +
+        '<button class="btn-primary btn-secondary" id="backToLoginBtn3">Go to Log In</button>' +
+      '</div></div>'
+    );
+  }
+  var errorHtml = state.authError ? ('<div class="error-text">' + esc(state.authError) + '</div>') : '';
+  return (
+    '<div class="login-wrap"><div class="login-box">' +
+      '<div style="text-align:center;margin-bottom:20px;">' +
+        '<div class="logo">WorkMatch</div>' +
+        '<p style="font-size:13px;color:#64748b;margin-top:6px;">Choose a new password.</p>' +
+      '</div>' +
+      '<form id="resetForm">' +
+        '<input type="password" id="newPassword" placeholder="New password (min 8 characters)" minlength="8" required />' +
+        '<input type="password" id="confirmPassword" placeholder="Confirm new password" minlength="8" required />' +
+        errorHtml +
+        '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Updating...' : 'Set New Password') + '</button>' +
+      '</form>' +
     '</div></div>'
   );
 }
 
 function attachLoginHandlers() {
+  if (state.authMode === 'forgot') { attachForgotHandlers(); return; }
+  if (state.authMode === 'reset') { attachResetHandlers(); return; }
   document.getElementById('modeLogin').onclick = function() { state.authMode = 'login'; state.authError = null; render(); };
   document.getElementById('modeRegister').onclick = function() { state.authMode = 'register'; state.authError = null; render(); };
+  var forgotLink = document.getElementById('forgotLink');
+  if (forgotLink) forgotLink.onclick = function() { state.authMode = 'forgot'; state.authError = null; state.forgotSent = false; render(); };
   document.getElementById('authForm').onsubmit = function(e) {
     e.preventDefault();
     state.authError = null;
     state.authLoading = true;
     render();
     doAuth();
+  };
+}
+
+function attachForgotHandlers() {
+  var backBtn = document.getElementById('backToLoginBtn');
+  if (backBtn) backBtn.onclick = function() { state.authMode = 'login'; state.forgotSent = false; render(); };
+
+  var backBtn2 = document.getElementById('backToLoginBtn2');
+  if (backBtn2) backBtn2.onclick = function() { state.authMode = 'login'; state.authError = null; render(); };
+
+  var form = document.getElementById('forgotForm');
+  if (form) form.onsubmit = function(e) {
+    e.preventDefault();
+    state.authError = null;
+    state.authLoading = true;
+    render();
+    var email = document.getElementById('forgotEmail').value;
+    fetch(API_BASE + '/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.detail || 'Something went wrong');
+        state.forgotSent = true;
+      })
+      .catch(function(err) { state.authError = err.message || 'Something went wrong'; })
+      .then(function() { state.authLoading = false; render(); });
+  };
+}
+
+function attachResetHandlers() {
+  var backBtn3 = document.getElementById('backToLoginBtn3');
+  if (backBtn3) backBtn3.onclick = function() {
+    state.authMode = 'login';
+    state.resetDone = false;
+    state.resetToken = null;
+    window.history.replaceState({}, document.title, window.location.pathname);
+    render();
+  };
+
+  var form = document.getElementById('resetForm');
+  if (form) form.onsubmit = function(e) {
+    e.preventDefault();
+    state.authError = null;
+    var newPw = document.getElementById('newPassword').value;
+    var confirmPw = document.getElementById('confirmPassword').value;
+    if (newPw !== confirmPw) {
+      state.authError = 'Passwords do not match.';
+      render();
+      return;
+    }
+    state.authLoading = true;
+    render();
+    fetch(API_BASE + '/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: state.resetToken, new_password: newPw })
+    })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.detail || 'Something went wrong');
+        state.resetDone = true;
+      })
+      .catch(function(err) { state.authError = err.message || 'Something went wrong'; })
+      .then(function() { state.authLoading = false; render(); });
   };
 }
 
