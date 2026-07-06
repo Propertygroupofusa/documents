@@ -98,7 +98,7 @@ var state = {
   bookingSubmitting: false,
   bookingError: null,
   bookingResult: null,
-  bookingFormValues: { service_type: '', scheduled_date: '', scheduled_time: '', state: '', location: '', is_remote: false, notes: '' }
+  bookingFormValues: { service_type: '', month: '', day: '', year: '', hour: '', minute: '', ampm: 'AM', state: '', location: '', is_remote: false, notes: '' }
 };
 
 var AVATAR_EMOJIS = ['\u{1F9D1}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BC}', '\u{1F468}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BB}', '\u{1F468}\u200D\u2696\uFE0F', '\u{1F469}\u200D\u{1F527}', '\u{1F468}\u200D\u{1F527}'];
@@ -502,10 +502,8 @@ function renderBookingModal() {
       '<h3 style="margin-bottom:14px;">Book ' + esc(w.name) + '</h3>' +
       '<form id="bookingForm">' +
         serviceField +
-        '<div class="two-col">' +
-          '<input type="date" id="schedDate" value="' + esc(bf.scheduled_date) + '" required />' +
-          '<input type="time" id="schedTime" value="' + esc(bf.scheduled_time) + '" required />' +
-        '</div>' +
+        buildDateSelects(bf) +
+        buildTimeSelects(bf) +
         '<input type="text" id="stateInput" placeholder="State (e.g. TX)" value="' + esc(bf.state) + '" maxlength="2" required />' +
         '<input type="text" id="locationInput" placeholder="Location (optional)" value="' + esc(bf.location) + '" />' +
         '<label class="checkbox"><input type="checkbox" id="isRemote"' + (bf.is_remote ? ' checked' : '') + ' /> Remote/online job</label>' +
@@ -517,6 +515,53 @@ function renderBookingModal() {
         '</div>' +
       '</form>' +
     '</div></div>'
+  );
+}
+
+function buildDateSelects(bf) {
+  var today = new Date();
+  var years = [today.getFullYear(), today.getFullYear() + 1];
+  var monthOpt = '<option value="">Month</option>';
+  for (var m = 1; m <= 12; m++) {
+    var mm = m < 10 ? '0' + m : '' + m;
+    monthOpt += '<option value="' + mm + '"' + (bf.month === mm ? ' selected' : '') + '>' + mm + '</option>';
+  }
+  var dayOpt = '<option value="">Day</option>';
+  for (var d = 1; d <= 31; d++) {
+    var dd = d < 10 ? '0' + d : '' + d;
+    dayOpt += '<option value="' + dd + '"' + (bf.day === dd ? ' selected' : '') + '>' + dd + '</option>';
+  }
+  var yearOpt = '<option value="">Year</option>';
+  years.forEach(function(y) {
+    yearOpt += '<option value="' + y + '"' + (bf.year === String(y) ? ' selected' : '') + '>' + y + '</option>';
+  });
+  return (
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">' +
+      '<select id="schedMonth">' + monthOpt + '</select>' +
+      '<select id="schedDay">' + dayOpt + '</select>' +
+      '<select id="schedYear">' + yearOpt + '</select>' +
+    '</div>'
+  );
+}
+
+function buildTimeSelects(bf) {
+  var hourOpt = '<option value="">Hour</option>';
+  for (var h = 1; h <= 12; h++) {
+    hourOpt += '<option value="' + h + '"' + (bf.hour === String(h) ? ' selected' : '') + '>' + h + '</option>';
+  }
+  var minOpt = '<option value="">Min</option>';
+  ['00', '15', '30', '45'].forEach(function(min) {
+    minOpt += '<option value="' + min + '"' + (bf.minute === min ? ' selected' : '') + '>' + min + '</option>';
+  });
+  var ampmOpt =
+    '<option value="AM"' + (bf.ampm === 'AM' ? ' selected' : '') + '>AM</option>' +
+    '<option value="PM"' + (bf.ampm === 'PM' ? ' selected' : '') + '>PM</option>';
+  return (
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">' +
+      '<select id="schedHour">' + hourOpt + '</select>' +
+      '<select id="schedMinute">' + minOpt + '</select>' +
+      '<select id="schedAmpm">' + ampmOpt + '</select>' +
+    '</div>'
   );
 }
 
@@ -552,7 +597,7 @@ function startBooking(worker) {
   state.bookingError = null;
   state.bookingResult = null;
   state.pricingLoading = true;
-  state.bookingFormValues = { service_type: '', scheduled_date: '', scheduled_time: '', state: '', location: '', is_remote: false, notes: '' };
+  state.bookingFormValues = { service_type: '', month: '', day: '', year: '', hour: '', minute: '', ampm: 'AM', state: '', location: '', is_remote: false, notes: '' };
   render();
   fetch(API_BASE + '/jobs/pricing')
     .then(function(res) { return res.json(); })
@@ -585,34 +630,52 @@ function attachBookingHandlers() {
   if (form) form.onsubmit = function(e) {
     e.preventDefault();
 
-    var payload = {
-      service_type: document.getElementById('serviceType') ? document.getElementById('serviceType').value : '',
-      scheduled_date: document.getElementById('schedDate').value,
-      scheduled_time: document.getElementById('schedTime').value,
-      state: document.getElementById('stateInput').value.toUpperCase(),
-      location: document.getElementById('locationInput').value,
-      is_remote: document.getElementById('isRemote').checked,
-      notes: document.getElementById('notesInput').value,
-      worker_id: state.bookingWorker.id
-    };
+    var serviceType = document.getElementById('serviceType') ? document.getElementById('serviceType').value : '';
+    var month = document.getElementById('schedMonth').value;
+    var day = document.getElementById('schedDay').value;
+    var year = document.getElementById('schedYear').value;
+    var hour12 = document.getElementById('schedHour').value;
+    var minute = document.getElementById('schedMinute').value;
+    var ampm = document.getElementById('schedAmpm').value;
+    var stateVal = document.getElementById('stateInput').value.toUpperCase();
+    var location = document.getElementById('locationInput').value;
+    var isRemote = document.getElementById('isRemote').checked;
+    var notes = document.getElementById('notesInput').value;
 
-    // Save what was typed BEFORE any render() call, so a validation
+    // Save what was picked BEFORE any render() call, so a validation
     // error or re-render never wipes the form back to blank.
     state.bookingFormValues = {
-      service_type: payload.service_type,
-      scheduled_date: payload.scheduled_date,
-      scheduled_time: payload.scheduled_time,
-      state: payload.state,
-      location: payload.location,
-      is_remote: payload.is_remote,
-      notes: payload.notes
+      service_type: serviceType,
+      month: month, day: day, year: year,
+      hour: hour12, minute: minute, ampm: ampm,
+      state: stateVal, location: location, is_remote: isRemote, notes: notes
     };
 
-    if (!payload.service_type || !payload.scheduled_date || !payload.scheduled_time || !payload.state) {
+    if (!serviceType || !month || !day || !year || !hour12 || !minute || !stateVal) {
       state.bookingError = 'Please fill in service, date, time, and state.';
       render();
       return;
     }
+
+    // Build ISO date (YYYY-MM-DD) and 24-hour time (HH:MM) from the
+    // dropdown selections — deterministic, no native-picker ambiguity.
+    var scheduledDate = year + '-' + month + '-' + day;
+    var hour24 = parseInt(hour12, 10);
+    if (ampm === 'PM' && hour24 !== 12) hour24 += 12;
+    if (ampm === 'AM' && hour24 === 12) hour24 = 0;
+    var hour24Str = hour24 < 10 ? '0' + hour24 : '' + hour24;
+    var scheduledTime = hour24Str + ':' + minute;
+
+    var payload = {
+      service_type: serviceType,
+      scheduled_date: scheduledDate,
+      scheduled_time: scheduledTime,
+      state: stateVal,
+      location: location,
+      is_remote: isRemote,
+      notes: notes,
+      worker_id: state.bookingWorker.id
+    };
 
     state.bookingError = null;
     state.bookingSubmitting = true;
