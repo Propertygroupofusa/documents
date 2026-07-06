@@ -97,7 +97,8 @@ var state = {
   pricingLoading: false,
   bookingSubmitting: false,
   bookingError: null,
-  bookingResult: null
+  bookingResult: null,
+  bookingFormValues: { service_type: '', scheduled_date: '', scheduled_time: '', state: '', location: '', is_remote: false, notes: '' }
 };
 
 var AVATAR_EMOJIS = ['\u{1F9D1}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BC}', '\u{1F468}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BB}', '\u{1F468}\u200D\u2696\uFE0F', '\u{1F469}\u200D\u{1F527}', '\u{1F468}\u200D\u{1F527}'];
@@ -487,12 +488,14 @@ function renderBookingModal() {
   }
 
   var options = state.pricingOptions.map(function(o) {
-    return '<option value="' + esc(o.service_type) + '">' + esc(o.title) + (o.price ? ' &mdash; $' + esc(o.price) : '') + '</option>';
+    var selected = (o.service_type === state.bookingFormValues.service_type) ? ' selected' : '';
+    return '<option value="' + esc(o.service_type) + '"' + selected + '>' + esc(o.title) + (o.price ? ' &mdash; $' + esc(o.price) : '') + '</option>';
   }).join('');
   var serviceField = state.pricingLoading
     ? '<p style="font-size:13px;color:#64748b;">Loading services...</p>'
     : ('<select id="serviceType" required><option value="">Select a service</option>' + options + '</select>');
   var errorHtml = state.bookingError ? ('<div class="error-text">' + esc(state.bookingError) + '</div>') : '';
+  var bf = state.bookingFormValues;
 
   return (
     '<div class="modal-overlay"><div class="modal-box">' +
@@ -500,13 +503,13 @@ function renderBookingModal() {
       '<form id="bookingForm">' +
         serviceField +
         '<div class="two-col">' +
-          '<input type="date" id="schedDate" required />' +
-          '<input type="time" id="schedTime" required />' +
+          '<input type="date" id="schedDate" value="' + esc(bf.scheduled_date) + '" required />' +
+          '<input type="time" id="schedTime" value="' + esc(bf.scheduled_time) + '" required />' +
         '</div>' +
-        '<input type="text" id="stateInput" placeholder="State (e.g. TX)" maxlength="2" required />' +
-        '<input type="text" id="locationInput" placeholder="Location (optional)" />' +
-        '<label class="checkbox"><input type="checkbox" id="isRemote" /> Remote/online job</label>' +
-        '<textarea id="notesInput" placeholder="Notes (optional)" rows="2"></textarea>' +
+        '<input type="text" id="stateInput" placeholder="State (e.g. TX)" value="' + esc(bf.state) + '" maxlength="2" required />' +
+        '<input type="text" id="locationInput" placeholder="Location (optional)" value="' + esc(bf.location) + '" />' +
+        '<label class="checkbox"><input type="checkbox" id="isRemote"' + (bf.is_remote ? ' checked' : '') + ' /> Remote/online job</label>' +
+        '<textarea id="notesInput" placeholder="Notes (optional)" rows="2">' + esc(bf.notes) + '</textarea>' +
         errorHtml +
         '<div class="two-col">' +
           '<button type="button" class="btn btn-skip" id="cancelBookingBtn">Cancel</button>' +
@@ -549,6 +552,7 @@ function startBooking(worker) {
   state.bookingError = null;
   state.bookingResult = null;
   state.pricingLoading = true;
+  state.bookingFormValues = { service_type: '', scheduled_date: '', scheduled_time: '', state: '', location: '', is_remote: false, notes: '' };
   render();
   fetch(API_BASE + '/jobs/pricing')
     .then(function(res) { return res.json(); })
@@ -580,9 +584,6 @@ function attachBookingHandlers() {
   var form = document.getElementById('bookingForm');
   if (form) form.onsubmit = function(e) {
     e.preventDefault();
-    state.bookingError = null;
-    state.bookingSubmitting = true;
-    render();
 
     var payload = {
       service_type: document.getElementById('serviceType') ? document.getElementById('serviceType').value : '',
@@ -594,12 +595,28 @@ function attachBookingHandlers() {
       notes: document.getElementById('notesInput').value,
       worker_id: state.bookingWorker.id
     };
+
+    // Save what was typed BEFORE any render() call, so a validation
+    // error or re-render never wipes the form back to blank.
+    state.bookingFormValues = {
+      service_type: payload.service_type,
+      scheduled_date: payload.scheduled_date,
+      scheduled_time: payload.scheduled_time,
+      state: payload.state,
+      location: payload.location,
+      is_remote: payload.is_remote,
+      notes: payload.notes
+    };
+
     if (!payload.service_type || !payload.scheduled_date || !payload.scheduled_time || !payload.state) {
       state.bookingError = 'Please fill in service, date, time, and state.';
-      state.bookingSubmitting = false;
       render();
       return;
     }
+
+    state.bookingError = null;
+    state.bookingSubmitting = true;
+    render();
 
     fetch(API_BASE + '/bookings/create', {
       method: 'POST',
