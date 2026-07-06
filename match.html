@@ -4,400 +4,454 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WorkMatch — Find & Book PGUSA Workers</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
-<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #eff6ff, #ecfdf5);
+    min-height: 100vh;
+    color: #0f172a;
+  }
+  .app-header {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,0.95);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo { font-size: 22px; font-weight: 800; background: linear-gradient(90deg,#2563eb,#059669); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tabs { display: flex; gap: 24px; padding: 0 16px; background: rgba(255,255,255,0.95); border-bottom: 1px solid #e2e8f0; }
+  .tab { padding: 12px 4px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #64748b; border: none; background: none; border-bottom: 2px solid transparent; cursor: pointer; }
+  .tab.active { color: #2563eb; border-color: #2563eb; }
+  .container { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 16px; }
+  .card-banner { height: 100px; background: linear-gradient(90deg,#3b82f6,#10b981,#14b8a6); position: relative; }
+  .avatar { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 90px; height: 90px; border-radius: 50%; background: #e2e8f0; border: 4px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 42px; }
+  .card-body { padding: 56px 20px 20px; text-align: center; }
+  .worker-name { font-size: 22px; font-weight: 800; }
+  .worker-title { color: #059669; font-weight: 600; margin-top: 2px; }
+  .stat-row { display: flex; justify-content: space-around; padding: 16px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; margin: 16px 0; }
+  .stat-num { font-size: 22px; font-weight: 800; }
+  .stat-label { font-size: 11px; color: #64748b; }
+  .loc-row { font-size: 14px; color: #334155; margin-bottom: 12px; }
+  .skill { display: inline-block; background: #dbeafe; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin: 3px; }
+
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn { padding: 14px; border-radius: 12px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; }
+  .btn-skip { background: #f1f5f9; color: #334155; }
+  .btn-book { background: linear-gradient(90deg,#10b981,#0d9488); color: #fff; }
+  .btn-primary { background: #2563eb; color: #fff; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; font-size: 14px; cursor: pointer; }
+  .btn-secondary { background: #f1f5f9; color: #334155; }
+
+  input, select, textarea {
+    width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; margin-bottom: 12px;
+  }
+  label.checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; margin-bottom: 12px; }
+  label.checkbox input { width: auto; margin: 0; }
+
+  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+  .login-box { background: #fff; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 32px; max-width: 380px; width: 100%; }
+  .toggle-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .toggle-btn { flex: 1; padding: 10px; border-radius: 10px; border: none; font-weight: 700; font-size: 13px; cursor: pointer; background: #f1f5f9; color: #475569; }
+  .toggle-btn.active { background: #2563eb; color: #fff; }
+  .error-text { color: #dc2626; font-size: 12px; margin-bottom: 10px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 30; padding: 16px; }
+  .modal-box { background: #fff; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .result-line { font-size: 14px; margin-bottom: 4px; }
+  .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .logout-link { font-size: 12px; color: #64748b; text-decoration: underline; background: none; border: none; cursor: pointer; }
+</style>
 </head>
 <body>
 <div id="root"></div>
 
-<script type="text/babel" data-presets="react">
-const { useState, useEffect } = React;
+<script>
+var API_BASE = 'https://pgusa-platform-production.up.railway.app';
 
-const API_BASE = 'https://pgusa-platform-production.up.railway.app';
+var state = {
+  authMode: 'login',
+  token: localStorage.getItem('pgusa_client_token') || null,
+  clientName: localStorage.getItem('pgusa_client_name') || null,
+  activeTab: 'discover',
+  cardIndex: 0,
+  workers: [],
+  matches: [],
+  loading: true,
+  error: null,
+  authError: null,
+  authLoading: false,
+  bookingWorker: null,
+  pricingOptions: [],
+  pricingLoading: false,
+  bookingSubmitting: false,
+  bookingError: null,
+  bookingResult: null
+};
 
-const AVATAR_EMOJIS = ['🧑‍💼', '👩‍💼', '👨‍💼', '👩‍💻', '👨‍⚖️', '👩‍🔧', '👨‍🔧'];
+var AVATAR_EMOJIS = ['\u{1F9D1}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BC}', '\u{1F468}\u200D\u{1F4BC}', '\u{1F469}\u200D\u{1F4BB}', '\u{1F468}\u200D\u2696\uFE0F', '\u{1F469}\u200D\u{1F527}', '\u{1F468}\u200D\u{1F527}'];
 function avatarFor(id) {
-  let hash = 0;
-  const s = String(id);
-  for (let i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
+  var hash = 0;
+  var s = String(id);
+  for (var i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
   return AVATAR_EMOJIS[hash % AVATAR_EMOJIS.length];
 }
+function esc(str) {
+  var d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
 
-function WorkerMatchmaking() {
-  const [activeTab, setActiveTab] = useState('discover');
-  const [cardIndex, setCardIndex] = useState(0);
-  const [matches, setMatches] = useState([]);
-
-  const [workers, setWorkers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [token, setToken] = useState(() => localStorage.getItem('pgusa_client_token') || null);
-  const [clientName, setClientName] = useState(() => localStorage.getItem('pgusa_client_name') || null);
-
-  // Login vs Register toggle
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [regFirstName, setRegFirstName] = useState('');
-  const [regLastName, setRegLastName] = useState('');
-  const [regPhone, setRegPhone] = useState('');
-  const [regState, setRegState] = useState('');
-  const [authError, setAuthError] = useState(null);
-  const [authLoading, setAuthLoading] = useState(false);
-
-  const [bookingWorker, setBookingWorker] = useState(null);
-  const [pricingOptions, setPricingOptions] = useState([]);
-  const [pricingLoading, setPricingLoading] = useState(false);
-  const [bookingForm, setBookingForm] = useState({
-    service_type: '', scheduled_date: '', scheduled_time: '',
-    state: '', location: '', is_remote: false, notes: '',
-  });
-  const [bookingSubmitting, setBookingSubmitting] = useState(false);
-  const [bookingError, setBookingError] = useState(null);
-  const [bookingResult, setBookingResult] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(API_BASE + '/workers/browse?limit=50');
-        if (!res.ok) throw new Error('Server returned ' + res.status);
-        const data = await res.json();
-        if (!cancelled) setWorkers(data.workers || []);
-      } catch (err) {
-        if (!cancelled) setError('Could not load workers. Try again shortly.');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
-
-  const currentWorker = cardIndex < workers.length ? workers[cardIndex] : null;
-  const matchedProfiles = workers.filter(w => matches.includes(w.id));
-
-  function handleSkip() { setCardIndex(cardIndex + 1); }
-
-  async function handleLogin(e) {
-    e.preventDefault();
-    setAuthError(null);
-    setAuthLoading(true);
-    try {
-      const body = new URLSearchParams();
-      body.append('username', loginEmail);
-      body.append('password', loginPassword);
-      const res = await fetch(API_BASE + '/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Login failed');
-      if (data.user_type !== 'client') throw new Error("This login isn't a client account.");
-      setToken(data.access_token);
-      setClientName(data.name);
-      localStorage.setItem('pgusa_client_token', data.access_token);
-      localStorage.setItem('pgusa_client_name', data.name);
-    } catch (err) {
-      setAuthError(err.message || 'Login failed');
-    } finally {
-      setAuthLoading(false);
-    }
+function render() {
+  var root = document.getElementById('root');
+  if (!state.token) {
+    root.innerHTML = renderLogin();
+    attachLoginHandlers();
+    return;
   }
+  root.innerHTML = renderApp();
+  attachAppHandlers();
+}
 
-  async function handleRegister(e) {
-    e.preventDefault();
-    setAuthError(null);
-    setAuthLoading(true);
-    try {
-      const res = await fetch(API_BASE + '/auth/register/client', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: regFirstName,
-          last_name: regLastName,
-          email: loginEmail,
-          phone: regPhone,
-          password: loginPassword,
-          state: regState.toUpperCase(),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Registration failed');
-      setToken(data.access_token);
-      setClientName(data.name);
-      localStorage.setItem('pgusa_client_token', data.access_token);
-      localStorage.setItem('pgusa_client_name', data.name);
-    } catch (err) {
-      setAuthError(err.message || 'Registration failed');
-    } finally {
-      setAuthLoading(false);
-    }
+function renderLogin() {
+  var isLogin = state.authMode === 'login';
+  var extraFields = '';
+  if (!isLogin) {
+    extraFields =
+      '<div class="two-col">' +
+        '<input type="text" id="regFirstName" placeholder="First name" required />' +
+        '<input type="text" id="regLastName" placeholder="Last name" required />' +
+      '</div>' +
+      '<input type="tel" id="regPhone" placeholder="Phone" required />' +
+      '<input type="text" id="regState" placeholder="State (e.g. TX)" maxlength="2" required />';
   }
-
-  function handleLogout() {
-    setToken(null);
-    setClientName(null);
-    localStorage.removeItem('pgusa_client_token');
-    localStorage.removeItem('pgusa_client_name');
-  }
-
-  async function startBooking(worker) {
-    setBookingWorker(worker);
-    setBookingError(null);
-    setBookingResult(null);
-    setPricingLoading(true);
-    try {
-      const res = await fetch(API_BASE + '/jobs/pricing');
-      const data = await res.json();
-      let options;
-      if (Array.isArray(data)) options = data;
-      else if (data.services) options = data.services;
-      else options = Object.entries(data).map(([key, val]) => ({
-        service_type: key, title: (val && val.title) || key, price: val && val.price,
-      }));
-      setPricingOptions(options);
-      if (options.length > 0) setBookingForm(f => ({ ...f, service_type: options[0].service_type }));
-    } catch (err) {
-      setBookingError('Could not load service pricing.');
-    } finally {
-      setPricingLoading(false);
-    }
-  }
-
-  function closeBookingModal() {
-    setBookingWorker(null);
-    setBookingError(null);
-    setBookingResult(null);
-    setBookingForm({ service_type: '', scheduled_date: '', scheduled_time: '', state: '', location: '', is_remote: false, notes: '' });
-  }
-
-  async function submitBooking(e) {
-    e.preventDefault();
-    setBookingError(null);
-    setBookingSubmitting(true);
-    try {
-      if (!bookingForm.service_type || !bookingForm.scheduled_date || !bookingForm.scheduled_time || !bookingForm.state) {
-        throw new Error('Please fill in service, date, time, and state.');
-      }
-      const res = await fetch(API_BASE + '/bookings/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-        body: JSON.stringify({ ...bookingForm, worker_id: bookingWorker.id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Booking failed');
-      setBookingResult(data);
-      setMatches(m => m.includes(bookingWorker.id) ? m : [...m, bookingWorker.id]);
-    } catch (err) {
-      setBookingError(err.message || 'Booking failed');
-    } finally {
-      setBookingSubmitting(false);
-    }
-  }
-
-  if (!token) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-sm w-full">
-          <div className="text-center mb-6">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-2">WorkMatch</div>
-            <p className="text-slate-600 text-sm">
-              {authMode === 'login' ? 'Log in to book real workers.' : 'Create a client account to get started.'}
-            </p>
-          </div>
-
-          <div className="flex gap-2 mb-4">
-            <button onClick={() => setAuthMode('login')} className={`flex-1 py-2 rounded-lg text-sm font-semibold ${authMode === 'login' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>Log In</button>
-            <button onClick={() => setAuthMode('register')} className={`flex-1 py-2 rounded-lg text-sm font-semibold ${authMode === 'register' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>Register</button>
-          </div>
-
-          <form onSubmit={authMode === 'login' ? handleLogin : handleRegister} className="space-y-3">
-            {authMode === 'register' && (
-              <>
-                <div className="grid grid-cols-2 gap-2">
-                  <input type="text" placeholder="First name" value={regFirstName} onChange={e => setRegFirstName(e.target.value)} className="px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                  <input type="text" placeholder="Last name" value={regLastName} onChange={e => setRegLastName(e.target.value)} className="px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                </div>
-                <input type="tel" placeholder="Phone" value={regPhone} onChange={e => setRegPhone(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                <input type="text" placeholder="State (e.g. TX)" maxLength={2} value={regState} onChange={e => setRegState(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-              </>
-            )}
-            <input type="email" placeholder="Email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} className="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm" required />
-            <input type="password" placeholder="Password" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} className="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm" required />
-            {authError && <p className="text-red-600 text-xs">{authError}</p>}
-            <button type="submit" disabled={authLoading} className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl disabled:opacity-60">
-              {authLoading ? 'Please wait...' : (authMode === 'login' ? 'Log In' : 'Create Account')}
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
+  var errorHtml = state.authError ? ('<div class="error-text">' + esc(state.authError) + '</div>') : '';
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900">
-      <div className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent">WorkMatch</div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-600 hidden sm:inline">Hi, {clientName}</span>
-            <button onClick={handleLogout} className="text-xs text-slate-500 underline">Log out</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="sticky top-16 z-10 bg-white/95 backdrop-blur border-b border-slate-200">
-        <div className="max-w-2xl mx-auto px-4 flex gap-6">
-          {['discover', 'matches'].map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)}
-              className={`py-3 px-2 font-semibold text-sm uppercase tracking-wide transition border-b-2 ${activeTab === tab ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600'}`}>
-              {tab === 'discover' ? '🎯 Discover' : '❤️ Booked'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="max-w-2xl mx-auto">
-        {activeTab === 'discover' && (
-          <div className="p-4 pb-20">
-            {loading ? (
-              <div className="text-center py-24 text-slate-500">Loading approved workers...</div>
-            ) : error ? (
-              <div className="text-center py-20">
-                <p className="text-red-600 font-semibold mb-2">{error}</p>
-                <button onClick={() => window.location.reload()} className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg">Retry</button>
-              </div>
-            ) : currentWorker ? (
-              <div className="space-y-4">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-                  <div className="h-32 bg-gradient-to-r from-blue-500 via-emerald-500 to-teal-500 relative">
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-center">
-                      <div className="w-28 h-28 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 border-4 border-white flex items-center justify-center text-6xl shadow-md">
-                        {avatarFor(currentWorker.id)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pt-16 px-6 pb-6 space-y-4">
-                    <div className="text-center">
-                      <h2 className="text-2xl font-bold">{currentWorker.name}</h2>
-                      <p className="text-emerald-600 font-semibold">{currentWorker.title}</p>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 py-4 border-y border-slate-200">
-                      <div className="text-center"><div className="text-2xl font-bold text-blue-600">{currentWorker.jobs}</div><div className="text-xs text-slate-600">Jobs</div></div>
-                      <div className="text-center"><div className="text-2xl font-bold text-amber-600">{currentWorker.rating.toFixed(1)}⭐</div><div className="text-xs text-slate-600">Rating</div></div>
-                      <div className="text-center"><div className="text-2xl font-bold text-emerald-600">{currentWorker.experience_years != null ? currentWorker.experience_years + 'y' : '—'}</div><div className="text-xs text-slate-600">Experience</div></div>
-                    </div>
-                    <p className="text-sm text-slate-700">📍 {currentWorker.location}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {currentWorker.skills.map((skill, i) => (
-                        <span key={i} className="px-3 py-1 bg-gradient-to-r from-blue-100 to-emerald-100 text-blue-700 text-xs font-semibold rounded-full">✓ {skill}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <button onClick={handleSkip} className="py-4 px-6 bg-slate-100 text-slate-700 font-bold rounded-xl">Skip</button>
-                  <button onClick={() => startBooking(currentWorker)} className="py-4 px-6 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl">Book This Worker</button>
-                </div>
-                <div className="text-center text-xs text-slate-500 mt-4">{cardIndex + 1} of {workers.length}</div>
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <h3 className="text-xl font-bold mb-2">You've reviewed everyone!</h3>
-                <button onClick={() => setCardIndex(0)} className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg">Start Over</button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'matches' && (
-          <div className="p-4 pb-20">
-            <h2 className="text-2xl font-bold mb-6">Booked Workers</h2>
-            {matchedProfiles.length === 0 ? (
-              <p className="text-slate-600 text-center py-12">No confirmed bookings yet.</p>
-            ) : (
-              <div className="grid gap-4">
-                {matchedProfiles.map(worker => (
-                  <div key={worker.id} className="bg-white rounded-lg p-4 border border-slate-200">
-                    <h3 className="font-bold text-lg">{worker.name}</h3>
-                    <p className="text-emerald-600 text-sm font-semibold">{worker.title}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {bookingWorker && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-30 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
-            {bookingResult ? (
-              <div className="text-center py-4">
-                <div className="text-5xl mb-3">✅</div>
-                <h3 className="text-xl font-bold mb-2">Booking Confirmed</h3>
-                <p className="text-sm text-slate-600 mb-4">{bookingResult.message}</p>
-                <div className="bg-slate-50 rounded-lg p-4 text-left text-sm space-y-1 mb-4">
-                  <p><strong>Service:</strong> {bookingResult.service}</p>
-                  <p><strong>Client Price:</strong> ${bookingResult.price}</p>
-                  <p><strong>Worker Pay:</strong> ${bookingResult.worker_pay}</p>
-                  <p><strong>Platform Fee:</strong> ${bookingResult.platform_fee}</p>
-                  <p><strong>Date:</strong> {bookingResult.date} at {bookingResult.time}</p>
-                  <p><strong>Status:</strong> {bookingResult.status}</p>
-                  <p><strong>Booking ID:</strong> {bookingResult.booking_id}</p>
-                </div>
-                {bookingResult.stripe_link && (
-                  <a href={bookingResult.stripe_link} target="_blank" rel="noopener noreferrer" className="block w-full py-3 bg-blue-600 text-white font-bold rounded-xl mb-3">Pay Now</a>
-                )}
-                <button onClick={closeBookingModal} className="w-full py-3 bg-slate-100 text-slate-700 font-bold rounded-xl">Done</button>
-              </div>
-            ) : (
-              <form onSubmit={submitBooking} className="space-y-4">
-                <h3 className="text-lg font-bold">Book {bookingWorker.name}</h3>
-                {pricingLoading ? (
-                  <p className="text-sm text-slate-500">Loading services...</p>
-                ) : (
-                  <select value={bookingForm.service_type} onChange={e => setBookingForm(f => ({ ...f, service_type: e.target.value }))} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" required>
-                    <option value="">Select a service</option>
-                    {pricingOptions.map(opt => (
-                      <option key={opt.service_type} value={opt.service_type}>{opt.title}{opt.price ? ' — $' + opt.price : ''}</option>
-                    ))}
-                  </select>
-                )}
-                <div className="grid grid-cols-2 gap-3">
-                  <input type="date" value={bookingForm.scheduled_date} onChange={e => setBookingForm(f => ({ ...f, scheduled_date: e.target.value }))} className="px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                  <input type="time" value={bookingForm.scheduled_time} onChange={e => setBookingForm(f => ({ ...f, scheduled_time: e.target.value }))} className="px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                </div>
-                <input type="text" placeholder="State (e.g. TX)" maxLength={2} value={bookingForm.state} onChange={e => setBookingForm(f => ({ ...f, state: e.target.value.toUpperCase() }))} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" required />
-                <input type="text" placeholder="Location (optional)" value={bookingForm.location} onChange={e => setBookingForm(f => ({ ...f, location: e.target.value }))} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" />
-                <label className="flex items-center gap-2 text-sm text-slate-600">
-                  <input type="checkbox" checked={bookingForm.is_remote} onChange={e => setBookingForm(f => ({ ...f, is_remote: e.target.checked }))} />
-                  Remote/online job
-                </label>
-                <textarea placeholder="Notes (optional)" value={bookingForm.notes} onChange={e => setBookingForm(f => ({ ...f, notes: e.target.value }))} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" rows={2} />
-                {bookingError && <p className="text-red-600 text-xs">{bookingError}</p>}
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <button type="button" onClick={closeBookingModal} className="py-3 bg-slate-100 text-slate-700 font-bold rounded-xl">Cancel</button>
-                  <button type="submit" disabled={bookingSubmitting} className="py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl disabled:opacity-60">
-                    {bookingSubmitting ? 'Booking...' : 'Confirm & Book'}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+    '<div class="login-wrap"><div class="login-box">' +
+      '<div style="text-align:center;margin-bottom:20px;">' +
+        '<div class="logo">WorkMatch</div>' +
+        '<p style="font-size:13px;color:#64748b;margin-top:6px;">' + (isLogin ? 'Log in to book real workers.' : 'Create a client account to get started.') + '</p>' +
+      '</div>' +
+      '<div class="toggle-row">' +
+        '<button class="toggle-btn ' + (isLogin ? 'active' : '') + '" id="modeLogin">Log In</button>' +
+        '<button class="toggle-btn ' + (!isLogin ? 'active' : '') + '" id="modeRegister">Register</button>' +
+      '</div>' +
+      '<form id="authForm">' +
+        extraFields +
+        '<input type="email" id="loginEmail" placeholder="Email" required />' +
+        '<input type="password" id="loginPassword" placeholder="Password" required />' +
+        errorHtml +
+        '<button type="submit" class="btn-primary" ' + (state.authLoading ? 'disabled' : '') + '>' + (state.authLoading ? 'Please wait...' : (isLogin ? 'Log In' : 'Create Account')) + '</button>' +
+      '</form>' +
+    '</div></div>'
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<WorkerMatchmaking />);
+function attachLoginHandlers() {
+  document.getElementById('modeLogin').onclick = function() { state.authMode = 'login'; state.authError = null; render(); };
+  document.getElementById('modeRegister').onclick = function() { state.authMode = 'register'; state.authError = null; render(); };
+  document.getElementById('authForm').onsubmit = function(e) {
+    e.preventDefault();
+    state.authError = null;
+    state.authLoading = true;
+    render();
+    doAuth();
+  };
+}
+
+function doAuth() {
+  if (state.authMode === 'login') {
+    var body = new URLSearchParams();
+    body.append('username', document.getElementById('loginEmail').value);
+    body.append('password', document.getElementById('loginPassword').value);
+    fetch(API_BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.detail || 'Login failed');
+        if (result.data.user_type !== 'client') throw new Error("This login isn't a client account.");
+        state.token = result.data.access_token;
+        state.clientName = result.data.name;
+        localStorage.setItem('pgusa_client_token', result.data.access_token);
+        localStorage.setItem('pgusa_client_name', result.data.name);
+        loadWorkers();
+      })
+      .catch(function(err) {
+        state.authError = err.message || 'Something went wrong';
+        state.authLoading = false;
+        render();
+      });
+  } else {
+    var payload = {
+      first_name: document.getElementById('regFirstName').value,
+      last_name: document.getElementById('regLastName').value,
+      email: document.getElementById('loginEmail').value,
+      phone: document.getElementById('regPhone').value,
+      password: document.getElementById('loginPassword').value,
+      state: document.getElementById('regState').value.toUpperCase()
+    };
+    fetch(API_BASE + '/auth/register/client', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.detail || 'Registration failed');
+        state.token = result.data.access_token;
+        state.clientName = result.data.name;
+        localStorage.setItem('pgusa_client_token', result.data.access_token);
+        localStorage.setItem('pgusa_client_name', result.data.name);
+        loadWorkers();
+      })
+      .catch(function(err) {
+        state.authError = err.message || 'Something went wrong';
+        state.authLoading = false;
+        render();
+      });
+  }
+}
+
+function loadWorkers() {
+  state.loading = true;
+  state.error = null;
+  render();
+  fetch(API_BASE + '/workers/browse?limit=50')
+    .then(function(res) {
+      if (!res.ok) throw new Error('Server returned ' + res.status);
+      return res.json();
+    })
+    .then(function(data) { state.workers = data.workers || []; })
+    .catch(function(err) { state.error = 'Could not load workers. Try again shortly.'; })
+    .then(function() {
+      state.loading = false;
+      state.authLoading = false;
+      render();
+    });
+}
+
+function renderApp() {
+  var tabsHtml =
+    '<div class="tabs">' +
+      '<button class="tab ' + (state.activeTab==='discover'?'active':'') + '" data-tab="discover">Discover</button>' +
+      '<button class="tab ' + (state.activeTab==='matches'?'active':'') + '" data-tab="matches">Booked</button>' +
+    '</div>';
+  return (
+    '<div class="app-header"><div class="logo">WorkMatch</div>' +
+      '<div style="display:flex;align-items:center;gap:12px;">' +
+        '<span style="font-size:13px;color:#64748b;">Hi, ' + esc(state.clientName) + '</span>' +
+        '<button class="logout-link" id="logoutBtn">Log out</button>' +
+      '</div>' +
+    '</div>' +
+    tabsHtml +
+    '<div class="container">' + (state.activeTab === 'discover' ? renderDiscover() : renderMatches()) + '</div>' +
+    (state.bookingWorker ? renderBookingModal() : '')
+  );
+}
+
+function renderDiscover() {
+  if (state.loading) return '<div class="empty-state">Loading approved workers...</div>';
+  if (state.error) return '<div class="empty-state"><p style="color:#dc2626;font-weight:700;">' + esc(state.error) + '</p><button class="btn-primary" id="retryBtn" style="max-width:200px;margin:12px auto;">Retry</button></div>';
+
+  var w = state.workers[state.cardIndex];
+  if (!w) {
+    if (state.workers.length === 0) return '<div class="empty-state"><h3>No approved workers yet</h3><p>Check back soon.</p></div>';
+    return '<div class="empty-state"><h3>You have reviewed everyone!</h3><button class="btn-primary" id="resetBtn" style="max-width:200px;margin:12px auto;">Start Over</button></div>';
+  }
+
+  var skills = (w.skills || []).map(function(s) { return '<span class="skill">&check; ' + esc(s) + '</span>'; }).join('');
+  return (
+    '<div class="card">' +
+      '<div class="card-banner"><div class="avatar">' + avatarFor(w.id) + '</div></div>' +
+      '<div class="card-body">' +
+        '<div class="worker-name">' + esc(w.name) + '</div>' +
+        '<div class="worker-title">' + esc(w.title) + '</div>' +
+        '<div class="stat-row">' +
+          '<div><div class="stat-num" style="color:#2563eb;">' + w.jobs + '</div><div class="stat-label">Jobs</div></div>' +
+          '<div><div class="stat-num" style="color:#d97706;">' + (w.rating||0).toFixed(1) + '&#9733;</div><div class="stat-label">Rating</div></div>' +
+          '<div><div class="stat-num" style="color:#059669;">' + (w.experience_years != null ? w.experience_years + 'y' : '&mdash;') + '</div><div class="stat-label">Experience</div></div>' +
+        '</div>' +
+        '<div class="loc-row">&#128205; ' + esc(w.location) + '</div>' +
+        '<div>' + skills + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="btn-row">' +
+      '<button class="btn btn-skip" id="skipBtn">Skip</button>' +
+      '<button class="btn btn-book" id="bookBtn">Book This Worker</button>' +
+    '</div>' +
+    '<div style="text-align:center;font-size:12px;color:#64748b;margin-top:12px;">' + (state.cardIndex+1) + ' of ' + state.workers.length + '</div>'
+  );
+}
+
+function renderMatches() {
+  var matched = state.workers.filter(function(w) { return state.matches.indexOf(w.id) !== -1; });
+  if (matched.length === 0) return '<div class="empty-state"><h3>No confirmed bookings yet.</h3></div>';
+  return matched.map(function(w) {
+    return '<div class="card" style="margin-bottom:12px;"><div style="padding:16px;display:flex;gap:12px;align-items:center;"><div style="font-size:36px;">' + avatarFor(w.id) + '</div><div><div style="font-weight:800;">' + esc(w.name) + '</div><div style="color:#059669;font-size:13px;font-weight:700;">' + esc(w.title) + '</div></div></div></div>';
+  }).join('');
+}
+
+function renderBookingModal() {
+  var w = state.bookingWorker;
+  if (state.bookingResult) {
+    var r = state.bookingResult;
+    var payLink = r.stripe_link ? ('<a href="' + esc(r.stripe_link) + '" target="_blank" class="btn-primary" style="display:block;text-decoration:none;margin-bottom:10px;">Pay Now</a>') : '';
+    return (
+      '<div class="modal-overlay"><div class="modal-box" style="text-align:center;">' +
+        '<div style="font-size:48px;">&#9989;</div>' +
+        '<h3 style="margin:10px 0;">Booking Confirmed</h3>' +
+        '<p style="font-size:13px;color:#64748b;margin-bottom:14px;">' + esc(r.message) + '</p>' +
+        '<div style="background:#f8fafc;border-radius:10px;padding:14px;text-align:left;font-size:13px;margin-bottom:14px;">' +
+          '<div class="result-line"><strong>Service:</strong> ' + esc(r.service) + '</div>' +
+          '<div class="result-line"><strong>Client Price:</strong> $' + esc(r.price) + '</div>' +
+          '<div class="result-line"><strong>Worker Pay:</strong> $' + esc(r.worker_pay) + '</div>' +
+          '<div class="result-line"><strong>Platform Fee:</strong> $' + esc(r.platform_fee) + '</div>' +
+          '<div class="result-line"><strong>Date:</strong> ' + esc(r.date) + ' at ' + esc(r.time) + '</div>' +
+          '<div class="result-line"><strong>Status:</strong> ' + esc(r.status) + '</div>' +
+          '<div class="result-line"><strong>Booking ID:</strong> ' + esc(r.booking_id) + '</div>' +
+        '</div>' +
+        payLink +
+        '<button class="btn-primary btn-secondary" id="closeModalBtn">Done</button>' +
+      '</div></div>'
+    );
+  }
+
+  var options = state.pricingOptions.map(function(o) {
+    return '<option value="' + esc(o.service_type) + '">' + esc(o.title) + (o.price ? ' &mdash; $' + esc(o.price) : '') + '</option>';
+  }).join('');
+  var serviceField = state.pricingLoading
+    ? '<p style="font-size:13px;color:#64748b;">Loading services...</p>'
+    : ('<select id="serviceType" required><option value="">Select a service</option>' + options + '</select>');
+  var errorHtml = state.bookingError ? ('<div class="error-text">' + esc(state.bookingError) + '</div>') : '';
+
+  return (
+    '<div class="modal-overlay"><div class="modal-box">' +
+      '<h3 style="margin-bottom:14px;">Book ' + esc(w.name) + '</h3>' +
+      '<form id="bookingForm">' +
+        serviceField +
+        '<div class="two-col">' +
+          '<input type="date" id="schedDate" required />' +
+          '<input type="time" id="schedTime" required />' +
+        '</div>' +
+        '<input type="text" id="stateInput" placeholder="State (e.g. TX)" maxlength="2" required />' +
+        '<input type="text" id="locationInput" placeholder="Location (optional)" />' +
+        '<label class="checkbox"><input type="checkbox" id="isRemote" /> Remote/online job</label>' +
+        '<textarea id="notesInput" placeholder="Notes (optional)" rows="2"></textarea>' +
+        errorHtml +
+        '<div class="two-col">' +
+          '<button type="button" class="btn btn-skip" id="cancelBookingBtn">Cancel</button>' +
+          '<button type="submit" class="btn btn-book" ' + (state.bookingSubmitting ? 'disabled' : '') + '>' + (state.bookingSubmitting ? 'Booking...' : 'Confirm & Book') + '</button>' +
+        '</div>' +
+      '</form>' +
+    '</div></div>'
+  );
+}
+
+function attachAppHandlers() {
+  document.getElementById('logoutBtn').onclick = function() {
+    state.token = null; state.clientName = null;
+    localStorage.removeItem('pgusa_client_token');
+    localStorage.removeItem('pgusa_client_name');
+    render();
+  };
+  var tabs = document.querySelectorAll('.tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].onclick = function() { state.activeTab = this.getAttribute('data-tab'); render(); };
+  }
+
+  var retryBtn = document.getElementById('retryBtn');
+  if (retryBtn) retryBtn.onclick = loadWorkers;
+
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) resetBtn.onclick = function() { state.cardIndex = 0; render(); };
+
+  var skipBtn = document.getElementById('skipBtn');
+  if (skipBtn) skipBtn.onclick = function() { state.cardIndex++; render(); };
+
+  var bookBtn = document.getElementById('bookBtn');
+  if (bookBtn) bookBtn.onclick = function() { startBooking(state.workers[state.cardIndex]); };
+
+  attachBookingHandlers();
+}
+
+function startBooking(worker) {
+  state.bookingWorker = worker;
+  state.bookingError = null;
+  state.bookingResult = null;
+  state.pricingLoading = true;
+  render();
+  fetch(API_BASE + '/jobs/pricing')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      var options;
+      if (Array.isArray(data)) {
+        options = data;
+      } else if (data.services) {
+        options = data.services;
+      } else {
+        options = Object.keys(data).map(function(key) {
+          var val = data[key];
+          return { service_type: key, title: (val && val.title) || key, price: val && val.price };
+        });
+      }
+      state.pricingOptions = options;
+    })
+    .catch(function(err) { state.bookingError = 'Could not load service pricing.'; })
+    .then(function() { state.pricingLoading = false; render(); });
+}
+
+function attachBookingHandlers() {
+  var closeBtn = document.getElementById('closeModalBtn');
+  if (closeBtn) closeBtn.onclick = closeBookingModal;
+
+  var cancelBtn = document.getElementById('cancelBookingBtn');
+  if (cancelBtn) cancelBtn.onclick = closeBookingModal;
+
+  var form = document.getElementById('bookingForm');
+  if (form) form.onsubmit = function(e) {
+    e.preventDefault();
+    state.bookingError = null;
+    state.bookingSubmitting = true;
+    render();
+
+    var payload = {
+      service_type: document.getElementById('serviceType') ? document.getElementById('serviceType').value : '',
+      scheduled_date: document.getElementById('schedDate').value,
+      scheduled_time: document.getElementById('schedTime').value,
+      state: document.getElementById('stateInput').value.toUpperCase(),
+      location: document.getElementById('locationInput').value,
+      is_remote: document.getElementById('isRemote').checked,
+      notes: document.getElementById('notesInput').value,
+      worker_id: state.bookingWorker.id
+    };
+    if (!payload.service_type || !payload.scheduled_date || !payload.scheduled_time || !payload.state) {
+      state.bookingError = 'Please fill in service, date, time, and state.';
+      state.bookingSubmitting = false;
+      render();
+      return;
+    }
+
+    fetch(API_BASE + '/bookings/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.token },
+      body: JSON.stringify(payload)
+    })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(result.data.detail || 'Booking failed');
+        state.bookingResult = result.data;
+        if (state.matches.indexOf(state.bookingWorker.id) === -1) state.matches.push(state.bookingWorker.id);
+      })
+      .catch(function(err) { state.bookingError = err.message || 'Booking failed'; })
+      .then(function() { state.bookingSubmitting = false; render(); });
+  };
+}
+
+function closeBookingModal() {
+  state.bookingWorker = null;
+  state.bookingError = null;
+  state.bookingResult = null;
+  render();
+}
+
+if (state.token) { loadWorkers(); } else { render(); }
 </script>
 </body>
 </html>
