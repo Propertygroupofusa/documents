@@ -112,6 +112,20 @@ function esc(str) {
   return d.innerHTML;
 }
 
+function formatApiError(detail, fallback) {
+  if (!detail) return fallback || 'Something went wrong';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    var msgs = detail.map(function(item) {
+      if (item && typeof item === 'object') return item.msg || JSON.stringify(item);
+      return String(item);
+    });
+    return msgs.join(' ');
+  }
+  if (typeof detail === 'object') return detail.msg || JSON.stringify(detail);
+  return String(detail);
+}
+
 function render() {
   var root = document.getElementById('root');
   if (!state.token) {
@@ -257,7 +271,7 @@ function attachForgotHandlers() {
     })
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
-        if (!result.ok) throw new Error(result.data.detail || 'Something went wrong');
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Something went wrong'));
         state.forgotSent = true;
       })
       .catch(function(err) { state.authError = err.message || 'Something went wrong'; })
@@ -295,7 +309,7 @@ function attachResetHandlers() {
     })
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
-        if (!result.ok) throw new Error(result.data.detail || 'Something went wrong');
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Something went wrong'));
         state.resetDone = true;
       })
       .catch(function(err) { state.authError = err.message || 'Something went wrong'; })
@@ -311,7 +325,7 @@ function doAuth() {
     fetch(API_BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
-        if (!result.ok) throw new Error(result.data.detail || 'Login failed');
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Login failed'));
         if (result.data.user_type !== 'client') throw new Error("This login isn't a client account.");
         state.token = result.data.access_token;
         state.clientName = result.data.name;
@@ -336,7 +350,7 @@ function doAuth() {
     fetch(API_BASE + '/auth/register/client', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
-        if (!result.ok) throw new Error(result.data.detail || 'Registration failed');
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Registration failed'));
         state.token = result.data.access_token;
         state.clientName = result.data.name;
         localStorage.setItem('pgusa_client_token', result.data.access_token);
@@ -577,7 +591,7 @@ function attachBookingHandlers() {
     })
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
-        if (!result.ok) throw new Error(result.data.detail || 'Booking failed');
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Booking failed'));
         state.bookingResult = result.data;
         if (state.matches.indexOf(state.bookingWorker.id) === -1) state.matches.push(state.bookingWorker.id);
       })
