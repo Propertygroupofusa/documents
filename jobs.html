@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Available Jobs — PGUSA Worker Portal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+  }
+  .navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .navbar h1 { font-size: 20px; }
+  .navbar a { color: white; text-decoration: underline; font-size: 13px; }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab-btn {
+    flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: 700;
+    font-size: 13px; cursor: pointer; background: #eef0ff; color: #4c4c8c;
+  }
+  .tab-btn.active { background: #667eea; color: #fff; }
+  .job-card {
+    background: white; border-radius: 12px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #667eea;
+  }
+  .job-card.urgent { border-left-color: #dc2626; }
+  .job-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .job-meta { font-size: 12px; color: #888; margin-bottom: 10px; }
+  .job-pay { font-size: 22px; font-weight: 800; color: #16a34a; margin-bottom: 10px; }
+  .job-desc { font-size: 13px; color: #555; margin-bottom: 12px; line-height: 1.4; }
+  .urgent-badge {
+    display: inline-block; background: #fee2e2; color: #dc2626; font-size: 11px;
+    font-weight: 700; padding: 3px 8px; border-radius: 999px; margin-left: 8px;
+  }
+  .btn {
+    width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 700;
+    font-size: 14px; cursor: pointer;
+  }
+  .btn-claim { background: linear-gradient(135deg,#667eea,#764ba2); color: white; }
+  .btn-complete { background: #16a34a; color: white; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .empty-state { text-align: center; padding: 50px 20px; color: #999; }
+  .loading { text-align: center; padding: 50px; color: #999; }
+  .error { background: #fee; color: #c33; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #c33; }
+  .success-banner { background: #efe; color: #3c3; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #3c3; }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>📋 Available Jobs</h1>
+  <a href="/documents/dashboard.html">&larr; Back to Dashboard</a>
+</div>
+
+<div class="container">
+  <div id="banner"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabAvailable">Available</button>
+    <button class="tab-btn" id="tabClaimed">My Claimed Jobs</button>
+  </div>
+
+  <div id="content"></div>
+</div>
+
+<script>
+var API_URL = 'https://pgusa-platform-production.up.railway.app';
+
+var state = {
+  view: 'available',
+  jobs: [],
+  claimedJobIds: JSON.parse(localStorage.getItem('pgusa_claimed_job_ids') || '[]'),
+  claimedJobsData: JSON.parse(localStorage.getItem('pgusa_claimed_jobs_data') || '{}'),
+  loading: true,
+  error: null,
+  banner: null,
+  actioningJobId: null
+};
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function esc(str) {
+  var d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function formatApiError(detail, fallback) {
+  if (!detail) return fallback || 'Something went wrong';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    return detail.map(function(item) {
+      return (item && item.msg) || JSON.stringify(item);
+    }).join(' ');
+  }
+  return JSON.stringify(detail);
+}
+
+function saveClaimedJobs() {
+  localStorage.setItem('pgusa_claimed_job_ids', JSON.stringify(state.claimedJobIds));
+  localStorage.setItem('pgusa_claimed_jobs_data', JSON.stringify(state.claimedJobsData));
+}
+
+function loadJobs() {
+  state.loading = true;
+  state.error = null;
+  render();
+  fetch(API_URL + '/workers/jobs/available', {
+    headers: { 'Authorization': 'Bearer ' + getToken() }
+  })
+    .then(function(res) {
+      if (res.status === 401) {
+        localStorage.clear();
+        window.location.href = '/documents/worker-login.html';
+        return null;
+      }
+      return res.json().then(function(data) { return { ok: res.ok, data: data }; });
+    })
+    .then(function(result) {
+      if (!result) return;
+      if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Could not load jobs'));
+      state.jobs = result.data.jobs || [];
+    })
+    .catch(function(err) { state.error = err.message; })
+    .then(function() { state.loading = false; render(); });
+}
+
+function claimJob(jobId) {
+  state.actioningJobId = jobId;
+  state.banner = null;
+  render();
+  fetch(API_URL + '/workers/jobs/' + jobId + '/claim', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + getToken() }
+  })
+    .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+    .then(function(result) {
+      if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Could not claim job'));
+      var claimedJob = state.jobs.find(function(j) { return j.id === jobId; });
+      if (claimedJob) {
+        state.claimedJobsData[jobId] = claimedJob;
+        if (state.claimedJobIds.indexOf(jobId) === -1) state.claimedJobIds.push(jobId);
+        saveClaimedJobs();
+      }
+      state.banner = { type: 'success', text: result.data.message || ('Job claimed! You will earn $' + result.data.worker_pay) };
+      loadJobs();
+    })
+    .catch(function(err) {
+      state.banner = { type: 'error', text: err.message };
+      state.actioningJobId = null;
+      render();
+    });
+}
+
+function completeJob(jobId) {
+  state.actioningJobId = jobId;
+  state.banner = null;
+  render();
+  fetch(API_URL + '/workers/jobs/' + jobId + '/complete', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + getToken() }
+  })
+    .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+    .then(function(result) {
+      if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Could not complete job'));
+      var msg = 'Job completed! You earned $' + result.data.worker_pay + '.';
+      if (result.data.bonus_message) msg += ' ' + result.data.bonus_message;
+      state.banner = { type: 'success', text: msg };
+      state.claimedJobIds = state.claimedJobIds.filter(function(id) { return id !== jobId; });
+      delete state.claimedJobsData[jobId];
+      saveClaimedJobs();
+      state.actioningJobId = null;
+      render();
+    })
+    .catch(function(err) {
+      state.banner = { type: 'error', text: err.message };
+      state.actioningJobId = null;
+      render();
+    });
+}
+
+function renderBanner() {
+  var el = document.getElementById('banner');
+  if (!state.banner) { el.innerHTML = ''; return; }
+  var cls = state.banner.type === 'success' ? 'success-banner' : 'error';
+  el.innerHTML = '<div class="' + cls + '">' + esc(state.banner.text) + '</div>';
+}
+
+function renderAvailableJob(job) {
+  var urgentBadge = job.is_urgent ? '<span class="urgent-badge">URGENT</span>' : '';
+  var isActioning = state.actioningJobId === job.id;
+  return (
+    '<div class="job-card' + (job.is_urgent ? ' urgent' : '') + '">' +
+      '<div class="job-title">' + esc(job.title) + urgentBadge + '</div>' +
+      '<div class="job-meta">' + esc(job.service_type) + ' &middot; ' + (job.is_remote ? 'Remote' : esc(job.location || job.state || '')) +
+        (job.scheduled_date ? (' &middot; ' + esc(job.scheduled_date) + ' ' + esc(job.scheduled_time || '')) : '') +
+      '</div>' +
+      '<div class="job-pay">$' + esc(job.worker_pay) + '</div>' +
+      (job.description ? '<div class="job-desc">' + esc(job.description) + '</div>' : '') +
+      '<button class="btn btn-claim" data-job-id="' + esc(job.id) + '" data-action="claim" ' + (isActioning ? 'disabled' : '') + '>' +
+        (isActioning ? 'Claiming...' : 'Claim This Job') +
+      '</button>' +
+    '</div>'
+  );
+}
+
+function renderClaimedJob(job) {
+  var isActioning = state.actioningJobId === job.id;
+  return (
+    '<div class="job-card">' +
+      '<div class="job-title">' + esc(job.title) + '</div>' +
+      '<div class="job-meta">' + esc(job.service_type) + ' &middot; ' + (job.is_remote ? 'Remote' : esc(job.location || job.state || '')) + '</div>' +
+      '<div class="job-pay">$' + esc(job.worker_pay) + '</div>' +
+      '<button class="btn btn-complete" data-job-id="' + esc(job.id) + '" data-action="complete" ' + (isActioning ? 'disabled' : '') + '>' +
+        (isActioning ? 'Completing...' : 'Mark as Complete') +
+      '</button>' +
+    '</div>'
+  );
+}
+
+function render() {
+  renderBanner();
+
+  var tabAvailable = document.getElementById('tabAvailable');
+  var tabClaimed = document.getElementById('tabClaimed');
+  tabAvailable.className = 'tab-btn' + (state.view === 'available' ? ' active' : '');
+  tabClaimed.className = 'tab-btn' + (state.view === 'claimed' ? ' active' : '');
+  tabClaimed.textContent = 'My Claimed Jobs (' + state.claimedJobIds.length + ')';
+
+  var content = document.getElementById('content');
+
+  if (state.view === 'available') {
+    if (state.loading) { content.innerHTML = '<div class="loading">Loading available jobs...</div>'; return; }
+    if (state.error) { content.innerHTML = '<div class="error">' + esc(state.error) + '</div>'; return; }
+    var openJobs = state.jobs.filter(function(j) { return state.claimedJobIds.indexOf(j.id) === -1; });
+    if (openJobs.length === 0) { content.innerHTML = '<div class="empty-state">No open jobs matching your specialty right now. Check back soon.</div>'; return; }
+    content.innerHTML = openJobs.map(renderAvailableJob).join('');
+  } else {
+    var claimed = state.claimedJobIds.map(function(id) { return state.claimedJobsData[id]; }).filter(Boolean);
+    if (claimed.length === 0) { content.innerHTML = '<div class="empty-state">You have not claimed any jobs yet.</div>'; return; }
+    content.innerHTML = claimed.map(renderClaimedJob).join('');
+  }
+
+  var buttons = content.querySelectorAll('button[data-action]');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = function() {
+      var jobId = this.getAttribute('data-job-id');
+      var action = this.getAttribute('data-action');
+      if (action === 'claim') claimJob(jobId);
+      else completeJob(jobId);
+    };
+  }
+}
+
+document.getElementById('tabAvailable').onclick = function() { state.view = 'available'; state.banner = null; render(); };
+document.getElementById('tabClaimed').onclick = function() { state.view = 'claimed'; state.banner = null; render(); };
+
+if (!getToken()) {
+  window.location.href = '/documents/worker-login.html';
+} else {
+  loadJobs();
+}
+</script>
+</body>
+</html>
