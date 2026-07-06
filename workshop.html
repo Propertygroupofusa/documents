@@ -1,503 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PGUSA Empire Workshop</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #060B14;
-      color: #fff;
-      min-height: 100vh;
-      padding: 20px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PGUSA Empire — Real Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #060B14;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .login-box { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 32px; max-width: 380px; width: 100%; }
+  .login-box input {
+    width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #30363d;
+    background: #0d1117; color: #fff; font-size: 14px;
+  }
+  .login-box button {
+    width: 100%; padding: 12px; border-radius: 8px; border: none; background: #F59E0B;
+    color: #000; font-weight: 800; font-size: 14px; cursor: pointer;
+  }
+  .error-text { color: #f87171; font-size: 12px; margin-bottom: 10px; }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .header h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
-    .header h1 span { color: #F59E0B; }
-    .live-dot {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #34D399;
-      font-weight: 700;
-    }
-    .live-dot::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: #34D399;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .header h1 { font-size: 20px; font-weight: 900; }
+  .header h1 span { color: #F59E0B; }
+  .status-row { display: flex; align-items: center; gap: 14px; font-size: 12px; color: #64748B; }
+  .last-updated { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #34D399; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .logout-btn { background: none; border: none; color: #64748B; text-decoration: underline; font-size: 12px; cursor: pointer; }
 
-    /* Stats Row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-    }
-    .stat-card.gold { border-color: rgba(245,158,11,0.3); }
-    .stat-card.green { border-color: rgba(52,211,153,0.3); }
-    .stat-card.blue { border-color: rgba(59,130,246,0.3); }
-    .stat-number {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      color: #F59E0B;
-    }
-    .stat-card.green .stat-number { color: #34D399; }
-    .stat-card.blue .stat-number { color: #60A5FA; }
-    .stat-label { font-size: 11px; color: #64748B; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 24px; font-weight: 900; color: #F59E0B; }
+  .stat-num.green { color: #34D399; }
+  .stat-num.blue { color: #60A5FA; }
+  .stat-label { font-size: 10px; color: #64748B; margin-top: 4px; text-transform: uppercase; }
 
-    /* Grid */
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
-
-    .panel {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 14px;
-      padding: 18px;
-    }
-    .panel-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #F59E0B;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Bot Grid */
-    .bot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .bot-card {
-      background: rgba(52,211,153,0.05);
-      border: 1px solid rgba(52,211,153,0.15);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 11px;
-    }
-    .bot-name { font-weight: 700; color: #34D399; margin-bottom: 2px; }
-    .bot-stats { color: #64748B; }
-    .bot-earned { color: #F59E0B; font-weight: 700; }
-
-    /* Campaign List */
-    .campaign-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 12px;
-    }
-    .campaign-item:last-child { border-bottom: none; }
-    .campaign-name { color: #94A3B8; }
-    .campaign-id { color: #F59E0B; font-weight: 700; font-family: monospace; }
-    .badge {
-      background: rgba(52,211,153,0.1);
-      border: 1px solid rgba(52,211,153,0.2);
-      color: #34D399;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-
-    /* Revenue Chart */
-    .chart-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 80px;
-      margin-top: 8px;
-    }
-    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .bar {
-      width: 100%;
-      background: linear-gradient(to top, #F59E0B, #FCD34D);
-      border-radius: 4px 4px 0 0;
-      min-height: 4px;
-      transition: height 0.3s;
-    }
-    .bar-label { font-size: 9px; color: #64748B; }
-
-    /* Action Buttons */
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    .btn {
-      background: #F59E0B;
-      color: #000;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-    }
-    .btn:hover { background: #FCD34D; }
-    .btn.outline {
-      background: transparent;
-      color: #F59E0B;
-      border: 1px solid #F59E0B;
-    }
-    .btn.green-btn {
-      background: #34D399;
-      color: #000;
-    }
-    .btn.red-btn {
-      background: #EF4444;
-      color: #fff;
-    }
-
-    /* Activity Feed */
-    .feed { max-height: 200px; overflow-y: auto; }
-    .feed-item {
-      display: flex;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      font-size: 12px;
-    }
-    .feed-icon { font-size: 16px; flex-shrink: 0; }
-    .feed-text { color: #94A3B8; line-height: 1.4; }
-    .feed-text strong { color: #fff; }
-    .feed-time { color: #475569; font-size: 10px; margin-top: 2px; }
-
-    /* Links */
-    .link-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .link-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 12px;
-      text-decoration: none;
-      color: #fff;
-    }
-    .link-item:hover { border-color: #F59E0B; }
-    .link-name { font-weight: 600; }
-    .link-url { color: #F59E0B; font-size: 10px; }
-    .link-arrow { color: #475569; }
-
-    .full-width { grid-column: 1 / -1; }
-    .time { color: #475569; font-size: 12px; }
-  </style>
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .panel-title { font-size: 12px; font-weight: 700; color: #F59E0B; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .row-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+  .row-item:last-child { border-bottom: none; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .badge.complete { background: rgba(52,211,153,0.15); color: #34D399; }
+  .badge.running { background: rgba(96,165,250,0.15); color: #60A5FA; }
+  .badge.queued { background: rgba(245,158,11,0.15); color: #F59E0B; }
+  .badge.error { background: rgba(248,113,113,0.15); color: #f87171; }
+  .empty { color: #475569; font-size: 12px; text-align: center; padding: 20px; }
+</style>
 </head>
 <body>
-
-<div class="header">
-  <h1>PGUSA <span>Empire</span> Workshop</h1>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <div class="time" id="clock"></div>
-    <div class="live-dot">LIVE</div>
-  </div>
-</div>
-
-<!-- Stats -->
-<div class="stats-row">
-  <div class="stat-card gold">
-    <div class="stat-number" id="total-earned">$0</div>
-    <div class="stat-label">Total Earned Today</div>
-  </div>
-  <div class="stat-card green">
-    <div class="stat-number" id="active-bots">21</div>
-    <div class="stat-label">Active Bots</div>
-  </div>
-  <div class="stat-card blue">
-    <div class="stat-number" id="jobs-done">0</div>
-    <div class="stat-label">Jobs Completed</div>
-  </div>
-  <div class="stat-card gold">
-    <div class="stat-number" id="campaigns">20</div>
-    <div class="stat-label">Campaigns Fired</div>
-  </div>
-  <div class="stat-card green">
-    <div class="stat-number">$27.65</div>
-    <div class="stat-label">Stripe Balance</div>
-  </div>
-  <div class="stat-card blue">
-    <div class="stat-number">8</div>
-    <div class="stat-label">Languages</div>
-  </div>
-</div>
-
-<div class="grid">
-
-  <!-- Bot Army Status -->
-  <div class="panel">
-    <div class="panel-title">🤖 Bot Army — 21 Active</div>
-    <div class="bot-grid" id="bot-grid">
-      <!-- filled by JS -->
-    </div>
-  </div>
-
-  <!-- Activity Feed -->
-  <div class="panel">
-    <div class="panel-title">⚡ Live Activity</div>
-    <div class="feed" id="feed">
-      <div class="feed-item">
-        <div class="feed-icon">💰</div>
-        <div>
-          <div class="feed-text"><strong>LegalBot-USA-1</strong> completed NDA — +$18.75</div>
-          <div class="feed-time">Just now</div>
-        </div>
-      </div>
-      <div class="feed-item">
-        <div class="feed-icon">📧</div>
-        <div>
-          <div class="feed-text"><strong>Wave 20</strong> fired — Pfizer, J&J, Eli Lilly, AbbVie, Merck</div>
-          <div class="feed-time">1 hour ago</div>
-        </div>
-      </div>
-      <div class="feed-item">
-        <div class="feed-icon">✅</div>
-        <div>
-          <div class="feed-text"><strong>Stripe webhook</strong> activated — PGUSA account cleared</div>
-          <div class="feed-time">3 hours ago</div>
-        </div>
-      </div>
-      <div class="feed-item">
-        <div class="feed-icon">🤖</div>
-        <div>
-          <div class="feed-text"><strong>TaxBot-ES-1</strong> completed Tax Organizer (Spanish) — +$21.75</div>
-          <div class="feed-time">5 min ago</div>
-        </div>
-      </div>
-      <div class="feed-item">
-        <div class="feed-icon">🌍</div>
-        <div>
-          <div class="feed-text"><strong>LegalBot-AE</strong> completed Arabic contract — +$26.25</div>
-          <div class="feed-time">12 min ago</div>
-        </div>
-      </div>
-      <div class="feed-item">
-        <div class="feed-icon">📈</div>
-        <div>
-          <div class="feed-text"><strong>Platform</strong> v2.3 deployed — all 13 routers active</div>
-          <div class="feed-time">2 hours ago</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Campaigns -->
-  <div class="panel">
-    <div class="panel-title">📧 Cold Email Campaigns</div>
-    <div class="campaign-item">
-      <span class="campaign-name">Property Managers</span>
-      <span class="campaign-id">d0d0d132</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div class="campaign-item">
-      <span class="campaign-name">Title Companies</span>
-      <span class="campaign-id">a367239a</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div class="campaign-item">
-      <span class="campaign-name">Law Firms</span>
-      <span class="campaign-id">979af56f</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div class="campaign-item">
-      <span class="campaign-name">Clinical Research</span>
-      <span class="campaign-id">55f1793f</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div class="campaign-item">
-      <span class="campaign-name">Pharma — Pfizer/J&J</span>
-      <span class="campaign-id">52b86ccb</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div class="campaign-item">
-      <span class="campaign-name">Hospitals & Healthcare</span>
-      <span class="campaign-id">56ada329</span>
-      <span class="badge">SENT</span>
-    </div>
-    <div style="margin-top:10px;font-size:11px;color:#475569;">
-      20 campaigns total · 100 emails fired · Follow-ups in 7 days
-    </div>
-  </div>
-
-  <!-- Quick Links -->
-  <div class="panel">
-    <div class="panel-title">🔗 Empire Links</div>
-    <div class="link-grid">
-      <a class="link-item" href="https://pgusa-platform-production.up.railway.app/docs" target="_blank">
-        <div>
-          <div class="link-name">PGUSA API Docs</div>
-          <div class="link-url">pgusa-platform-production.up.railway.app/docs</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-      <a class="link-item" href="https://propertygroupofusa.github.io/documents/services.html" target="_blank">
-        <div>
-          <div class="link-name">Services Page (Money Page)</div>
-          <div class="link-url">propertygroupofusa.github.io/documents/services.html</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-      <a class="link-item" href="https://propertygroupofusa.github.io/documents/payeetrust-landing.html" target="_blank">
-        <div>
-          <div class="link-name">Payee Trust Waitlist</div>
-          <div class="link-url">payeetrust-landing.html</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-      <a class="link-item" href="https://dashboard.stripe.com" target="_blank">
-        <div>
-          <div class="link-name">Stripe Dashboard</div>
-          <div class="link-url">dashboard.stripe.com</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-      <a class="link-item" href="https://railway.app" target="_blank">
-        <div>
-          <div class="link-name">Railway — heroic-essence</div>
-          <div class="link-url">railway.app</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-      <a class="link-item" href="https://github.com/Propertygroupofusa/pgusa-platform" target="_blank">
-        <div>
-          <div class="link-name">GitHub — pgusa-platform</div>
-          <div class="link-url">github.com/Propertygroupofusa</div>
-        </div>
-        <div class="link-arrow">→</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- Action Center -->
-  <div class="panel full-width">
-    <div class="panel-title">⚡ Command Center</div>
-    <div class="actions">
-      <button class="btn" onclick="window.open('https://pgusa-platform-production.up.railway.app/docs#/outreach/create_campaign_outreach_campaign_create_post')">
-        🔥 Fire New Campaign
-      </button>
-      <button class="btn outline" onclick="window.open('https://pgusa-platform-production.up.railway.app/admin/dashboard')">
-        📊 Admin Dashboard
-      </button>
-      <button class="btn green-btn" onclick="window.open('https://pgusa-platform-production.up.railway.app/outreach/templates')">
-        📧 View Templates
-      </button>
-      <button class="btn outline" onclick="window.open('https://pgusa-platform-production.up.railway.app/outreach/campaigns')">
-        📋 All Campaigns
-      </button>
-      <button class="btn outline" onclick="window.open('https://propertygroupofusa.github.io/documents/payeetrust-video-pitch.html')">
-        🎬 Payee Trust Video
-      </button>
-      <button class="btn outline" onclick="window.open('https://propertygroupofusa.github.io/documents/research-pitch.html')">
-        🔬 Research Pitch
-      </button>
-    </div>
-  </div>
-
-</div>
+<div id="root"></div>
 
 <script>
-// Clock
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
+var API_BASE = 'https://pgusa-platform-production.up.railway.app';
+var REFRESH_MS = 60000; // real poll every 60s — not a fake animation timer
+
+var state = {
+  token: localStorage.getItem('pgusa_admin_token') || null,
+  loginEmail: '',
+  loginError: null,
+  loginLoading: false,
+  dashboard: null,
+  campaigns: [],
+  workers: [],
+  lastUpdated: null,
+  error: null
+};
+
+function esc(str) {
+  var d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function formatApiError(detail, fallback) {
+  if (!detail) return fallback || 'Something went wrong';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) return detail.map(function(i){ return (i && i.msg) || JSON.stringify(i); }).join(' ');
+  return JSON.stringify(detail);
+}
+
+function render() {
+  var root = document.getElementById('root');
+  if (!state.token) {
+    root.innerHTML = renderLogin();
+    attachLoginHandlers();
+    return;
+  }
+  root.innerHTML = renderDashboard();
+  var logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) logoutBtn.onclick = function() {
+    state.token = null;
+    localStorage.removeItem('pgusa_admin_token');
+    render();
+  };
+}
+
+function renderLogin() {
+  var errorHtml = state.loginError ? ('<div class="error-text">' + esc(state.loginError) + '</div>') : '';
+  return (
+    '<div class="login-wrap"><div class="login-box">' +
+      '<h2 style="margin-bottom:6px;">PGUSA Empire</h2>' +
+      '<p style="font-size:13px;color:#64748B;margin-bottom:18px;">Admin login — real data only.</p>' +
+      '<form id="loginForm">' +
+        '<input type="email" id="adminEmail" placeholder="Admin email" required />' +
+        '<input type="password" id="adminPassword" placeholder="Password" required />' +
+        errorHtml +
+        '<button type="submit" ' + (state.loginLoading ? 'disabled' : '') + '>' + (state.loginLoading ? 'Logging in...' : 'Log In') + '</button>' +
+      '</form>' +
+    '</div></div>'
+  );
+}
+
+function attachLoginHandlers() {
+  document.getElementById('loginForm').onsubmit = function(e) {
+    e.preventDefault();
+    state.loginError = null;
+    state.loginLoading = true;
+    render();
+
+    var email = document.getElementById('adminEmail').value;
+    var password = document.getElementById('adminPassword').value;
+    var body = new URLSearchParams();
+    body.append('username', email);
+    body.append('password', password);
+
+    fetch(API_BASE + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body
+    })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error(formatApiError(result.data.detail, 'Login failed'));
+        if (result.data.user_type !== 'admin') throw new Error('This account is not an admin account.');
+        state.token = result.data.access_token;
+        localStorage.setItem('pgusa_admin_token', state.token);
+        loadAll();
+      })
+      .catch(function(err) {
+        state.loginError = err.message;
+        state.loginLoading = false;
+        render();
+      });
+  };
+}
+
+function renderDashboard() {
+  var d = state.dashboard;
+  var statsHtml = '';
+  if (d) {
+    statsHtml =
+      '<div class="stats-row">' +
+        statCard(d.total_workers, 'Total Workers', 'gold') +
+        statCard(d.approved_workers, 'Approved Workers', 'green') +
+        statCard(d.pending_workers, 'Pending Approval', 'blue') +
+        statCard(d.total_clients, 'Total Clients', 'gold') +
+        statCard(d.total_jobs, 'Total Jobs', 'green') +
+        statCard(d.active_jobs, 'Active Jobs', 'blue') +
+        statCard(d.completed_jobs, 'Completed Jobs', 'gold') +
+        statCard('$' + Number(d.total_revenue).toFixed(2), 'Total Revenue', 'green') +
+        statCard('$' + Number(d.this_month_revenue).toFixed(2), 'This Month', 'blue') +
+        statCard('$' + Number(d.platform_volume_24h).toFixed(2), '24h Volume', 'gold') +
+        statCard('$' + Number(d.avg_job_value).toFixed(2), 'Avg Job Value', 'green') +
+        statCard(d.system_health, 'System Health', 'blue') +
+      '</div>';
+  } else if (state.error) {
+    statsHtml = '<div class="panel"><div class="empty" style="color:#f87171;">' + esc(state.error) + '</div></div>';
+  } else {
+    statsHtml = '<div class="panel"><div class="empty">Loading real stats...</div></div>';
+  }
+
+  var campaignsHtml = state.campaigns.length === 0
+    ? '<div class="empty">No campaigns yet.</div>'
+    : state.campaigns.slice(0, 10).map(function(c) {
+        var badgeClass = c.status === 'complete' ? 'complete' : c.status === 'running' ? 'running' : c.status === 'error' ? 'error' : 'queued';
+        return (
+          '<div class="row-item">' +
+            '<span>' + esc(c.name) + '</span>' +
+            '<span>' + c.sent + '/' + c.total + ' sent</span>' +
+            '<span class="badge ' + badgeClass + '">' + esc(c.status).toUpperCase() + '</span>' +
+          '</div>'
+        );
+      }).join('');
+
+  var workersHtml = state.workers.length === 0
+    ? '<div class="empty">No approved workers yet.</div>'
+    : state.workers.slice(0, 10).map(function(w) {
+        return (
+          '<div class="row-item">' +
+            '<span>' + esc(w.name) + '</span>' +
+            '<span>' + esc(w.title) + '</span>' +
+            '<span>' + w.jobs + ' jobs &middot; ' + Number(w.rating).toFixed(1) + '&#9733;</span>' +
+          '</div>'
+        );
+      }).join('');
+
+  return (
+    '<div class="header">' +
+      '<h1>PGUSA <span>Empire</span> — Real Dashboard</h1>' +
+      '<div class="status-row">' +
+        '<div class="last-updated"><div class="dot"></div>' + (state.lastUpdated ? ('Updated ' + state.lastUpdated) : 'Loading...') + '</div>' +
+        '<button class="logout-btn" id="logoutBtn">Log out</button>' +
+      '</div>' +
+    '</div>' +
+    statsHtml +
+    '<div class="panel"><div class="panel-title">📧 Real Campaigns</div>' + campaignsHtml + '</div>' +
+    '<div class="panel"><div class="panel-title">👷 Real Approved Workers</div>' + workersHtml + '</div>'
+  );
+}
+
+function statCard(value, label, color) {
+  return (
+    '<div class="stat-card">' +
+      '<div class="stat-num ' + color + '">' + esc(value) + '</div>' +
+      '<div class="stat-label">' + esc(label) + '</div>' +
+    '</div>'
+  );
+}
+
+function loadAll() {
+  state.error = null;
+  var headers = { 'Authorization': 'Bearer ' + state.token };
+
+  var dashboardP = fetch(API_BASE + '/admin/dashboard', { headers: headers })
+    .then(function(res) {
+      if (res.status === 401) { state.token = null; localStorage.removeItem('pgusa_admin_token'); throw new Error('Session expired'); }
+      return res.json();
+    })
+    .then(function(data) { state.dashboard = data; })
+    .catch(function(err) { state.error = err.message; });
+
+  var campaignsP = fetch(API_BASE + '/outreach/campaigns')
+    .then(function(res) { return res.json(); })
+    .then(function(data) { state.campaigns = Array.isArray(data) ? data : []; })
+    .catch(function() { state.campaigns = []; });
+
+  var workersP = fetch(API_BASE + '/workers/browse?limit=20')
+    .then(function(res) { return res.json(); })
+    .then(function(data) { state.workers = data.workers || []; })
+    .catch(function() { state.workers = []; });
+
+  Promise.all([dashboardP, campaignsP, workersP]).then(function() {
+    state.lastUpdated = new Date().toLocaleTimeString();
+    state.loginLoading = false;
+    render();
   });
 }
-setInterval(updateClock, 1000);
-updateClock();
 
-// Bot Army Display
-const bots = [
-  {name: "LegalBot-USA-1", region: "USA", jobs: 0, earned: 0},
-  {name: "LegalBot-USA-2", region: "USA", jobs: 0, earned: 0},
-  {name: "TaxBot-USA-1", region: "USA", jobs: 0, earned: 0},
-  {name: "TaxBot-USA-2", region: "USA", jobs: 0, earned: 0},
-  {name: "LegalBot-ES-1", region: "LATAM", jobs: 0, earned: 0},
-  {name: "TaxBot-ES-1", region: "LATAM", jobs: 0, earned: 0},
-  {name: "LegalBot-UK", region: "UK", jobs: 0, earned: 0},
-  {name: "LegalBot-AE", region: "UAE", jobs: 0, earned: 0},
-  {name: "BusinessBot-FR", region: "France", jobs: 0, earned: 0},
-  {name: "LegalBot-BR", region: "Brazil", jobs: 0, earned: 0},
-  {name: "ClinicalBot-1", region: "Global", jobs: 0, earned: 0},
-  {name: "ImmiBot-1", region: "USA-Immi", jobs: 0, earned: 0},
-];
-
-function renderBots() {
-  const grid = document.getElementById('bot-grid');
-  grid.innerHTML = bots.map(b => `
-    <div class="bot-card">
-      <div class="bot-name">${b.name}</div>
-      <div class="bot-stats">${b.region} · ${b.jobs} jobs</div>
-      <div class="bot-earned">$${b.earned.toFixed(2)}</div>
-    </div>
-  `).join('');
+// Real polling — actual fetches on a real interval, not a fake counter.
+if (state.token) {
+  loadAll();
+  setInterval(function() { if (state.token) loadAll(); }, REFRESH_MS);
+} else {
+  render();
 }
-renderBots();
-
-// Simulate live bot activity
-let totalEarned = 0;
-let totalJobs = 0;
-
-function simulateActivity() {
-  const bot = bots[Math.floor(Math.random() * bots.length)];
-  const pay = [18.75, 21.75, 26.25, 22.50, 19.50][Math.floor(Math.random() * 5)];
-  bot.jobs += 1;
-  bot.earned += pay;
-  totalEarned += pay;
-  totalJobs += 1;
-  
-  document.getElementById('total-earned').textContent = '$' + totalEarned.toFixed(2);
-  document.getElementById('jobs-done').textContent = totalJobs;
-  document.getElementById('active-bots').textContent = bots.length;
-  
-  renderBots();
-
-  // Add to feed
-  const feed = document.getElementById('feed');
-  const item = document.createElement('div');
-  item.className = 'feed-item';
-  item.innerHTML = `
-    <div class="feed-icon">💰</div>
-    <div>
-      <div class="feed-text"><strong>${bot.name}</strong> completed job — +$${pay.toFixed(2)}</div>
-      <div class="feed-time">Just now</div>
-    </div>
-  `;
-  feed.insertBefore(item, feed.firstChild);
-  if (feed.children.length > 20) feed.removeChild(feed.lastChild);
-}
-
-// Simulate bot activity every 8 seconds
-setInterval(simulateActivity, 8000);
 </script>
-
 </body>
 </html>
