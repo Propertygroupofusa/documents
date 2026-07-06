@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>React Test</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root">If you see this text, JS never ran.</div>
+<script type="text/babel" data-presets="react">
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <h1 style={{color: 'green', fontFamily: 'sans-serif', padding: '40px'}}>
+    ✅ React is working!
+  </h1>
+);
+</script>
+</body>
+</html>
