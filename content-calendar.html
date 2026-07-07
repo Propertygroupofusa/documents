@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Calendar — PGUSA Channel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; }
+  .navbar { background: linear-gradient(135deg,#667eea,#764ba2); padding: 16px 20px; }
+  .navbar h1 { font-size: 18px; color: #fff; }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+  .upload-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
+  .upload-box input[type=file] { margin-top: 10px; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 800; color: #a78bfa; }
+  .stat-label { font-size: 11px; color: #8b949e; margin-top: 4px; text-transform: uppercase; }
+  .section-title { font-size: 13px; font-weight: 700; color: #a78bfa; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px; }
+  .video-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .video-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .video-meta { font-size: 11px; color: #8b949e; }
+  .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; background: rgba(167,139,250,0.15); color: #a78bfa; white-space: nowrap; }
+  .empty { text-align: center; padding: 40px; color: #6e7681; font-size: 13px; }
+  .next-due { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 10px; padding: 14px; margin-bottom: 20px; color: #34d399; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="navbar"><h1>📅 Content Calendar — PGUSA Channel</h1></div>
+
+<div class="container">
+  <div class="upload-box">
+    <p style="font-size:13px;color:#8b949e;margin-bottom:8px;">Upload content_bot_state.json from Railway (Volumes tab, or download via the deploy shell) to see the real publishing history.</p>
+    <input type="file" id="fileInput" accept="application/json" />
+  </div>
+  <div id="content"><div class="empty">Upload the state file to see your real content calendar.</div></div>
+</div>
+
+<script>
+function esc(str) {
+  var d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function render(state) {
+  var content = document.getElementById('content');
+  var published = state.published || [];
+
+  var statsHtml =
+    '<div class="stats-row">' +
+      '<div class="stat-card"><div class="stat-num">' + published.length + '</div><div class="stat-label">Total Published</div></div>' +
+      '<div class="stat-card"><div class="stat-num">' + published.filter(function(p){return p.kind==='short';}).length + '</div><div class="stat-label">Shorts</div></div>' +
+      '<div class="stat-card"><div class="stat-num">' + published.filter(function(p){return p.kind==='long';}).length + '</div><div class="stat-label">Long-form</div></div>' +
+    '</div>';
+
+  var nextDue = '';
+  var today = new Date().toISOString().slice(0, 10);
+  if (state.last_short_date !== today) {
+    nextDue += '<div class="next-due">Short due today (' + today + ') last one published ' + esc(state.last_short_date || 'never') + '</div>';
+  }
+  var isMonday = new Date().getDay() === 1;
+  if (isMonday && state.last_long_date !== today) {
+    nextDue += '<div class="next-due">Long-form due today (Monday) last one published ' + esc(state.last_long_date || 'never') + '</div>';
+  }
+
+  var sorted = published.slice().sort(function(a, b) { return (b.date || '').localeCompare(a.date || ''); });
+  var videoListHtml = sorted.length === 0
+    ? '<div class="empty">No videos published yet.</div>'
+    : sorted.map(function(p) {
+        var link = p.youtube_id ? ('https://youtu.be/' + p.youtube_id) : null;
+        return (
+          '<div class="video-card">' +
+            '<div>' +
+              '<div class="video-title">' + esc(p.title) + '</div>' +
+              '<div class="video-meta">' + esc(p.date) + ' - ' + esc(p.kind) +
+                (link ? (' - <a href="' + link + '" style="color:#60a5fa;" target="_blank">watch</a>') : '') +
+              '</div>' +
+            '</div>' +
+            '<span class="badge">' + esc(p.format) + '</span>' +
+          '</div>'
+        );
+      }).join('');
+
+  content.innerHTML =
+    statsHtml +
+    nextDue +
+    '<div class="section-title">Publishing History (' + published.length + ')</div>' +
+    videoListHtml;
+}
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      var state = JSON.parse(evt.target.result);
+      render(state);
+    } catch (err) {
+      document.getElementById('content').innerHTML = '<div class="empty" style="color:#f87171;">Could not parse that file.</div>';
+    }
+  };
+  reader.readAsText(file);
+});
+</script>
+</body>
+</html>
