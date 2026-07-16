@@ -208,6 +208,29 @@
             font-size: 13px;
             color: #333;
         }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .toggle-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -224,49 +247,113 @@
         <div class="error-message" id="errorMessage"></div>
         <div class="success-message" id="successMessage"></div>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="your@email.com" 
-                    required 
-                    autocomplete="email"
-                >
+        <div id="loginView" class="view active">
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="your@email.com"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="••••••••"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    Sign In
+                </button>
+
+                <div class="loading" id="loading">
+                    <span class="spinner"></span>
+                    Signing in...
+                </div>
+            </form>
+
+            <div class="links">
+                <a href="mailto:propertygroupofusa@gmail.com?subject=Password%20Reset%20Request">Forgot password?</a>
+                <a href="mailto:propertygroupofusa@gmail.com?subject=Worker%20Portal%20Help">Need help?</a>
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    placeholder="••••••••" 
-                    required 
-                    autocomplete="current-password"
-                >
+            <div class="divider">or</div>
+
+            <div class="signup-prompt">
+                Don't have an account?
+                <button type="button" class="toggle-link" onclick="showView('signup')">Apply to become a worker</button>
             </div>
-
-            <button type="submit" class="btn-login" id="loginBtn">
-                Sign In
-            </button>
-
-            <div class="loading" id="loading">
-                <span class="spinner"></span>
-                Signing in...
-            </div>
-        </form>
-
-        <div class="links">
-            <a href="mailto:propertygroupofusa@gmail.com?subject=Password%20Reset%20Request">Forgot password?</a>
-            <a href="mailto:propertygroupofusa@gmail.com?subject=Worker%20Portal%20Help">Need help?</a>
         </div>
 
-        <div class="divider">or</div>
+        <div id="signupView" class="view">
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input
+                        type="text"
+                        id="signupName"
+                        placeholder="Jane Smith"
+                        required
+                        autocomplete="name"
+                    >
+                </div>
 
-        <div class="signup-prompt">
-            Don't have an account?
-            <a href="mailto:propertygroupofusa@gmail.com?subject=Worker%20Application">Apply to become a worker</a>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="your@email.com"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="signupPhone"
+                        placeholder="(210) 555-0100"
+                        required
+                        autocomplete="tel"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Create a Password</label>
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="••••••••"
+                        required
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="signupBtn">
+                    Apply Now
+                </button>
+
+                <div class="loading" id="signupLoading">
+                    <span class="spinner"></span>
+                    Submitting your application...
+                </div>
+            </form>
+
+            <div class="signup-prompt">
+                Already have an account?
+                <button type="button" class="toggle-link" onclick="showView('login')">Sign in</button>
+            </div>
         </div>
     </div>
 
@@ -355,6 +442,79 @@
             const successEl = document.getElementById('successMessage');
             successEl.textContent = '✅ ' + message;
             successEl.classList.add('show');
+        }
+
+        function showView(view) {
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('loginView').classList.toggle('active', view === 'login');
+            document.getElementById('signupView').classList.toggle('active', view === 'signup');
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            const loadingEl = document.getElementById('signupLoading');
+            const signupBtn = document.getElementById('signupBtn');
+
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+
+            if (!name || !email || !phone || !password) {
+                showError('Please fill in every field.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            loadingEl.classList.add('show');
+            signupBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        password: password,
+                        user_type: 'worker'
+                    })
+                });
+
+                if (!response.ok) {
+                    let errorMsg = 'Could not submit your application automatically.';
+                    try {
+                        const data = await response.json();
+                        errorMsg = data.detail || errorMsg;
+                    } catch (e) { /* response wasn't JSON */ }
+                    throw new Error(errorMsg);
+                }
+
+                showSuccess(`Thanks, ${name}! Your application was submitted. Check ${email} for next steps.`);
+                document.getElementById('signupForm').reset();
+
+            } catch (error) {
+                // Fall back to email so no application is ever lost, even if the
+                // signup endpoint is down or unreachable.
+                showError((error.message || 'Something went wrong') + ' We’ve opened an email with your details — just hit send.');
+                const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+                window.location.href = `mailto:propertygroupofusa@gmail.com?subject=${encodeURIComponent('Worker Application')}&body=${encodeURIComponent(body)}`;
+            } finally {
+                loadingEl.classList.remove('show');
+                signupBtn.disabled = false;
+            }
         }
 
         // Check if already logged in
