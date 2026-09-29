@@ -43,6 +43,32 @@
       border-radius: 20px;
     }
 
+    .video-fallback {
+      display: none;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .video-fallback.show {
+      display: flex;
+    }
+
+    .video-fallback-icon {
+      font-size: 40px;
+    }
+
+    .video-fallback-text {
+      color: #94A3B8;
+      font-size: 14px;
+      max-width: 420px;
+    }
+
     .below-video {
       max-width: 720px;
       width: 100%;
@@ -135,15 +161,21 @@
 
   <div class="video-wrap">
     <video
+      id="pitchVideo"
       controls
       autoplay
       playsinline
       preload="auto"
       poster=""
+      onerror="document.getElementById('pitchVideo').style.display='none'; document.getElementById('videoFallback').classList.add('show');"
     >
       <source src="HeyGen-Video-1782563172297.mp4" type="video/mp4"/>
       Your browser does not support the video tag.
     </video>
+    <div class="video-fallback" id="videoFallback">
+      <div class="video-fallback-icon">🎬</div>
+      <div class="video-fallback-text">The video is temporarily unavailable. Read Delfine's story below, or reach out directly at <a href="mailto:payeetrust@gmail.com" style="color:#F59E0B;">payeetrust@gmail.com</a>.</div>
+    </div>
   </div>
 
   <div class="below-video">
